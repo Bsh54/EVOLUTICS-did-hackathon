@@ -295,6 +295,45 @@
             transition: gap 200ms ease;
         }
 
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: 14px 28px;
+            background: var(--color-cta);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            font-family: var(--font-body);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 200ms ease;
+            box-shadow: 0 4px 12px rgba(202, 138, 4, 0.25);
+            margin-top: var(--space-lg);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(202, 138, 4, 0.35);
+            background: #B8790A;
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        .cta-button svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 200ms ease;
+        }
+
+        .cta-button:hover svg {
+            transform: translateX(4px);
+        }
+
         .parcours-card:hover .card-cta {
             gap: var(--space-md);
         }
@@ -432,7 +471,7 @@
             <!-- Parcours Cards -->
             <div class="parcours-grid" style="margin-top: 64px;">
                 <!-- Parcours 1: Certification Agriculteur -->
-                <a href="/certification.html" class="parcours-card" tabindex="0">
+                <div class="parcours-card" tabindex="0">
                     <div class="card-content">
                         <div class="card-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -441,14 +480,14 @@
                         </div>
                         <h3 class="card-title">Obtenir ma certification agriculteur</h3>
                         <p class="card-description">Créez votre identité numérique vérifiée et recevez votre badge de certification dans votre wallet mobile</p>
-                        <span class="card-cta">
+                        <button class="cta-button" onclick="window.location.href='/certification/auth/login'">
                             Commencer
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                             </svg>
-                        </span>
+                        </button>
                     </div>
-                </a>
+                </div>
 
                 <!-- Parcours 2: Collecteur -->
                 <a href="/collector.html" class="parcours-card" tabindex="0">
