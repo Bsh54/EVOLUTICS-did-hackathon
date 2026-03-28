@@ -12,6 +12,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./src/routes/auth');
 const userRoutes = require('./src/routes/user');
 const certificationRoutes = require('./src/routes/certification');
+const salesRoutes = require('./src/routes/sales');
 
 const app = express();
 const PORT = process.env.APP_PORT || 3002;
@@ -44,6 +45,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/certification', certificationRoutes);
+app.use('/sales', salesRoutes);
 
 // Redirect /callback to /auth/callback
 app.get('/callback', (req, res) => {
