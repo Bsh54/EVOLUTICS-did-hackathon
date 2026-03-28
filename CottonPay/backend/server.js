@@ -39,7 +39,8 @@ app.use(session({
 }));
 
 // Serve static files from frontend
-app.use(express.static('../frontend'));
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/certification', certificationRoutes);
