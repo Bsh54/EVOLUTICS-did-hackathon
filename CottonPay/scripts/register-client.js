@@ -30,7 +30,7 @@ async function generateRSAKeyPair() {
   });
 
   // Créer le dossier keys s'il n'existe pas
-  const keysDir = path.resolve(__dirname, '../keys');
+  const keysDir = path.resolve(__dirname, '../backend/keys');
   if (!fs.existsSync(keysDir)) {
     fs.mkdirSync(keysDir, { recursive: true });
   }
@@ -140,11 +140,11 @@ function updateEnvFile(clientId) {
   // Mettre à jour les chemins des clés
   envContent = envContent.replace(
     /CLIENT_PRIVATE_KEY_PATH=.*/,
-    'CLIENT_PRIVATE_KEY_PATH=./keys/private-key.pem'
+    'CLIENT_PRIVATE_KEY_PATH=./backend/keys/private-key.pem'
   );
   envContent = envContent.replace(
     /CLIENT_PUBLIC_KEY_PATH=.*/,
-    'CLIENT_PUBLIC_KEY_PATH=./keys/public-key.pem'
+    'CLIENT_PUBLIC_KEY_PATH=./backend/keys/public-key.pem'
   );
 
   fs.writeFileSync(envPath, envContent);

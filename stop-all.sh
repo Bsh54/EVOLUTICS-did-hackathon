@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Script d'arrêt de tous les services CottonPay + IDS
+# Script d'arrêt de tous les services CottonPay
 
 set -e
 
 echo "=========================================="
-echo "Arrêt de CottonPay + IDS"
+echo "Arrêt de CottonPay"
 echo "=========================================="
 echo ""
 
@@ -27,7 +27,9 @@ print_error() {
     echo -e "${RED}[ERREUR]${NC} $1"
 }
 
-# Arrêter CottonPay Backend
+# ========================================
+# Étape 1: Arrêter CottonPay Backend
+# ========================================
 if [ -f /tmp/cottonpay-backend.pid ]; then
     COTTONPAY_PID=$(cat /tmp/cottonpay-backend.pid)
     print_info "Arrêt de CottonPay Backend (PID: $COTTONPAY_PID)..."
@@ -37,8 +39,11 @@ if [ -f /tmp/cottonpay-backend.pid ]; then
 else
     print_info "CottonPay Backend n'est pas en cours d'exécution"
 fi
+echo ""
 
-# Arrêter eidStack-CMU
+# ========================================
+# Étape 2: Arrêter eidStack-CMU
+# ========================================
 if [ -f /tmp/eidstack.pid ]; then
     EIDSTACK_PID=$(cat /tmp/eidstack.pid)
     print_info "Arrêt de eidStack-CMU (PID: $EIDSTACK_PID)..."
@@ -48,15 +53,28 @@ if [ -f /tmp/eidstack.pid ]; then
 else
     print_info "eidStack-CMU n'est pas en cours d'exécution"
 fi
-
-# Arrêter les services Docker eSignet
-print_info "Arrêt des services Docker eSignet..."
-cd /mnt/c/Users/shadr/Downloads/CottonPay/esignet-master/docker-compose
-docker compose down
-print_success "Services Docker eSignet arrêtés"
-
 echo ""
+
+# ========================================
+# Étape 3: Arrêter les services Docker eSignet
+# ========================================
+print_info "Arrêt des services Docker eSignet..."
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR/esignet-master/docker-compose"
+
+if docker compose ps | grep -q "Up"; then
+    docker compose down
+    print_success "Services Docker eSignet arrêtés"
+else
+    print_info "Les services Docker eSignet ne sont pas en cours d'exécution"
+fi
+echo ""
+
 echo "=========================================="
 echo "Tous les services sont arrêtés !"
 echo "=========================================="
+echo ""
+echo "Pour redémarrer les services :"
+echo "  ./start-all.sh"
 echo ""
