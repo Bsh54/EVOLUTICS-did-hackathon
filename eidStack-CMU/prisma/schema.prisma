@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Connection {
+  id           Int      @id @default(autoincrement())
+  connectionId String   @unique
+  outOfBandId  String
+  status       String
+  orgDid       String
+  holderDid    String
+  createDate   DateTime @default(now())
+  updateDate   DateTime @updatedAt
+}
+
+model Schema {
+  id                    Int                     @id @default(autoincrement())
+  name                  String
+  issuerId              String
+  version               String
+  schema_id             String                  @unique
+  unqualified_schema_id String                  @unique
+  create_date           DateTime                @default(now())
+
+  attributes            Attribute[]
+  credentialDefinitions CredentialDefinition[]
+  credentials           Credential[]
+}
+
+model Attribute {
+  id             Int      @id @default(autoincrement())
+  name           String
+  schemaDataType String
+  displayName    String
+  create_date    DateTime @default(now())
+
+  schemaId       Int
+  schema         Schema   @relation(fields: [schemaId], references: [id])
+}
+
+model CredentialDefinition {
+  id                      Int      @id @default(autoincrement())
+  name                    String
+  issuerId                String
+  cred_def_id             String   @unique
+  unqualified_cred_def_id String   @unique
+  create_date             DateTime @default(now())
+
+  schemaId     Int?
+  schema       Schema?              @relation(fields: [schemaId], references: [id])
+  credentials  Credential[]
+}
+
+model Credential {
+  id               Int      @id @default(autoincrement())
+  credExId         String
+  threadId         String
+  credentialState  String
+  protocolVersion  String
+  connectionId     String
+  issuerDid        String
+  create_date      DateTime @default(now())
+
+  schemaId         Int?       // nullable
+  schema           Schema?    @relation(fields: [schemaId], references: [id])
+
+  credentialDefId  Int?       // nullable
+  credentialDef    CredentialDefinition? @relation(fields: [credentialDefId], references: [id])
+}
+
+model Proof {
+  id           Int      @id @default(autoincrement())
+  proofRecordId String  @unique
+  orgDid        String
+  holderDid     String
+  state         String
+  credDefId     String
+  threadDid     String
+  createDate    DateTime @default(now())
+  updateDate    DateTime @updatedAt
+}
+
+model ShortUrl {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  originalUrl String
+  createdAt   DateTime @default(now())
+}

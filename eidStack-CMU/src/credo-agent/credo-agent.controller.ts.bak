@@ -1,0 +1,41 @@
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { CredoAgentService } from './credo-agent.service';
+import { InitAgentDto } from './dto/initAgent.dto';
+import { ReceiveInvitationDto } from './dto/receiveInvitation.dto';
+
+@ApiTags('credo-agent')
+@Controller('credo-agent')
+export class CredoAgentController {
+  constructor(private readonly credoAgentService: CredoAgentService) {}
+
+  // initializeAgent(input)
+  @Post('initAgent')
+  @ApiOperation({ summary: 'initializeAgent' })
+  @ApiResponse({ status: 201, description: 'Agent initialized' })
+  async initAgent(@Body() body: InitAgentDto) {
+    // service method is `initializeAgent(input)`
+    return this.credoAgentService.initializeAgent(body);
+  }
+
+  // receiveInvitation(invitationUrl: string)
+  @Post('receiveInvitation')
+  @ApiOperation({ summary: 'Receive OOB invitation URL and process' })
+  async receiveInvitation(@Body() body: ReceiveInvitationDto) {
+    return this.credoAgentService.receiveInvitation(body.invitationUrl);
+  }
+
+  // getIssuerDid() — returns issuer DID string
+  @Get('getIssuerDid')
+  @ApiOperation({ summary: 'Get issuer DID' })
+  async getIssuerDid() {
+    return this.credoAgentService.getIssuerDid();
+  }
+
+  // Optionally expose agent instance (careful, returns internal agent object)
+  @Get('getAgent')
+  @ApiOperation({ summary: 'Get agent instance' })
+  async getAgent() {
+    return this.credoAgentService.getAgent();
+  }
+}
