@@ -165,10 +165,10 @@ echo "[8/8] Configuration de Prisma..."
 echo ""
 
 echo "Generation du client Prisma..."
-npx --yes prisma@5.15.0 generate
+npx --yes prisma@5.15.0 generate --schema=./prisma/schema.prisma
 
 echo "Execution des migrations..."
-npx --yes prisma@5.15.0 migrate deploy
+npx --yes prisma@5.15.0 migrate deploy --schema=./prisma/schema.prisma
 
 echo "[OK] Prisma configure"
 echo ""
