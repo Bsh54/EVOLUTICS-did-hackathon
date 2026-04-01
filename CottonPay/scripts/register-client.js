@@ -79,7 +79,7 @@ async function registerClient(publicKeyJWK, csrfToken) {
       clientId: 'cottonpay-client',
       clientName: CLIENT_NAME,
       relyingPartyId: 'cottonpay-rp',
-      logoUri: 'https://via.placeholder.com/150',
+      logoUri: 'http://localhost:3002/logo.png',
       redirectUris: [REDIRECT_URI],
       grantTypes: ['authorization_code'],
       clientAuthMethods: ['private_key_jwt'],
