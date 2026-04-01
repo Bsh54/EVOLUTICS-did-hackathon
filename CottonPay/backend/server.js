@@ -3,7 +3,7 @@
  * eSignet OIDC Integration
  */
 
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config({ path: __dirname + '/../.env' });
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
@@ -42,6 +42,12 @@ app.use(session({
 // Serve static files from frontend
 const path = require('path');
 app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Serve logo from project root
+app.get('/logo.png', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../logo.png'));
+});
+
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/certification', certificationRoutes);
