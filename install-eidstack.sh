@@ -140,7 +140,12 @@ echo ""
 echo "[7/8] Configuration du fichier .env..."
 echo ""
 
-if [ ! -f ".env" ]; then
+# Utiliser .env.development comme fichier principal
+if [ -f ".env.development" ]; then
+    echo "Copie de .env.development vers .env..."
+    cp .env.development .env
+    echo "[OK] Fichier .env configure depuis .env.development"
+elif [ ! -f ".env" ]; then
     cat > .env << 'EOF'
 DATABASE_URL="postgresql://postgres:postgres18@localhost:5432/ids-db?schema=public"
 AGENT_PUBLIC_URL="http://localhost:3021"
@@ -165,10 +170,10 @@ echo "[8/8] Configuration de Prisma..."
 echo ""
 
 echo "Generation du client Prisma..."
-npx --yes prisma@5.15.0 generate --schema=./prisma/schema.prisma
+npx prisma generate
 
 echo "Execution des migrations..."
-npx --yes prisma@5.15.0 migrate deploy --schema=./prisma/schema.prisma
+npx prisma migrate deploy
 
 echo "[OK] Prisma configure"
 echo ""
