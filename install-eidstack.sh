@@ -149,10 +149,11 @@ echo "[6/7] Configuration de Prisma..."
 echo ""
 
 echo "Generation du client Prisma..."
-npx prisma generate
+cd "$SCRIPT_DIR/eidStack-CMU"
+npx --yes prisma@5.15.0 generate
 
 echo "Execution des migrations..."
-npx prisma migrate deploy
+npx --yes prisma@5.15.0 migrate deploy
 
 echo "[OK] Prisma configure"
 echo ""
@@ -163,6 +164,7 @@ echo ""
 echo "[7/7] Compilation du projet..."
 echo ""
 
+cd "$SCRIPT_DIR/eidStack-CMU"
 npm run build
 echo "[OK] Projet compile"
 echo ""
