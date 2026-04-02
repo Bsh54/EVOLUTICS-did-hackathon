@@ -62,13 +62,15 @@ Dans Git Bash ou terminal Windows :
 
 ### Étape 3 : Installation de eidStack-CMU (WSL Ubuntu)
 
-Ouvrez un terminal WSL :
+Ouvrez un terminal WSL et naviguez vers le dossier du projet :
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom-utilisateur>/Downloads/CottonPay
+cd CottonPay
 ./install-eidstack.sh
 ```
+
+**Note :** Si vous avez cloné le projet dans Windows, le chemin depuis WSL sera `/mnt/c/chemin/vers/CottonPay`
 
 **Ce script effectue :**
 - Installation automatique de Node.js v18.17.1 via nvm
@@ -101,11 +103,11 @@ Dans Git Bash ou terminal Windows :
 
 ### Démarrage de eidStack-CMU (WSL Ubuntu)
 
-Dans un terminal WSL :
+Dans un terminal WSL, naviguez vers le dossier eidStack-CMU :
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom-utilisateur>/Downloads/CottonPay/eidStack-CMU
+cd CottonPay/eidStack-CMU
 
 # Démarrer PostgreSQL si nécessaire
 sudo service postgresql start
@@ -118,11 +120,11 @@ Le serveur démarre sur http://localhost:4000
 
 ### Initialisation de l'agent SSI (une seule fois)
 
-Dans un **autre terminal WSL** :
+Dans un **autre terminal WSL**, naviguez vers le dossier du projet :
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom-utilisateur>/Downloads/CottonPay
+cd CottonPay
 ./setup-agent.sh
 ```
 
