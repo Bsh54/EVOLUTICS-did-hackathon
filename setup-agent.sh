@@ -2,17 +2,43 @@
 # ============================================================
 # eidStack-CMU - Initialisation de l'Agent SSI
 # A executer APRES le demarrage du serveur (npm run start:dev)
+#
+# PREREQUIS : Enregistrement manuel du DID sur BCovrin
 # ============================================================
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 API_URL="http://localhost:4000"
+SEED="CottonPayBenin2024Issuer00000000"
 
 echo ""
 echo "============================================================"
 echo "  Initialisation de l'Agent SSI"
 echo "============================================================"
+echo ""
+
+# ============================================================
+# Verification de l'enregistrement BCovrin
+# ============================================================
+echo "[IMPORTANT] Prerequis : Enregistrement du DID sur BCovrin"
+echo ""
+echo "Avant de continuer, assurez-vous d'avoir enregistre le DID sur :"
+echo "  http://test.bcovrin.vonx.io/"
+echo ""
+echo "Parametres d'enregistrement :"
+echo "  - Seed : $SEED"
+echo "  - Alias : CottonPay-Issuer"
+echo "  - Role : ENDORSER (obligatoire)"
+echo ""
+read -p "Avez-vous deja enregistre le DID avec le role ENDORSER ? (o/n) " -n 1 -r
+echo ""
+if [[ ! $REPLY =~ ^[OoYy]$ ]]; then
+    echo ""
+    echo "Veuillez d'abord enregistrer le DID sur BCovrin, puis relancez ce script."
+    exit 1
+fi
+
 echo ""
 
 # ============================================================
@@ -39,13 +65,13 @@ echo ""
 
 INIT_RESPONSE=$(curl -s -X POST "$API_URL/credo-agent/initAgent" \
   -H "Content-Type: application/json" \
-  -d '{
-    "walletId": "cottonpay-issuer-wallet",
-    "walletKey": "cottonpay-secure-key-2024",
-    "endpoint": "http://localhost:3021",
-    "label": "CottonPay-Issuer",
-    "seed": "00000000000000000000000CottonPay"
-  }')
+  -d "{
+    \"walletId\": \"cottonpay-issuer-wallet\",
+    \"walletKey\": \"cottonpay-secure-key-2024\",
+    \"endpoint\": \"http://localhost:3021\",
+    \"label\": \"CottonPay-Issuer\",
+    \"seed\": \"$SEED\"
+  }")
 
 if echo "$INIT_RESPONSE" | grep -q "issuerDid"; then
     ISSUER_DID=$(echo "$INIT_RESPONSE" | grep -o '"issuerDid":"[^"]*"' | cut -d'"' -f4)

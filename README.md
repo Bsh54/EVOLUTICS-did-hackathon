@@ -38,7 +38,7 @@ Créez un nom d'utilisateur et mot de passe pour Ubuntu.
 
 **NB :** Tous les chemins relatifs supposent que vous êtes à la racine du projet CottonPay.
 
-### PARTIE 1 : CottonPay + eSignet (Windows)
+### PARTIE 1 
 
 #### Étape 1 : Cloner le projet
 
@@ -47,7 +47,7 @@ git clone <url-du-projet>
 cd CottonPay
 ```
 
-#### Étape 2 : Installation (une seule fois)
+#### Étape 2 : Installation 
 
 Dans Git Bash ou terminal Windows :
 
@@ -62,7 +62,7 @@ Dans Git Bash ou terminal Windows :
 - Création du fichier `.env` depuis `.env.example`
 - Création des dossiers `keys/` et `logs/`
 
-**Durée : 2-3 minutes**
+
 
 #### Étape 3 : Démarrage
 
@@ -79,7 +79,7 @@ Dans Git Bash ou terminal Windows :
 - Création de l'utilisateur de test
 - Démarrage du backend CottonPay
 
-**Durée : 4-6 minutes**
+
 
 #### Étape 4 : Accéder à l'application
 
@@ -99,15 +99,15 @@ Ouvrez votre navigateur : **http://localhost:3002**
 
 ### PARTIE 2 : eidStack-CMU (WSL Ubuntu)
 
-**NB :** Si vous avez cloné le projet dans Windows (par exemple `C:\Users\shadr\Downloads\CottonPay`), le chemin depuis WSL sera `/mnt/c/Users/shadr/Downloads/CottonPay`
+**NB :** Si vous avez cloné le projet dans Windows (par exemple `C:\Users\CottonPay`), le chemin depuis WSL sera `/mnt/c/Users/CottonPay`
 
-#### Étape 1 : Installation (une seule fois)
+#### Étape 1 : Installation 
 
 Ouvrez un terminal WSL :
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom-utilisateur>/Downloads/CottonPay
+cd /mnt/c/Users/CottonPay
 ./install-eidstack.sh
 ```
 
@@ -118,7 +118,6 @@ cd /mnt/c/Users/<votre-nom-utilisateur>/Downloads/CottonPay
 - Installation des dépendances npm avec --legacy-peer-deps
 - Configuration de Prisma et migrations
 
-**Durée : 5-10 minutes**
 
 #### Étape 2 : Démarrage
 
@@ -126,7 +125,7 @@ Dans un terminal WSL :
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom-utilisateur>/Downloads/CottonPay/eidStack-CMU
+cd /mnt/c/Users/CottonPay/eidStack-CMU
 
 # Démarrer PostgreSQL si nécessaire
 sudo service postgresql start
@@ -137,24 +136,39 @@ npm run start:dev
 
 Le serveur démarre sur **http://localhost:4000**
 
-#### Étape 3 : Initialisation de l'agent SSI (une seule fois)
+#### Étape 3 : Initialisation de l'agent SSI 
+
+**IMPORTANT : Avant d'exécuter ce script, vous devez enregistrer manuellement le DID sur BCovrin.**
+
+**Étape 3a : Enregistrement du DID sur BCovrin**
+
+1. Allez sur : **http://test.bcovrin.vonx.io/**
+2. Remplissez le formulaire d'enregistrement :
+   - **Seed** : `CottonPayBenin2024Issuer00000000`
+   - **Alias** : `CottonPay-Issuer`
+   - **Role** : Sélectionnez **ENDORSER** (obligatoire pour créer des schémas)
+3. Cliquez sur **"Register DID"**
+4. Notez le DID retourné (exemple : `NqLAnmLCKE1VSMA2JphDj6`)
+
+**Étape 3b : Initialisation de l'agent**
 
 Dans un **autre terminal WSL** :
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom-utilisateur>/Downloads/CottonPay
+cd /mnt/c/Users/CottonPay
 ./setup-agent.sh
 ```
 
+Le script vous demandera confirmation que vous avez bien enregistré le DID sur BCovrin.
+
 **Ce script effectue :**
-- Initialisation de l'agent SSI avec DID sur BCovrin
+- Initialisation de l'agent SSI avec le DID enregistré
 - Création des schémas (FarmerIdentityCredential, CottonSaleReceiptCredential)
 - Création des Credential Definitions
 
-**Durée : 1-2 minutes**
-
 **Note :** Ce script ne s'exécute qu'une seule fois après l'installation. L'agent se reconnecte automatiquement aux démarrages suivants.
+
 
 ---
 
@@ -246,116 +260,3 @@ Dans le terminal WSL où tourne le serveur, tapez `Ctrl+C`
 ## Équipe
 
 **Team EVOLUTICS - Université d'Abomey-Calavi (UAC)**
-
-## Licence
-
-MIT License
-
-## Utilisation
-
-### Accéder à l'application
-
-Ouvrez votre navigateur : **http://localhost:3002**
-
-### Identifiants de test
-
-- **NPI** : `1234567890123456`
-- **OTP** : `111111`
-
-### Flux d'authentification
-
-1. Cliquez sur **"Accéder"** sur la page d'accueil
-2. Cliquez sur **"Se connecter avec eSignet"**
-3. Entrez les identifiants de test
-4. Vous êtes redirigé vers le dashboard
-
-### Enregistrer une vente
-
-1. Sur le dashboard, remplissez le formulaire :
-   - Poids de coton (kg)
-   - Prix unitaire (FCFA/kg)
-2. Cliquez sur **"Enregistrer la vente"**
-3. Le système calcule le montant, simule le paiement Mobile Money et émet un credential vérifiable
-
-## Structure du projet
-
-```
-CottonPay/
-├── install.sh              # Installation CottonPay + eSignet (Windows)
-├── start.sh                # Démarrage CottonPay + eSignet (Windows)
-├── install-eidstack.sh     # Installation eidStack-CMU (WSL)
-├── setup-agent.sh          # Initialisation agent SSI (WSL, une fois)
-├── logo.png                # Logo CottonPay
-├── CottonPay/              # Application principale
-│   ├── frontend/           # Interface utilisateur (HTML/CSS/JS)
-│   ├── backend/            # API REST Node.js + Express
-│   └── scripts/            # Scripts d'enregistrement OIDC
-├── esignet-master/         # Infrastructure d'authentification (Docker)
-│   └── docker-compose/     # PostgreSQL, Redis, eSignet, Mock Identity
-└── eidStack-CMU/           # Service d'émission de credentials (WSL)
-    ├── src/                # API REST NestJS
-    └── prisma/             # Base de données PostgreSQL
-```
-
-## Services disponibles
-
-| Port | Service | Description | Environnement |
-|------|---------|-------------|---------------|
-| 3000 | eSignet UI | Interface d'authentification | Docker (Windows) |
-| 3002 | CottonPay | Application principale | Node.js (Windows) |
-| 3021 | Agent DIDComm | Transport credentials | WSL Ubuntu |
-| 4000 | eidStack-CMU | API émission credentials | WSL Ubuntu |
-| 5432 | PostgreSQL (eidStack) | Base de données eidStack | WSL Ubuntu |
-| 5455 | PostgreSQL (eSignet) | Base de données eSignet | Docker (Windows) |
-| 6379 | Redis | Cache eSignet | Docker (Windows) |
-| 8082 | Mock Identity | Système d'identité de test | Docker (Windows) |
-| 8088 | eSignet Backend | API OIDC | Docker (Windows) |
-
-## Logs
-
-```bash
-# Backend CottonPay (Windows)
-tail -f CottonPay/logs/backend.log
-
-# eSignet (Windows)
-docker compose -f esignet-master/docker-compose/docker-compose.yml logs -f
-
-# eidStack-CMU (WSL)
-# Les logs s'affichent directement dans le terminal où tourne npm run start:dev
-```
-
-## Arrêt des services
-
-### Arrêter CottonPay + eSignet (Windows)
-
-```bash
-# Arrêter le backend CottonPay
-kill $(cat .cottonpay.pid)
-rm .cottonpay.pid
-
-# Arrêter eSignet
-cd esignet-master/docker-compose
-docker compose down
-```
-
-### Arrêter eidStack-CMU (WSL)
-
-Dans le terminal WSL où tourne le serveur, tapez `Ctrl+C`
-
-## Technologies utilisées
-
-- **Frontend** : HTML5, CSS3, JavaScript
-- **Backend CottonPay** : Node.js 18, Express.js, Jose (JWT)
-- **Backend eidStack-CMU** : NestJS 10, Credo-TS 0.5, Prisma ORM
-- **Authentification** : eSignet (MOSIP), OIDC with PKCE, private_key_jwt
-- **SSI** : Hyperledger Aries, AnonCreds, Indy VDR
-- **Base de données** : PostgreSQL
-- **Infrastructure** : Docker, Docker Compose, WSL 2
-
-## Équipe
-
-**Team EVOLUTICS - Université d'Abomey-Calavi (UAC)**
-
-## Licence
-
-MIT License
