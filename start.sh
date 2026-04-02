@@ -76,7 +76,7 @@ echo ""
 
 echo "Verification de l'API eSignet (peut prendre 2-3 minutes)..."
 
-MAX_ATTEMPTS=90
+MAX_ATTEMPTS=120
 ATTEMPT=0
 
 printf "  "
