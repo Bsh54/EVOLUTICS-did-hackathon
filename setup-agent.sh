@@ -164,45 +164,60 @@ echo ""
 echo "[5/5] Creation des Credential Definitions..."
 echo ""
 
+# Fonction de retry pour les operations sur le ledger
+retry_creddef() {
+    local schema_id=$1
+    local tag=$2
+    local name=$3
+    local max_attempts=3
+    local attempt=1
+
+    while [ $attempt -le $max_attempts ]; do
+        echo "Tentative $attempt/$max_attempts pour $name..."
+
+        CREDDEF_RESPONSE=$(curl -s -X POST "$API_URL/issuance/credential-definitions" \
+          -H "Content-Type: application/json" \
+          -d "{
+            \"schemaId\": \"$schema_id\",
+            \"tag\": \"$tag\",
+            \"supportRevocation\": false
+          }")
+
+        if echo "$CREDDEF_RESPONSE" | grep -q "credDefId"; then
+            CREDDEF_ID=$(echo "$CREDDEF_RESPONSE" | grep -o '"credDefId":"[^"]*"' | cut -d'"' -f4)
+            echo "[OK] CredDef $name creee"
+            echo "     CredDef ID: $CREDDEF_ID"
+            return 0
+        else
+            if [ $attempt -lt $max_attempts ]; then
+                echo "[AVERTISSEMENT] Echec tentative $attempt, nouvelle tentative dans 10 secondes..."
+                sleep 10
+            fi
+        fi
+
+        attempt=$((attempt + 1))
+    done
+
+    echo "[ERREUR] Echec de creation de la CredDef $name apres $max_attempts tentatives"
+    echo "$CREDDEF_RESPONSE"
+    return 1
+}
+
 # Credential Definition pour FarmerIdentityCredential
 echo "Creation de la CredDef pour FarmerIdentityCredential..."
-FARMER_CREDDEF=$(curl -s -X POST "$API_URL/issuance/credential-definitions" \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"schemaId\": \"$FARMER_SCHEMA_ID\",
-    \"tag\": \"farmer-identity-v1\",
-    \"supportRevocation\": false
-  }")
-
-if echo "$FARMER_CREDDEF" | grep -q "credDefId"; then
-    FARMER_CREDDEF_ID=$(echo "$FARMER_CREDDEF" | grep -o '"credDefId":"[^"]*"' | cut -d'"' -f4)
-    echo "[OK] CredDef FarmerIdentityCredential creee"
-    echo "     CredDef ID: $FARMER_CREDDEF_ID"
-else
-    echo "[ERREUR] Echec de creation de la CredDef FarmerIdentityCredential"
-    echo "$FARMER_CREDDEF"
+if ! retry_creddef "$FARMER_SCHEMA_ID" "farmer-identity-v1" "FarmerIdentityCredential"; then
     exit 1
 fi
 
 echo ""
 
+# Attendre 5 secondes avant la prochaine CredDef
+echo "Attente de 5 secondes avant la prochaine CredDef..."
+sleep 5
+
 # Credential Definition pour CottonSaleReceiptCredential
 echo "Creation de la CredDef pour CottonSaleReceiptCredential..."
-SALE_CREDDEF=$(curl -s -X POST "$API_URL/issuance/credential-definitions" \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"schemaId\": \"$SALE_SCHEMA_ID\",
-    \"tag\": \"cotton-sale-receipt-v1\",
-    \"supportRevocation\": false
-  }")
-
-if echo "$SALE_CREDDEF" | grep -q "credDefId"; then
-    SALE_CREDDEF_ID=$(echo "$SALE_CREDDEF" | grep -o '"credDefId":"[^"]*"' | cut -d'"' -f4)
-    echo "[OK] CredDef CottonSaleReceiptCredential creee"
-    echo "     CredDef ID: $SALE_CREDDEF_ID"
-else
-    echo "[ERREUR] Echec de creation de la CredDef CottonSaleReceiptCredential"
-    echo "$SALE_CREDDEF"
+if ! retry_creddef "$SALE_SCHEMA_ID" "cotton-sale-receipt-v1" "CottonSaleReceiptCredential"; then
     exit 1
 fi
 
@@ -221,11 +236,11 @@ echo ""
 echo "Schemas crees:"
 echo "  1. FarmerIdentityCredential"
 echo "     Schema ID: $FARMER_SCHEMA_ID"
-echo "     CredDef ID: $FARMER_CREDDEF_ID"
 echo ""
 echo "  2. CottonSaleReceiptCredential"
 echo "     Schema ID: $SALE_SCHEMA_ID"
-echo "     CredDef ID: $SALE_CREDDEF_ID"
+echo ""
+echo "Credential Definitions creees avec succes !"
 echo ""
 echo "Le systeme est pret a emettre des credentials !"
 echo ""
