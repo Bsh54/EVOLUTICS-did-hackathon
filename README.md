@@ -1,5 +1,7 @@
 # CottonPay - Système d'Identité Numérique et de Paiement pour Producteurs de Coton
 
+![CottonPay Logo](logo.png)
+
 CottonPay est une plateforme complète d'identité numérique et de paiement destinée aux producteurs de coton au Bénin. Le système combine l'authentification biométrique via eSignet (MOSIP) et l'émission de credentials vérifiables via eidStack-CMU.
 
 ## Architecture du système
@@ -36,15 +38,15 @@ Créez un nom d'utilisateur et mot de passe pour Ubuntu.
 
 ## Installation et Démarrage
 
-**NB :** Tous les chemins relatifs supposent que vous êtes à la racine du projet CottonPay.
+**NB :** Tous les chemins relatifs supposent que vous êtes à la racine du projet EVOLUTICS-did-hackathon.
 
 ### PARTIE 1 
 
 #### Étape 1 : Cloner le projet
 
 ```bash
-git clone <url-du-projet>
-cd CottonPay
+git clone https://github.com/Bsh54/EVOLUTICS-did-hackathon.git
+cd EVOLUTICS-did-hackathon
 ```
 
 #### Étape 2 : Installation 
@@ -99,7 +101,7 @@ Ouvrez votre navigateur : **http://localhost:3002**
 
 ### PARTIE 2 : eidStack-CMU (WSL Ubuntu)
 
-**NB :** Si vous avez cloné le projet dans Windows (par exemple `C:\Users\CottonPay`), le chemin depuis WSL sera `/mnt/c/Users/CottonPay`
+**NB :** Si vous avez cloné le projet dans Windows (par exemple `C:\Users\shadr\EVOLUTICS-did-hackathon`), le chemin depuis WSL sera `/mnt/c/Users/shadr/EVOLUTICS-did-hackathon`
 
 #### Étape 1 : Installation 
 
@@ -107,7 +109,7 @@ Ouvrez un terminal WSL :
 
 ```bash
 wsl
-cd /mnt/c/Users/CottonPay
+cd /mnt/c/Users/shadr/EVOLUTICS-did-hackathon
 ./install-eidstack.sh
 ```
 
@@ -125,7 +127,7 @@ Dans un terminal WSL :
 
 ```bash
 wsl
-cd /mnt/c/Users/CottonPay/eidStack-CMU
+cd /mnt/c/Users/shadr/EVOLUTICS-did-hackathon/eidStack-CMU
 
 # Démarrer PostgreSQL si nécessaire
 sudo service postgresql start
@@ -156,7 +158,7 @@ Dans un **autre terminal WSL** :
 
 ```bash
 wsl
-cd /mnt/c/Users/CottonPay
+cd /mnt/c/Users/shadr/EVOLUTICS-did-hackathon
 ./setup-agent.sh
 ```
 
@@ -185,7 +187,7 @@ Le script vous demandera confirmation que vous avez bien enregistré le DID sur 
 ## Structure du projet
 
 ```
-CottonPay/
+EVOLUTICS-did-hackathon/
 ├── install.sh              # Installation CottonPay + eSignet (Windows)
 ├── start.sh                # Démarrage CottonPay + eSignet (Windows)
 ├── install-eidstack.sh     # Installation eidStack-CMU (WSL)
