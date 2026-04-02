@@ -2,7 +2,7 @@
 
 ![CottonPay Logo](logo.png)
 
-CottonPay est une plateforme complète d'identité numérique et de paiement destinée aux producteurs de coton au Bénin. Le système combine l'authentification biométrique via eSignet (MOSIP) et l'émission de credentials vérifiables via eidStack-CMU.
+CottonPay est une plateforme complète d'identité numérique et de paiement destinée aux producteurs de coton au Bénin. Le système combine l'authentification par OTP via eSignet (MOSIP) et l'émission de credentials vérifiables via eidStack-CMU.
 
 ## Architecture du système
 
@@ -101,7 +101,7 @@ Ouvrez votre navigateur : **http://localhost:3002**
 
 ### PARTIE 2 : eidStack-CMU (WSL Ubuntu)
 
-**NB :** Si vous avez cloné le projet dans Windows (par exemple `C:\Users\shadr\EVOLUTICS-did-hackathon`), le chemin depuis WSL sera `/mnt/c/Users/shadr/EVOLUTICS-did-hackathon`
+**NB :** Si vous avez cloné le projet dans Windows (par exemple `C:\Users\EVOLUTICS-did-hackathon`), le chemin depuis WSL sera `/mnt/c/Users/EVOLUTICS-did-hackathon`
 
 #### Étape 1 : Installation 
 
@@ -109,7 +109,7 @@ Ouvrez un terminal WSL :
 
 ```bash
 wsl
-cd /mnt/c/Users/shadr/EVOLUTICS-did-hackathon
+cd /mnt/c/Users/EVOLUTICS-did-hackathon
 ./install-eidstack.sh
 ```
 
@@ -127,7 +127,7 @@ Dans un terminal WSL :
 
 ```bash
 wsl
-cd /mnt/c/Users/shadr/EVOLUTICS-did-hackathon/eidStack-CMU
+cd /mnt/c/Users/EVOLUTICS-did-hackathon/eidStack-CMU
 
 # Démarrer PostgreSQL si nécessaire
 sudo service postgresql start
@@ -158,7 +158,7 @@ Dans un **autre terminal WSL** :
 
 ```bash
 wsl
-cd /mnt/c/Users/shadr/EVOLUTICS-did-hackathon
+cd /mnt/c/Users/EVOLUTICS-did-hackathon
 ./setup-agent.sh
 ```
 
@@ -169,7 +169,6 @@ Le script vous demandera confirmation que vous avez bien enregistré le DID sur 
 - Création des schémas (FarmerIdentityCredential, CottonSaleReceiptCredential)
 - Création des Credential Definitions
 
-**Note :** Ce script ne s'exécute qu'une seule fois après l'installation. L'agent se reconnecte automatiquement aux démarrages suivants.
 
 
 ---
