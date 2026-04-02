@@ -195,6 +195,102 @@ Le script vous demandera confirmation que vous avez bien enregistré le DID sur 
 
 ---
 
+## PARTIE 3 : e-IDapp_CMU (Portefeuille Mobile)
+
+**e-IDapp_CMU** est l'application mobile qui permet aux producteurs de recevoir et stocker leurs credentials vérifiables sur leur smartphone.
+
+### Prérequis
+
+| Logiciel | Version minimale | Notes |
+|----------|------------------|-------|
+| **Node.js** | >= 20.x | Version LTS recommandée |
+| **npm** ou **Yarn** | npm 9+ / Yarn 1.22+ | Gestionnaire de paquets |
+| **React Native CLI** | Latest | `npm install -g @react-native-community/cli` |
+| **Java JDK** | 17 | Requis pour les builds Android |
+| **Android Studio** | Latest | Avec Android SDK, NDK, et émulateur |
+| **Xcode** | 15+ | Builds iOS uniquement (macOS requis) |
+| **CocoaPods** | Latest | Gestionnaire de dépendances iOS |
+| **Ruby** | 2.7+ | Requis pour CocoaPods (Bundler) |
+
+**Variables d'environnement importantes :**
+- `ANDROID_HOME` : Chemin vers Android SDK
+- `JAVA_HOME` : Chemin vers Java JDK 17
+
+### Étape 1 : Installation
+
+```bash
+cd e-IDapp_CMU
+
+# Installer les dépendances
+npm install
+
+# iOS uniquement - Installer CocoaPods
+bundle install
+cd ios && bundle exec pod install && cd ..
+```
+
+### Étape 2 : Configuration
+
+Créer le fichier `.env` :
+
+```bash
+cp .env.sample .env
+```
+
+Éditer `.env` avec les valeurs suivantes :
+
+```
+GENESIS_URL=https://test.bcovrin.vonx.io/genesis
+MEDIATOR_URL=https://your-mediator.example.com/createMediatorInvitation
+```
+
+### Étape 3 : Démarrage
+
+**Démarrer Metro bundler :**
+
+```bash
+npm start
+```
+
+**Dans un autre terminal, lancer l'application :**
+
+```bash
+# Pour Android
+npm run android
+
+# Pour iOS
+npm run ios
+```
+
+L'application démarre sur l'émulateur ou le device connecté.
+
+### Étape 4 : Réception des credentials
+
+**Flux complet de réception :**
+
+1. **Sur CottonPay Web** : Après l'enregistrement d'une vente, un QR code est généré contenant l'invitation DIDComm
+2. **Sur e-IDapp_CMU** : 
+   - Ouvrir l'application mobile
+   - Cliquer sur **"Scan QR"**
+   - Scanner le QR code affiché sur CottonPay
+3. **Traitement automatique** :
+   - L'app décode l'invitation
+   - Affiche un aperçu du credential (attributs, émetteur)
+   - Deux options : **View Details** ou **Accept**
+4. **Stockage sécurisé** :
+   - Le credential est reçu via DIDComm
+   - Stocké chiffré dans Hyperledger Aries Askar
+   - Visible dans la liste des credentials
+
+**Technologies utilisées :**
+- **React Native 0.81.4** avec TypeScript
+- **Credo-TS 0.5.17** (Hyperledger Aries)
+- **Aries Askar** pour le stockage chiffré
+- **AnonCreds** pour les credentials anonymes
+- **Indy VDR** pour l'accès au ledger BCovrin
+
+---
+
 ## Utilisation
 
 ### Enregistrer une vente
@@ -204,6 +300,8 @@ Le script vous demandera confirmation que vous avez bien enregistré le DID sur 
    - Prix unitaire (FCFA/kg)
 2. Cliquez sur **"Enregistrer la vente"**
 3. Le système calcule le montant, simule le paiement Mobile Money et émet un credential vérifiable
+4. Un QR code s'affiche contenant l'invitation DIDComm
+5. Scannez ce QR code avec l'application mobile e-IDapp_CMU pour recevoir le credential
 
 ## Structure du projet
 
@@ -220,9 +318,13 @@ EVOLUTICS-did-hackathon/
 │   └── scripts/            # Scripts d'enregistrement OIDC
 ├── esignet-master/         # Infrastructure d'authentification (Docker)
 │   └── docker-compose/     # PostgreSQL, Redis, eSignet, Mock Identity
-└── eidStack-CMU/           # Service d'émission de credentials (WSL)
-    ├── src/                # API REST NestJS
-    └── prisma/             # Base de données PostgreSQL
+├── eidStack-CMU/           # Service d'émission de credentials (WSL)
+│   ├── src/                # API REST NestJS
+│   └── prisma/             # Base de données PostgreSQL
+└── e-IDapp_CMU/            # Application mobile portefeuille (Android/iOS)
+    ├── src/                # Code source React Native
+    ├── android/            # Projet Android natif
+    └── ios/                # Projet iOS natif
 ```
 
 ## Services disponibles
@@ -275,8 +377,9 @@ Dans le terminal WSL où tourne le serveur, tapez `Ctrl+C`
 - **Frontend** : HTML5, CSS3, JavaScript
 - **Backend CottonPay** : Node.js 18, Express.js, Jose (JWT)
 - **Backend eidStack-CMU** : NestJS 10, Credo-TS 0.5, Prisma ORM
+- **Mobile e-IDapp_CMU** : React Native 0.81.4, TypeScript, Credo-TS 0.5.17
 - **Authentification** : eSignet (MOSIP), OIDC with PKCE, private_key_jwt
-- **SSI** : Hyperledger Aries, AnonCreds, Indy VDR
+- **SSI** : Hyperledger Aries, AnonCreds, Indy VDR, Aries Askar
 - **Base de données** : PostgreSQL
 - **Infrastructure** : Docker, Docker Compose, WSL 2
 
