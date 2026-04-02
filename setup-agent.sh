@@ -37,7 +37,7 @@ echo ""
 echo "[2/5] Initialisation de l'agent SSI..."
 echo ""
 
-INIT_RESPONSE=$(curl -s -X POST "$API_URL/credo-agent/initialize" \
+INIT_RESPONSE=$(curl -s -X POST "$API_URL/credo-agent/initAgent" \
   -H "Content-Type: application/json" \
   -d '{
     "walletId": "cottonpay-issuer-wallet",
@@ -47,8 +47,8 @@ INIT_RESPONSE=$(curl -s -X POST "$API_URL/credo-agent/initialize" \
     "seed": "00000000000000000000000CottonPay"
   }')
 
-if echo "$INIT_RESPONSE" | grep -q "did:indy"; then
-    ISSUER_DID=$(echo "$INIT_RESPONSE" | grep -o '"did":"[^"]*"' | cut -d'"' -f4)
+if echo "$INIT_RESPONSE" | grep -q "issuerDid"; then
+    ISSUER_DID=$(echo "$INIT_RESPONSE" | grep -o '"issuerDid":"[^"]*"' | cut -d'"' -f4)
     echo "[OK] Agent initialise"
     echo "     DID: $ISSUER_DID"
 else
