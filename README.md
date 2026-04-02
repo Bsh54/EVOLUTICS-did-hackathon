@@ -1,6 +1,8 @@
 # CottonPay - Système d'Identité Numérique et de Paiement pour Producteurs de Coton
 
-![CottonPay Logo](logo.png)
+<p align="center">
+  <img src="logo.png" alt="CottonPay Logo" width="200"/>
+</p>
 
 CottonPay est une plateforme complète d'identité numérique et de paiement destinée aux producteurs de coton au Bénin. Le système combine l'authentification par OTP via eSignet (MOSIP) et l'émission de credentials vérifiables via eidStack-CMU.
 
@@ -137,6 +139,26 @@ npm run start:dev
 ```
 
 Le serveur démarre sur **http://localhost:4000**
+
+#### Étape 2b : Configuration de ngrok (obligatoire)
+
+**ngrok est nécessaire pour exposer l'agent DIDComm (port 3021) sur internet afin de recevoir les credentials.**
+
+1. **Démarrer ngrok** (dans Windows ou WSL) :
+```bash
+ngrok http 3021
+```
+
+2. **Copier l'URL publique** générée (exemple : `https://xxxx-xxxx.ngrok-free.app`)
+
+3. **Mettre à jour le fichier .env** dans `eidStack-CMU` :
+```bash
+AGENT_PUBLIC_URL="https://votre-url-ngrok.ngrok-free.app"
+```
+
+4. **Redémarrer le serveur eidStack** pour prendre en compte la nouvelle URL
+
+**Note :** Si vous avez un compte ngrok avec domaine fixe, l'URL ne changera pas à chaque démarrage.
 
 #### Étape 3 : Initialisation de l'agent SSI 
 
