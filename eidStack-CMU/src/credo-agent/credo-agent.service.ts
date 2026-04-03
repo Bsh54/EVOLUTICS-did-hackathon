@@ -193,34 +193,37 @@ export class CredoAgentService {
       did: string;
       verkey?: string;
     }
+
+    // Calculer le DID à partir du seed (déterministe)
+    // Le DID est dérivé de la clé publique Ed25519 générée depuis le seed
+    const privateKey = TypedArrayEncoder.fromString(seed);
+    const keyPair = await ariesAskar.keyGenerate({ algorithm: 'ed25519', seed: privateKey });
+    const publicKeyBytes = keyPair.publicBytes;
+
+    // Le DID Indy est le base58 des 16 premiers octets du hash SHA256 de la clé publique
+    const crypto = require('crypto');
+    const hash = crypto.createHash('sha256').update(publicKeyBytes).digest();
+    const did = TypedArrayEncoder.toBase58(hash.slice(0, 16));
+
+    console.log('✅ Using pre-registered DID on BCovrin:', did);
+    console.log('⚠️  IMPORTANT: Make sure this DID is registered on BCovrin with ENDORSER role!');
+
     try {
-      const response = await axios.post<BcovrinResponse>(process.env.BCOVRIN_TESTNET_URL, {
-        role: 'ENDORSER',
-        alias: 'eID-Backend-Agent', //agent.config.label,
-        seed,
+      // Import the DID into the wallet with private key
+      await agent.dids.import({
+        did: `did:indy:bcovrin:test:${did}`,
+        overwrite: true,
+        privateKeys: [
+          {
+            keyType: KeyType.Ed25519,
+            privateKey: TypedArrayEncoder.fromString(seed),
+          },
+        ],
       });
 
-      if (response.data && response.data.did) {
-        console.log('✅ Credo Agent DID registered on BCovrin:', response.data.did);
-
-        // Import the DID into the wallet with private key
-        await agent.dids.import({
-          did: `did:indy:bcovrin:test:${response.data.did}`,
-          overwrite: true,
-          privateKeys: [
-            {
-              keyType: KeyType.Ed25519,
-              privateKey: TypedArrayEncoder.fromString(seed),
-            },
-          ],
-        });
-
-        return response.data.did;
-      } else {
-        throw new Error('Invalid response from BCovrin registration API');
-      }
+      return did;
     } catch (err: any) {
-      console.error('❌ Failed to register DID on BCovrin:', err.message);
+      console.error('❌ Failed to import DID into wallet:', err.message);
       throw err;
     }
   }
