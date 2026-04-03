@@ -128,8 +128,29 @@ REQUIRED_CONTAINERS=("redis-server" "docker-compose-database-1" "docker-compose-
 
 for container in "${REQUIRED_CONTAINERS[@]}"; do
     if ! docker ps --format '{{.Names}}' | grep -q "^${container}$"; then
-        echo "[ERREUR] Le conteneur $container n'est pas demarre"
-        CONTAINERS_OK=false
+        echo "[AVERTISSEMENT] Le conteneur $container n'est pas demarre"
+
+        # Si c'est esignet-ui, tenter un redemarrage
+        if [ "$container" = "docker-compose-esignet-ui-1" ]; then
+            echo "Tentative de redemarrage d'esignet-ui..."
+            cd "$SCRIPT_DIR/esignet-master/docker-compose"
+            docker compose restart esignet-ui
+
+            # Attendre 30 secondes pour le redemarrage
+            sleep 30
+
+            # Verifier a nouveau
+            if docker ps --format '{{.Names}}' | grep -q "^${container}$"; then
+                echo "[OK] esignet-ui redemarre avec succes"
+            else
+                echo "[ERREUR] Echec du redemarrage d'esignet-ui"
+                CONTAINERS_OK=false
+            fi
+
+            cd "$SCRIPT_DIR"
+        else
+            CONTAINERS_OK=false
+        fi
     fi
 done
 
