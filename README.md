@@ -6,6 +6,12 @@
 
 CottonPay est une plateforme complète d'identité numérique et de paiement destinée aux producteurs de coton au Bénin. Le système combine l'authentification par OTP via eSignet (MOSIP) et l'émission de credentials vérifiables via eidStack-CMU.
 
+## 📊 Présentation du Projet
+
+**[Télécharger la présentation PowerPoint](./EVOLUTICS-presentation.pptx)**
+
+Cette présentation contient tous les détails du projet CottonPay pour le hackathon EVOLUTICS.
+
 
 ## Prérequis
 
