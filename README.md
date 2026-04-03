@@ -8,7 +8,7 @@ CottonPay est une plateforme complète d'identité numérique et de paiement des
 
 ## 📊 Présentation du Projet
 
-**[Télécharger la présentation PowerPoint](https://docs.google.com/presentation/d/17TTFGQCAaX6_SbGGxSC2g9J1N__kM9gY/edit?usp=sharing&ouid=101533659653011151923&rtpof=true&sd=true)**
+**<a href="https://docs.google.com/presentation/d/17TTFGQCAaX6_SbGGxSC2g9J1N__kM9gY/edit?usp=sharing&ouid=101533659653011151923&rtpof=true&sd=true" target="_blank">Télécharger la présentation PowerPoint</a>**
 
 
 
