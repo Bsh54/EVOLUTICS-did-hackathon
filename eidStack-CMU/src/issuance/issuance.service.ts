@@ -113,7 +113,19 @@ export class IssuanceService {
     });
 
     if (schemaResult.schemaState.state === 'failed') {
-      throw new Error(`Schema creation failed: ${schemaResult.schemaState.reason}`);
+      const errorMsg = `Schema creation failed: ${schemaResult.schemaState.reason}`;
+
+      // Check if it's a permission error
+      if (schemaResult.schemaState.reason?.includes('UnauthorizedClientRequest') ||
+          schemaResult.schemaState.reason?.includes('forbidden')) {
+        console.error('❌ PERMISSION ERROR: DID does not have ENDORSER role on BCovrin ledger');
+        console.error('💡 Solution: Manually register your DID with ENDORSER role at:');
+        console.error('💡 http://test.bcovrin.vonx.io/');
+        console.error('💡 Your DID:', issuerDid);
+        throw new Error('Permission denied: DID lacks ENDORSER role. Please register manually on BCovrin with ENDORSER role.');
+      }
+
+      throw new Error(errorMsg);
     }
     if (schemaResult.schemaState.state !== 'finished') {
       throw new Error('Unexpected schema registration state.');

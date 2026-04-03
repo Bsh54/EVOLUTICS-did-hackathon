@@ -192,38 +192,52 @@ export class CredoAgentService {
     interface BcovrinResponse {
       did: string;
       verkey?: string;
+      role?: string;
     }
-
-    // Calculer le DID à partir du seed (déterministe)
-    // Le DID est dérivé de la clé publique Ed25519 générée depuis le seed
-    const privateKey = TypedArrayEncoder.fromString(seed);
-    const keyPair = await ariesAskar.keyGenerate({ algorithm: 'ed25519', seed: privateKey });
-    const publicKeyBytes = keyPair.publicBytes;
-
-    // Le DID Indy est le base58 des 16 premiers octets du hash SHA256 de la clé publique
-    const crypto = require('crypto');
-    const hash = crypto.createHash('sha256').update(publicKeyBytes).digest();
-    const did = TypedArrayEncoder.toBase58(hash.slice(0, 16));
-
-    console.log('✅ Using pre-registered DID on BCovrin:', did);
-    console.log('⚠️  IMPORTANT: Make sure this DID is registered on BCovrin with ENDORSER role!');
-
     try {
-      // Import the DID into the wallet with private key
-      await agent.dids.import({
-        did: `did:indy:bcovrin:test:${did}`,
-        overwrite: true,
-        privateKeys: [
-          {
-            keyType: KeyType.Ed25519,
-            privateKey: TypedArrayEncoder.fromString(seed),
-          },
-        ],
+      console.log('🔄 Registering DID on BCovrin with ENDORSER role...');
+
+      const response = await axios.post<BcovrinResponse>(process.env.BCOVRIN_TESTNET_URL, {
+        role: 'ENDORSER',
+        alias: 'eID-Backend-Agent',
+        seed,
       });
 
-      return did;
+      if (response.data && response.data.did) {
+        console.log('✅ DID registered on BCovrin:', response.data.did);
+
+        // Log the full response to see what BCovrin returned
+        console.log('📋 BCovrin response:', JSON.stringify(response.data, null, 2));
+
+        // Warning if role is not explicitly confirmed
+        if (!response.data.role || response.data.role !== 'ENDORSER') {
+          console.warn('⚠️  WARNING: BCovrin may not have granted ENDORSER role!');
+          console.warn('⚠️  If schema creation fails, manually register this DID with ENDORSER role at:');
+          console.warn('⚠️  http://test.bcovrin.vonx.io/');
+          console.warn('⚠️  Seed:', seed);
+          console.warn('⚠️  DID:', response.data.did);
+        }
+
+        // Import the DID into the wallet with private key
+        await agent.dids.import({
+          did: `did:indy:bcovrin:test:${response.data.did}`,
+          overwrite: true,
+          privateKeys: [
+            {
+              keyType: KeyType.Ed25519,
+              privateKey: TypedArrayEncoder.fromString(seed),
+            },
+          ],
+        });
+
+        return response.data.did;
+      } else {
+        throw new Error('Invalid response from BCovrin registration API');
+      }
     } catch (err: any) {
-      console.error('❌ Failed to import DID into wallet:', err.message);
+      console.error('❌ Failed to register DID on BCovrin:', err.message);
+      console.error('💡 Try manually registering at: http://test.bcovrin.vonx.io/');
+      console.error('💡 Seed:', seed);
       throw err;
     }
   }
