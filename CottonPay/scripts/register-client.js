@@ -111,6 +111,12 @@ async function registerClient(publicKeyJWK, csrfToken) {
 
     return clientId;
   } catch (error) {
+    // Si le client existe déjà, utiliser le clientId existant
+    if (error.response?.data?.errors?.[0]?.errorCode === 'duplicate_client_id') {
+      console.log(' Client OIDC déjà enregistré, utilisation du client existant');
+      return 'cottonpay-client'; // Retourner le clientId défini dans clientData
+    }
+
     console.error('Erreur lors de l\'enregistrement:', error.response?.data || error.message);
     throw error;
   }

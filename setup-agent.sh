@@ -10,7 +10,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 API_URL="http://localhost:4000"
-SEED="CottonPayBenin2024Issuer00000000"
+SEED="CottonPayBenin2024Issuer00000001"
 
 echo ""
 echo "============================================================"
@@ -42,9 +42,41 @@ fi
 echo ""
 
 # ============================================================
+# Suppression de l'ancien wallet (si existe)
+# ============================================================
+echo "[1/6] Nettoyage de l'ancien wallet (si existe)..."
+echo ""
+
+WALLET_CLEANED=false
+
+if [ -d "$HOME/.askar" ]; then
+    rm -rf "$HOME/.askar"
+    echo "[OK] Ancien wallet Askar supprime"
+    WALLET_CLEANED=true
+fi
+
+if [ -d "$HOME/.local/share/askar" ]; then
+    rm -rf "$HOME/.local/share/askar"
+    echo "[OK] Ancien wallet Askar (local) supprime"
+    WALLET_CLEANED=true
+fi
+
+if [ -d "$HOME/.indy_client" ]; then
+    rm -rf "$HOME/.indy_client"
+    echo "[OK] Ancien wallet Indy supprime"
+    WALLET_CLEANED=true
+fi
+
+if [ "$WALLET_CLEANED" = false ]; then
+    echo "[OK] Aucun ancien wallet trouve (premiere installation)"
+fi
+
+echo ""
+
+# ============================================================
 # Verification que le serveur est demarre
 # ============================================================
-echo "[1/5] Verification du serveur..."
+echo "[2/6] Verification du serveur..."
 echo ""
 
 if ! curl -sf "$API_URL/api/docs" &> /dev/null; then
@@ -60,7 +92,7 @@ echo ""
 # ============================================================
 # Initialisation de l'agent
 # ============================================================
-echo "[2/5] Initialisation de l'agent SSI..."
+echo "[3/6] Initialisation de l'agent SSI..."
 echo ""
 
 INIT_RESPONSE=$(curl -s -X POST "$API_URL/credo-agent/initAgent" \
@@ -88,7 +120,7 @@ echo ""
 # ============================================================
 # Creation du schema FarmerIdentityCredential
 # ============================================================
-echo "[3/5] Creation du schema FarmerIdentityCredential..."
+echo "[4/6] Creation du schema FarmerIdentityCredential..."
 echo ""
 
 FARMER_SCHEMA=$(curl -s -X POST "$API_URL/issuance/schemas" \
@@ -123,7 +155,7 @@ echo ""
 # ============================================================
 # Creation du schema CottonSaleReceiptCredential
 # ============================================================
-echo "[4/5] Creation du schema CottonSaleReceiptCredential..."
+echo "[5/6] Creation du schema CottonSaleReceiptCredential..."
 echo ""
 
 SALE_SCHEMA=$(curl -s -X POST "$API_URL/issuance/schemas" \
@@ -161,7 +193,7 @@ echo ""
 # ============================================================
 # Creation des Credential Definitions
 # ============================================================
-echo "[5/5] Creation des Credential Definitions..."
+echo "[6/6] Creation des Credential Definitions..."
 echo ""
 
 # Fonction de retry pour les operations sur le ledger

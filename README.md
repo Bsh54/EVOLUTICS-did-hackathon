@@ -6,13 +6,6 @@
 
 CottonPay est une plateforme complète d'identité numérique et de paiement destinée aux producteurs de coton au Bénin. Le système combine l'authentification par OTP via eSignet (MOSIP) et l'émission de credentials vérifiables via eidStack-CMU.
 
-## Architecture du système
-
-Le système est composé de trois modules :
-
-1. **CottonPay** - Application web (frontend + backend Node.js)
-2. **eSignet** - Authentification OIDC avec biométrie (Docker)
-3. **eidStack-CMU** - Émission de Verifiable Credentials (WSL Ubuntu)
 
 ## Prérequis
 
@@ -372,16 +365,6 @@ docker compose down
 
 Dans le terminal WSL où tourne le serveur, tapez `Ctrl+C`
 
-## Technologies utilisées
-
-- **Frontend** : HTML5, CSS3, JavaScript
-- **Backend CottonPay** : Node.js 18, Express.js, Jose (JWT)
-- **Backend eidStack-CMU** : NestJS 10, Credo-TS 0.5, Prisma ORM
-- **Mobile e-IDapp_CMU** : React Native 0.81.4, TypeScript, Credo-TS 0.5.17
-- **Authentification** : eSignet (MOSIP), OIDC with PKCE, private_key_jwt
-- **SSI** : Hyperledger Aries, AnonCreds, Indy VDR, Aries Askar
-- **Base de données** : PostgreSQL
-- **Infrastructure** : Docker, Docker Compose, WSL 2
 
 ## Équipe
 

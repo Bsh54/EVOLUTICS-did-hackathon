@@ -36,8 +36,9 @@ fi
 echo "[OK] Installation detectee"
 
 # Verifier que Docker est actif
-if ! docker info &> /dev/null; then
-    echo "[ERREUR] Docker n'est pas en cours d'execution"
+echo "Verification de Docker..."
+if ! docker ps &> /dev/null; then
+    echo "[ERREUR] Docker n'est pas en cours d'execution ou ne repond pas"
     echo "         Demarrez Docker Desktop et relancez ce script"
     exit 1
 fi
@@ -74,9 +75,9 @@ cd "$SCRIPT_DIR"
 echo "[3/5] Attente du demarrage d'eSignet..."
 echo ""
 
-echo "Verification de l'API eSignet (peut prendre 2-3 minutes)..."
+echo "Verification de l'API eSignet (peut prendre 5-10 minutes)..."
 
-MAX_ATTEMPTS=120
+MAX_ATTEMPTS=200
 ATTEMPT=0
 
 printf "  "
@@ -116,6 +117,29 @@ while [ $ATTEMPT -lt 30 ]; do
     sleep 3
     ATTEMPT=$((ATTEMPT + 1))
 done
+
+echo ""
+
+# Verification finale de tous les conteneurs
+echo "Verification finale de tous les conteneurs..."
+CONTAINERS_OK=true
+
+REQUIRED_CONTAINERS=("redis-server" "docker-compose-database-1" "docker-compose-mock-identity-system-1" "docker-compose-esignet-1" "docker-compose-esignet-ui-1")
+
+for container in "${REQUIRED_CONTAINERS[@]}"; do
+    if ! docker ps --format '{{.Names}}' | grep -q "^${container}$"; then
+        echo "[ERREUR] Le conteneur $container n'est pas demarre"
+        CONTAINERS_OK=false
+    fi
+done
+
+if [ "$CONTAINERS_OK" = true ]; then
+    echo "[OK] Tous les conteneurs sont demarres"
+else
+    echo "[ERREUR] Certains conteneurs ne sont pas demarres"
+    echo "         Verifiez avec: docker ps"
+    exit 1
+fi
 
 echo ""
 
