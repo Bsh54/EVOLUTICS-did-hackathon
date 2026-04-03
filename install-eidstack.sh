@@ -126,11 +126,13 @@ echo ""
 cd "$SCRIPT_DIR/eidStack-CMU"
 
 if [ -d "node_modules" ]; then
-    echo "[INFO] node_modules existe deja, reinstallation..."
-    rm -rf node_modules package-lock.json
+    echo "[OK] node_modules existe deja, verification des dependances..."
+    npm install --legacy-peer-deps
+else
+    echo "Installation des dependances npm..."
+    npm install --legacy-peer-deps
 fi
 
-npm install --legacy-peer-deps
 echo "[OK] Dependances npm installees"
 echo ""
 
