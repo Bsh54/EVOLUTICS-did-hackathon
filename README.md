@@ -8,9 +8,9 @@ CottonPay est une plateforme complète d'identité numérique et de paiement des
 
 ## 📊 Présentation du Projet
 
-**[Télécharger la présentation PowerPoint](./EVOLUTICS-presentation.pptx)**
+**[Télécharger la présentation PowerPoint](https://docs.google.com/presentation/d/17TTFGQCAaX6_SbGGxSC2g9J1N__kM9gY/edit?usp=sharing&ouid=101533659653011151923&rtpof=true&sd=true)**
 
-Cette présentation contient tous les détails du projet CottonPay pour le hackathon EVOLUTICS.
+
 
 
 ## Prérequis
