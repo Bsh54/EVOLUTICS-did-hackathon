@@ -50,18 +50,6 @@ git clone https://github.com/Bsh54/EVOLUTICS-did-hackathon.git
 cd EVOLUTICS-did-hackathon
 ```
 
-#### Étape 1.5 : Correction des fins de ligne (Linux/WSL uniquement)
-
-Si vous êtes sur Linux ou WSL, convertissez les fins de ligne des scripts bash :
-
-```bash
-sed -i 's/\r$//' install-eidstack.sh
-sed -i 's/\r$//' install.sh
-sed -i 's/\r$//' start.sh
-sed -i 's/\r$//' setup-agent.sh
-```
-
-**Note :** Cette étape est nécessaire car les scripts peuvent avoir des fins de ligne Windows (CRLF) qui causent des erreurs sur Linux/WSL.
 
 #### Étape 2 : Installation 
 
@@ -116,6 +104,19 @@ Ouvrez votre navigateur : **http://localhost:3002**
 ### PARTIE 2 : eidStack-CMU (WSL Ubuntu)
 
 **NB :** Si vous avez cloné le projet dans Windows (par exemple `C:\Users\EVOLUTICS-did-hackathon`), le chemin depuis WSL sera `/mnt/c/Users/EVOLUTICS-did-hackathon`
+
+#### Étape 0 : Correction des fins de ligne (obligatoire)
+
+Avant l'installation, convertissez les fins de ligne des scripts bash :
+
+```bash
+wsl
+cd /mnt/c/Users/EVOLUTICS-did-hackathon
+sed -i 's/\r$//' install-eidstack.sh
+sed -i 's/\r$//' setup-agent.sh
+```
+
+**Note :** Cette étape est nécessaire car les scripts peuvent avoir des fins de ligne Windows (CRLF) qui causent des erreurs sur Linux/WSL.
 
 #### Étape 1 : Installation 
 
