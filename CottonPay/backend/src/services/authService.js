@@ -106,8 +106,11 @@ class AuthService {
    */
   async validateAndDecodeIdToken(idToken) {
     try {
-      // Créer un JWKS remote pour la validation
-      const JWKS = createRemoteJWKSet(new URL(this.esignetJwksUrl));
+      // Créer un JWKS remote pour la validation avec timeout augmenté
+      const JWKS = createRemoteJWKSet(new URL(this.esignetJwksUrl), {
+        timeoutDuration: 10000, // 10 secondes au lieu du défaut (5s)
+        cooldownDuration: 30000
+      });
 
       // Vérifier et décoder le JWT
       const { payload } = await jwtVerify(idToken, JWKS, {

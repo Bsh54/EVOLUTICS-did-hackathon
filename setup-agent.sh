@@ -12,6 +12,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 API_URL="http://localhost:4000"
 SEED="CottonPayBenin2024Issuer00000001"
 
+# Charger les variables d'environnement depuis .env.development
+if [ -f "$SCRIPT_DIR/eidStack-CMU/.env.development" ]; then
+    export $(grep -v '^#' "$SCRIPT_DIR/eidStack-CMU/.env.development" | xargs)
+fi
+
+# Utiliser AGENT_PUBLIC_URL depuis .env ou fallback sur localhost
+AGENT_ENDPOINT="${AGENT_PUBLIC_URL:-http://localhost:3021}"
+
 echo ""
 echo "============================================================"
 echo "  Initialisation de l'Agent SSI"
@@ -100,7 +108,7 @@ INIT_RESPONSE=$(curl -s -X POST "$API_URL/credo-agent/initAgent" \
   -d "{
     \"walletId\": \"cottonpay-issuer-wallet\",
     \"walletKey\": \"cottonpay-secure-key-2024\",
-    \"endpoint\": \"http://localhost:3021\",
+    \"endpoint\": \"$AGENT_ENDPOINT\",
     \"label\": \"CottonPay-Issuer\",
     \"seed\": \"$SEED\"
   }")
@@ -123,31 +131,39 @@ echo ""
 echo "[4/6] Creation du schema FarmerIdentityCredential..."
 echo ""
 
-FARMER_SCHEMA=$(curl -s -X POST "$API_URL/issuance/schemas" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "FarmerIdentityCredential",
-    "version": "1.0",
-    "attributes": [
-      {"attributeName": "farmer_npi", "schemaDataType": "string", "displayName": "NPI Agriculteur"},
-      {"attributeName": "farmer_name", "schemaDataType": "string", "displayName": "Nom Complet"},
-      {"attributeName": "phone_number", "schemaDataType": "string", "displayName": "Telephone"},
-      {"attributeName": "region", "schemaDataType": "string", "displayName": "Region"},
-      {"attributeName": "commune", "schemaDataType": "string", "displayName": "Commune"},
-      {"attributeName": "verified_by", "schemaDataType": "string", "displayName": "Verifie Par"},
-      {"attributeName": "verification_date", "schemaDataType": "string", "displayName": "Date Verification"},
-      {"attributeName": "verification_method", "schemaDataType": "string", "displayName": "Methode Verification"}
-    ]
-  }')
-
-if echo "$FARMER_SCHEMA" | grep -q "schemaId"; then
-    FARMER_SCHEMA_ID=$(echo "$FARMER_SCHEMA" | grep -o '"schemaId":"[^"]*"' | cut -d'"' -f4)
-    echo "[OK] Schema FarmerIdentityCredential cree"
+# Verifier si le schema existe deja
+EXISTING_SCHEMAS=$(curl -s "$API_URL/issuance/schemas")
+if echo "$EXISTING_SCHEMAS" | grep -q '"name":"FarmerIdentityCredential"'; then
+    FARMER_SCHEMA_ID=$(echo "$EXISTING_SCHEMAS" | grep -o '"schema_id":"did:indy:bcovrin:test:[^"]*FarmerIdentityCredential[^"]*"' | head -1 | cut -d'"' -f4)
+    echo "[OK] Schema FarmerIdentityCredential existe deja"
     echo "     Schema ID: $FARMER_SCHEMA_ID"
 else
-    echo "[ERREUR] Echec de creation du schema FarmerIdentityCredential"
-    echo "$FARMER_SCHEMA"
-    exit 1
+    FARMER_SCHEMA=$(curl -s -X POST "$API_URL/issuance/schemas" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "FarmerIdentityCredential",
+        "version": "1.0",
+        "attributes": [
+          {"attributeName": "farmer_npi", "schemaDataType": "string", "displayName": "NPI Agriculteur"},
+          {"attributeName": "farmer_name", "schemaDataType": "string", "displayName": "Nom Complet"},
+          {"attributeName": "phone_number", "schemaDataType": "string", "displayName": "Telephone"},
+          {"attributeName": "region", "schemaDataType": "string", "displayName": "Region"},
+          {"attributeName": "commune", "schemaDataType": "string", "displayName": "Commune"},
+          {"attributeName": "verified_by", "schemaDataType": "string", "displayName": "Verifie Par"},
+          {"attributeName": "verification_date", "schemaDataType": "string", "displayName": "Date Verification"},
+          {"attributeName": "verification_method", "schemaDataType": "string", "displayName": "Methode Verification"}
+        ]
+      }')
+
+    if echo "$FARMER_SCHEMA" | grep -q "schemaId"; then
+        FARMER_SCHEMA_ID=$(echo "$FARMER_SCHEMA" | grep -o '"schemaId":"[^"]*"' | cut -d'"' -f4)
+        echo "[OK] Schema FarmerIdentityCredential cree"
+        echo "     Schema ID: $FARMER_SCHEMA_ID"
+    else
+        echo "[ERREUR] Echec de creation du schema FarmerIdentityCredential"
+        echo "$FARMER_SCHEMA"
+        exit 1
+    fi
 fi
 
 echo ""
@@ -158,34 +174,41 @@ echo ""
 echo "[5/6] Creation du schema CottonSaleReceiptCredential..."
 echo ""
 
-SALE_SCHEMA=$(curl -s -X POST "$API_URL/issuance/schemas" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "CottonSaleReceiptCredential",
-    "version": "1.0",
-    "attributes": [
-      {"attributeName": "farmer_npi", "schemaDataType": "string", "displayName": "NPI Agriculteur"},
-      {"attributeName": "sale_date", "schemaDataType": "string", "displayName": "Date Vente"},
-      {"attributeName": "sale_time", "schemaDataType": "string", "displayName": "Heure Vente"},
-      {"attributeName": "cotton_weight_kg", "schemaDataType": "string", "displayName": "Poids Coton (kg)"},
-      {"attributeName": "unit_price_fcfa", "schemaDataType": "string", "displayName": "Prix Unitaire (FCFA)"},
-      {"attributeName": "total_amount_fcfa", "schemaDataType": "string", "displayName": "Montant Total (FCFA)"},
-      {"attributeName": "payment_reference", "schemaDataType": "string", "displayName": "Reference Paiement"},
-      {"attributeName": "payment_status", "schemaDataType": "string", "displayName": "Statut Paiement"},
-      {"attributeName": "payment_method", "schemaDataType": "string", "displayName": "Methode Paiement"},
-      {"attributeName": "transaction_id", "schemaDataType": "string", "displayName": "ID Transaction"},
-      {"attributeName": "collection_point", "schemaDataType": "string", "displayName": "Point Collecte"}
-    ]
-  }')
-
-if echo "$SALE_SCHEMA" | grep -q "schemaId"; then
-    SALE_SCHEMA_ID=$(echo "$SALE_SCHEMA" | grep -o '"schemaId":"[^"]*"' | cut -d'"' -f4)
-    echo "[OK] Schema CottonSaleReceiptCredential cree"
+# Verifier si le schema existe deja
+if echo "$EXISTING_SCHEMAS" | grep -q '"name":"CottonSaleReceiptCredential"'; then
+    SALE_SCHEMA_ID=$(echo "$EXISTING_SCHEMAS" | grep -o '"schema_id":"did:indy:bcovrin:test:[^"]*CottonSaleReceiptCredential[^"]*"' | head -1 | cut -d'"' -f4)
+    echo "[OK] Schema CottonSaleReceiptCredential existe deja"
     echo "     Schema ID: $SALE_SCHEMA_ID"
 else
-    echo "[ERREUR] Echec de creation du schema CottonSaleReceiptCredential"
-    echo "$SALE_SCHEMA"
-    exit 1
+    SALE_SCHEMA=$(curl -s -X POST "$API_URL/issuance/schemas" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "CottonSaleReceiptCredential",
+        "version": "1.0",
+        "attributes": [
+          {"attributeName": "farmer_npi", "schemaDataType": "string", "displayName": "NPI Agriculteur"},
+          {"attributeName": "sale_date", "schemaDataType": "string", "displayName": "Date Vente"},
+          {"attributeName": "sale_time", "schemaDataType": "string", "displayName": "Heure Vente"},
+          {"attributeName": "cotton_weight_kg", "schemaDataType": "string", "displayName": "Poids Coton (kg)"},
+          {"attributeName": "unit_price_fcfa", "schemaDataType": "string", "displayName": "Prix Unitaire (FCFA)"},
+          {"attributeName": "total_amount_fcfa", "schemaDataType": "string", "displayName": "Montant Total (FCFA)"},
+          {"attributeName": "payment_reference", "schemaDataType": "string", "displayName": "Reference Paiement"},
+          {"attributeName": "payment_status", "schemaDataType": "string", "displayName": "Statut Paiement"},
+          {"attributeName": "payment_method", "schemaDataType": "string", "displayName": "Methode Paiement"},
+          {"attributeName": "transaction_id", "schemaDataType": "string", "displayName": "ID Transaction"},
+          {"attributeName": "collection_point", "schemaDataType": "string", "displayName": "Point Collecte"}
+        ]
+      }')
+
+    if echo "$SALE_SCHEMA" | grep -q "schemaId"; then
+        SALE_SCHEMA_ID=$(echo "$SALE_SCHEMA" | grep -o '"schemaId":"[^"]*"' | cut -d'"' -f4)
+        echo "[OK] Schema CottonSaleReceiptCredential cree"
+        echo "     Schema ID: $SALE_SCHEMA_ID"
+    else
+        echo "[ERREUR] Echec de creation du schema CottonSaleReceiptCredential"
+        echo "$SALE_SCHEMA"
+        exit 1
+    fi
 fi
 
 echo ""
@@ -203,6 +226,15 @@ retry_creddef() {
     local name=$3
     local max_attempts=3
     local attempt=1
+
+    # Verifier si la CredDef existe deja
+    EXISTING_CREDDEFS=$(curl -s "$API_URL/issuance/credential-definitions")
+    if echo "$EXISTING_CREDDEFS" | grep -q "\"name\":\"$tag\""; then
+        CREDDEF_ID=$(echo "$EXISTING_CREDDEFS" | grep -B5 "\"name\":\"$tag\"" | grep -o '"cred_def_id":"[^"]*"' | head -1 | cut -d'"' -f4)
+        echo "[OK] CredDef $name existe deja"
+        echo "     CredDef ID: $CREDDEF_ID"
+        return 0
+    fi
 
     while [ $attempt -le $max_attempts ]; do
         echo "Tentative $attempt/$max_attempts pour $name..."
