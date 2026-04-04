@@ -10,6 +10,10 @@ CottonPay est une plateforme complète d'identité numérique et de paiement des
 
 **<a href="https://docs.google.com/presentation/d/17TTFGQCAaX6_SbGGxSC2g9J1N__kM9gY/edit?usp=sharing&ouid=101533659653011151923&rtpof=true&sd=true" target="_blank">Télécharger la présentation PowerPoint</a>**
 
+## 🎥 Vidéo de Démonstration
+
+**<a href="https://youtu.be/t82CBL8v7Ik" target="_blank">Voir la démo sur YouTube</a>**
+
 
 
 
@@ -108,6 +112,8 @@ Ouvrez votre navigateur : **http://localhost:3002**
 #### Étape 0 : Correction des fins de ligne (obligatoire)
 
 Avant l'installation, convertissez les fins de ligne des scripts bash :
+
+Ouvrez un terminal WSL 
 
 ```bash
 wsl
