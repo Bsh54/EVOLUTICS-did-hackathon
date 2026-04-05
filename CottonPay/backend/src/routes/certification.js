@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const OIDC_CONFIG = {
     issuer: process.env.OIDC_ISSUER || 'http://localhost:8088/v1/esignet',
     clientId: process.env.OIDC_CLIENT_ID || 'cottonpay-client',
-    redirectUri: process.env.OIDC_REDIRECT_URI || 'http://localhost:3002/certification/auth/callback',
+    redirectUri: process.env.OIDC_REDIRECT_URI || 'http://localhost:3002/callback',
     scopes: process.env.OIDC_SCOPES || 'openid profile phone',
     authorizationEndpoint: 'http://localhost:3000/authorize',
     tokenEndpoint: 'http://localhost:8088/v1/esignet/oauth/v2/token',
@@ -68,7 +68,7 @@ router.get('/auth/login', (req, res) => {
 });
 
 // Route 2: Callback après authentification eSignet
-router.get('/auth/callback', async (req, res) => {
+router.get('/callback', async (req, res) => {
     try {
         const { code, state } = req.query;
 

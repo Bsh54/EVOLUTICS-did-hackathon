@@ -53,10 +53,10 @@ app.use('/user', userRoutes);
 app.use('/certification', certificationRoutes);
 app.use('/sales', salesRoutes);
 
-// Redirect /callback to /auth/callback
+// Redirect /callback to /certification/auth/callback
 app.get('/callback', (req, res) => {
   const queryString = new URLSearchParams(req.query).toString();
-  res.redirect(`/auth/callback?${queryString}`);
+  res.redirect(`/certification/auth/callback?${queryString}`);
 });
 
 // Health check
