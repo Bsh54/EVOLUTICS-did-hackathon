@@ -64,10 +64,11 @@ export class CredoAgentService {
     endpoint: string;
     label: string;
     seed: string;
+    role?: string;
   }) {
     if (this.agent) return this.agent;
 
-    const { walletId, walletKey, endpoint, label, seed } = input;
+    const { walletId, walletKey, endpoint, label, seed, role = 'ENDORSER' } = input;
 
     // Dynamic genesis load
     const genesisTxn = await axios
@@ -151,7 +152,7 @@ export class CredoAgentService {
     this.agent = agent;
 
     // DID Registration
-    const did = await this.registerBcovrinDid(agent, seed);
+    const did = await this.registerBcovrinDid(agent, seed, role);
     this.issuerDid = `did:indy:bcovrin:test:${did}`;
     console.log('✅ Credo Agent DID registered:', this.issuerDid);
 
@@ -187,7 +188,7 @@ export class CredoAgentService {
   /**
    * Register a DID on the BCovrin test ledger using seed.
    */
-  private async registerBcovrinDid(agent: Agent, seed: string): Promise<string> {
+  private async registerBcovrinDid(agent: Agent, seed: string, role: string = 'ENDORSER'): Promise<string> {
 
     interface BcovrinResponse {
       did: string;
@@ -195,11 +196,11 @@ export class CredoAgentService {
       role?: string;
     }
     try {
-      console.log('🔄 Registering DID on BCovrin with ENDORSER role...');
+      console.log(`🔄 Registering DID on BCovrin with ${role} role...`);
 
       const response = await axios.post<BcovrinResponse>(process.env.BCOVRIN_TESTNET_URL, {
-        role: 'ENDORSER',
-        alias: 'eID-Backend-Agent',
+        role: role,
+        alias: 'CottonPay-Issuer',
         seed,
       });
 
