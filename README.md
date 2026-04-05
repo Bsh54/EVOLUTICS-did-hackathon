@@ -169,15 +169,35 @@ Le serveur démarre sur **http://localhost:4000**
 
 **Étape 3a : Enregistrement du DID sur BCovrin**
 
-1. Allez sur : **http://test.bcovrin.vonx.io/**
+1. Accédez à : **http://test.bcovrin.vonx.io/**
 2. Remplissez le formulaire d'enregistrement :
-   - **Seed** : `CottonPayBenin2024Issuer00000000`
+   - **Seed** : Entrez un seed unique (exemple : `CottonPayBenin2024Issuer00000000`)
    - **Alias** : `CottonPay-Issuer`
-   - **Role** : Sélectionnez **ENDORSER** (obligatoire pour créer des schémas)
+   - **Role** : Sélectionnez **ENDORSER** (obligatoire)
 3. Cliquez sur **"Register DID"**
-4. Notez le DID retourné (exemple : `NqLAnmLCKE1VSMA2JphDj6`)
+4. Notez le **Seed** et le **DID** retournés
 
-**Étape 3b : Initialisation de l'agent**
+**Étape 3b : Mise à jour du script setup-agent.sh**
+
+Modifiez la ligne 13 du fichier `setup-agent.sh` avec le seed obtenu :
+
+```bash
+SEED="<votre-seed-bcovrin>"
+```
+
+**Étape 3c : Redémarrage du serveur eidStack**
+
+Le serveur eidStack doit être redémarré après chaque modification du seed :
+
+```bash
+# Dans le terminal WSL où tourne npm run start:dev
+# Appuyez sur Ctrl+C pour arrêter le serveur
+
+# Relancez le serveur
+npm run start:dev
+```
+
+**Étape 3d : Initialisation de l'agent**
 
 Dans un **autre terminal WSL** :
 
@@ -187,7 +207,7 @@ cd /mnt/c/Users/EVOLUTICS-did-hackathon
 ./setup-agent.sh
 ```
 
-Le script vous demandera confirmation que vous avez bien enregistré le DID sur BCovrin.
+Le script vous demandera confirmation que vous avez bien enregistré le DID sur BCovrin avec le rôle ENDORSER.
 
 **Ce script effectue :**
 - Initialisation de l'agent SSI avec le DID enregistré
@@ -321,6 +341,41 @@ docker compose down
 
 Dans le terminal WSL où tourne le serveur, tapez `Ctrl+C`
 
+---
+
+## Troubleshooting
+
+### Erreur : "Permission denied: DID lacks ENDORSER role"
+
+**Cause :** Le DID n'a pas le rôle ENDORSER sur BCovrin, ou le serveur eidStack utilise un ancien DID en mémoire.
+
+**Solution :**
+
+1. Vérifiez que le DID est bien enregistré avec le rôle **ENDORSER** sur http://test.bcovrin.vonx.io/
+2. Redémarrez le serveur eidStack :
+   ```bash
+   # Dans le terminal WSL où tourne npm run start:dev
+   # Appuyez sur Ctrl+C
+   npm run start:dev
+   ```
+3. Relancez le script d'initialisation :
+   ```bash
+   ./setup-agent.sh
+   ```
+
+### Erreur : "Unexpected token \r in JSON"
+
+**Cause :** Les scripts bash ont des fins de ligne Windows (CRLF) au lieu de Unix (LF).
+
+**Solution :**
+
+```bash
+sed -i 's/\r$//' setup-agent.sh install-eidstack.sh
+```
+
+Puis relancez le script.
+
+---
 
 ## Équipe
 
