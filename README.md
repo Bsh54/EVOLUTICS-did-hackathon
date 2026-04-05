@@ -202,60 +202,26 @@ Le script vous demandera confirmation que vous avez bien enregistré le DID sur 
 
 **e-IDapp_CMU** est l'application mobile qui permet aux producteurs de recevoir et stocker leurs credentials vérifiables sur leur smartphone.
 
-### Prérequis
-
-| Logiciel | Version minimale | Notes |
-|----------|------------------|-------|
-| **Node.js** | >= 20.x | Version LTS recommandée |
-| **npm** ou **Yarn** | npm 9+ / Yarn 1.22+ | Gestionnaire de paquets |
-| **React Native CLI** | Latest | `npm install -g @react-native-community/cli` |
-| **Java JDK** | 17 | Requis pour les builds Android |
-| **Android Studio** | Latest | Avec Android SDK, NDK, et émulateur |
-| **Xcode** | 15+ | Builds iOS uniquement (macOS requis) |
-| **CocoaPods** | Latest | Gestionnaire de dépendances iOS |
-| **Ruby** | 2.7+ | Requis pour CocoaPods (Bundler) |
-
-**Variables d'environnement importantes :**
-- `ANDROID_HOME` : Chemin vers Android SDK
-- `JAVA_HOME` : Chemin vers Java JDK 17
-
 ### Étape 1 : Installation
 
 ```bash
 cd e-IDapp_CMU
-
-# Installer les dépendances
 npm install
-
-# iOS uniquement - Installer CocoaPods
-bundle install
-cd ios && bundle exec pod install && cd ..
 ```
 
 ### Étape 2 : Configuration
-
-Créer le fichier `.env` :
 
 ```bash
 cp .env.sample .env
 ```
 
-Éditer `.env` avec les valeurs suivantes :
-
-```
-GENESIS_URL=https://test.bcovrin.vonx.io/genesis
-MEDIATOR_URL=https://your-mediator.example.com/createMediatorInvitation
-```
-
 ### Étape 3 : Démarrage
-
-**Démarrer Metro bundler :**
 
 ```bash
 npm start
 ```
 
-**Dans un autre terminal, lancer l'application :**
+Dans un autre terminal :
 
 ```bash
 # Pour Android
@@ -265,32 +231,12 @@ npm run android
 npm run ios
 ```
 
-L'application démarre sur l'émulateur ou le device connecté.
-
 ### Étape 4 : Réception des credentials
 
-**Flux complet de réception :**
-
-1. **Sur CottonPay Web** : Après l'enregistrement d'une vente, un QR code est généré contenant l'invitation DIDComm
-2. **Sur e-IDapp_CMU** : 
-   - Ouvrir l'application mobile
-   - Cliquer sur **"Scan QR"**
-   - Scanner le QR code affiché sur CottonPay
-3. **Traitement automatique** :
-   - L'app décode l'invitation
-   - Affiche un aperçu du credential (attributs, émetteur)
-   - Deux options : **View Details** ou **Accept**
-4. **Stockage sécurisé** :
-   - Le credential est reçu via DIDComm
-   - Stocké chiffré dans Hyperledger Aries Askar
-   - Visible dans la liste des credentials
-
-**Technologies utilisées :**
-- **React Native 0.81.4** avec TypeScript
-- **Credo-TS 0.5.17** (Hyperledger Aries)
-- **Aries Askar** pour le stockage chiffré
-- **AnonCreds** pour les credentials anonymes
-- **Indy VDR** pour l'accès au ledger BCovrin
+1. **Sur CottonPay Web** : Après l'enregistrement d'une vente, un QR code est généré
+2. **Sur e-IDapp_CMU** : Cliquer sur **"Scan QR"** et scanner le code
+3. L'app affiche un aperçu du credential et permet de l'accepter
+4. Le credential est stocké de manière sécurisée dans l'application
 
 ---
 
