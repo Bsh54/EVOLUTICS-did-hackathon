@@ -10,7 +10,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 API_URL="http://localhost:4000"
-SEED="CottonPayBenin2024Issuer00000001"
+SEED="CottonPayEndorser000000000000010"
 
 # Charger les variables d'environnement depuis .env.development
 if [ -f "$SCRIPT_DIR/eidStack-CMU/.env.development" ]; then
