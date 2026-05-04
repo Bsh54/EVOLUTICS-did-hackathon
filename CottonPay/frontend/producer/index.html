@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Espace Producteur — CottonPay</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Shared Design System -->
+    <link rel="stylesheet" href="../coop/styles.css">
+    
+    <!-- QR Code generation -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-svg@1.1.0/lib/qrcode.min.js"></script>
+
+    <style>
+        /* Override shared styles.css body flex (designed for coop sidebar) */
+        body {
+            display: block !important;
+            background-color: var(--bg);
+            background-image: url('../arriere1.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(240, 253, 244, 0.85);
+            z-index: -1;
+        }
+        
+        .producer-header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(21,128,61,0.1);
+            padding: 16px 32px;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        /* Disable hover lift on producer page cards */
+        .main-container .glass-card:hover {
+            transform: none;
+            box-shadow: var(--shadow-card);
+        }
+
+        .avatar {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 32px; font-weight: 700;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(21,128,61,0.3);
+        }
+
+        @media (max-width: 767px) {
+            .producer-header { padding: 12px 16px; }
+            .main-container { padding-top: 80px; gap: 24px; }
+            .avatar { width: 64px; height: 64px; font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="producer-header">
+        <div class="flex items-center gap-3">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#15803D" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span class="font-lora" style="font-weight:700;font-size:20px;color:var(--primary);">CottonPay</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="font-jakarta" style="font-weight:600;font-size:14px;color:var(--text);" id="headerName">...</span>
+            <button class="btn btn-danger btn-sm" onclick="handleLogout()">Déconnexion</button>
+        </div>
+    </header>
+
+    <main class="main-container" id="mainContainer" style="display:none;">
+        
+        <!-- Profile Section -->
+        <div class="glass-card animate-fadeInUp" style="padding:24px;">
+            <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+                <div class="avatar" id="profileAvatar">--</div>
+                <div style="flex:1; min-width:200px;">
+                    <h2 class="font-jakarta" style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:12px;" id="profileName">Chargement...</h2>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px;">
+                        <div>
+                            <p style="color:rgba(107,114,128,1); margin-bottom:2px;">NPI</p>
+                            <p class="font-mono" style="font-weight:600; font-size:13px;" id="profileNpi">---</p>
+                        </div>
+                        <div>
+                            <p style="color:rgba(107,114,128,1); margin-bottom:2px;">Téléphone</p>
+                            <p style="font-weight:600; font-size:13px;" id="profilePhone">---</p>
+                        </div>
+                        <div>
+                            <p style="color:rgba(107,114,128,1); margin-bottom:2px;">Coopérative</p>
+                            <p style="font-weight:600; font-size:13px;" id="profileCoop">---</p>
+                        </div>
+                        <div>
+                            <p style="color:rgba(107,114,128,1); margin-bottom:2px;">Commune</p>
+                            <p style="font-weight:600; font-size:13px;" id="profileCommune">---</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deliveries List -->
+        <div class="glass-card animate-fadeInUp" style="padding:24px;">
+            <h3 class="font-jakarta" style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:16px;">Mes livraisons</h3>
+            <div id="deliveriesContainer" style="display:flex; flex-direction:column; gap:16px;">
+                <!-- Rendered via JS -->
+            </div>
+            <div class="empty-state hidden" id="deliveriesEmpty">
+                <div class="empty-state-icon">📦</div>
+                <div class="empty-state-text">Aucune livraison enregistrée pour le moment.</div>
+            </div>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="glass-card animate-fadeInUp" style="padding:24px; background:linear-gradient(to bottom right, rgba(240,253,244,0.9), rgba(209,250,229,0.9));">
+            <h3 class="font-jakarta" style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:16px;">Résumé financier</h3>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px solid rgba(220,252,231,1); font-size:13px;">
+                  <span style="color:rgba(75,85,99,1);">Total livré</span>
+                  <span class="font-jakarta" id="statWeight" style="font-weight:600;">0 kg</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px solid rgba(220,252,231,1); font-size:13px;">
+                  <span style="color:rgba(75,85,99,1);">Total brut</span>
+                  <span class="font-jakarta" id="statGross" style="font-weight:600;">0 FCFA</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px solid rgba(220,252,231,1); font-size:13px;">
+                  <span style="color:rgba(75,85,99,1);">Total déductions</span>
+                  <span class="font-jakarta" id="statDeductions" style="color:rgba(220,38,38,1);font-weight:600;">- 0 FCFA</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding-bottom:6px; border-bottom:1px solid rgba(220,252,231,1); font-size:14px;">
+                  <span style="color:rgba(75,85,99,1);">Total net</span>
+                  <span class="font-jakarta" id="statNet" style="font-weight:700;">0 FCFA</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding-bottom:6px; font-size:13px;">
+                  <span style="color:rgba(75,85,99,1);">Total payé</span>
+                  <span class="font-jakarta" id="statPaid" style="color:rgba(22,163,74,1);font-weight:600;">0 FCFA ✅</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding-bottom:6px; font-size:13px;">
+                  <span style="color:rgba(75,85,99,1);">En attente</span>
+                  <span class="font-jakarta" id="statPending" style="color:rgba(217,119,6,1);font-weight:600;">0 FCFA ⏳</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Spinner -->
+    <div id="loadingOverlay" style="position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+        <div class="spinner"></div>
+        <p class="font-jakarta" style="font-weight:600;color:var(--primary);">Chargement de votre espace...</p>
+    </div>
+
+    <!-- QR Modal -->
+    <div class="modal-overlay" id="qrModal">
+        <div class="modal-content glass-card" style="padding:32px;text-align:center;max-width:420px;">
+            <h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:8px;">Credential Numérique</h3>
+            <p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:24px;">Scannez ce QR code avec <strong>IDS Wallet</strong> pour récupérer votre reçu de livraison certifié.</p>
+            <div id="qrCodeContainer" style="background:#fff;padding:16px;border-radius:12px;display:inline-block;margin-bottom:16px;border:1px solid rgba(229,231,235,1);min-height:232px;min-width:232px;display:flex;align-items:center;justify-content:center;">
+                <div class="spinner" style="width:32px;height:32px;"></div>
+            </div>
+            <p id="qrError" style="color:#EF4444;font-size:13px;margin-bottom:16px;display:none;"></p>
+            <button class="btn btn-outline btn-block" onclick="closeModal('qrModal')">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        console.log("CottonPay Producer Dashboard v4 — Real Credentials");
+        const API = 'http://localhost:3002';
+        
+        const formatFCFA = n => n==null?'—':new Intl.NumberFormat('fr-FR').format(n)+' FCFA';
+        const formatDate = iso => {
+            if(!iso) return '—';
+            return new Date(iso).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+        };
+        const getInitials = name => {
+            if(!name) return 'PR';
+            return name.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+        };
+
+        async function init() {
+            try {
+                const authRes = await fetch(`${API}/auth/status`, { credentials: 'include' });
+                const authData = await authRes.json();
+                
+                if (!authData.authenticated || authData.flow !== 'producer') {
+                    window.location.href = '/';
+                    return;
+                }
+                
+                const profileRes = await fetch(`${API}/api/producer/dashboard`, { credentials: 'include' });
+                const profileData = await profileRes.json();
+                
+                if (profileData.success) {
+                    renderDashboard(profileData.producer, profileData.deliveries || []);
+                } else {
+                    renderDashboard({ name: authData.user.name, npi: authData.user.sub, cooperative_id: '---', communes: '---' }, []);
+                }
+                
+            } catch (err) {
+                console.error('Initialization error:', err);
+                alert('Erreur de connexion au serveur.');
+            } finally {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+            }
+        }
+
+        function renderDashboard(producer, deliveries) {
+            const fullName = ((producer.firstname || '') + ' ' + (producer.name || '')).trim() || 'Producteur';
+            document.getElementById('headerName').textContent = fullName;
+            document.getElementById('profileName').textContent = fullName;
+            document.getElementById('profileAvatar').textContent = getInitials(fullName);
+            document.getElementById('profileNpi').textContent = producer.npi;
+            document.getElementById('profilePhone').textContent = producer.phone || '+229 97 00 00 00';
+            document.getElementById('profileCoop').textContent = producer.cooperative || producer.cooperative_id || '---';
+            document.getElementById('profileCommune').textContent = producer.commune || '---';
+
+            let totalWeight = 0, totalNet = 0, totalPaid = 0, totalGross = 0;
+            deliveries.forEach(d => {
+                totalWeight += (d.weight_kg || 0);
+                totalNet += (d.total_net || 0);
+                totalGross += (d.total_gross || 0);
+                if(d.payment_status === 'paid') totalPaid += (d.total_net || 0);
+            });
+            
+            const totalDeductions = totalGross - totalNet;
+            const totalPending = totalNet - totalPaid;
+            
+            document.getElementById('statWeight').textContent = `${totalWeight} kg`;
+            document.getElementById('statGross').textContent = formatFCFA(totalGross);
+            document.getElementById('statDeductions').textContent = `- ${formatFCFA(totalDeductions)}`;
+            document.getElementById('statNet').textContent = formatFCFA(totalNet);
+            document.getElementById('statPaid').textContent = `${formatFCFA(totalPaid)} ✅`;
+            document.getElementById('statPending').textContent = `${formatFCFA(totalPending)} ⏳`;
+
+            const container = document.getElementById('deliveriesContainer');
+            const empty = document.getElementById('deliveriesEmpty');
+            
+            if (!deliveries || deliveries.length === 0) {
+                container.innerHTML = '';
+                empty.classList.remove('hidden');
+            } else {
+                empty.classList.add('hidden');
+                container.innerHTML = deliveries.map(d => {
+                    // Determine action based on real credential_status
+                    let actionHtml = '';
+                    if (d.credential_status === 'accepted') {
+                        // Credential scanné et dans le wallet → bouton télécharger reçu
+                        actionHtml = `
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <span class="badge badge-success" style="font-size:12px;">✅ Dans le wallet</span>
+                                <button onclick="downloadReceipt('${d.id}')" style="background:#15803D;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;" onmouseover="this.style.background='#0f6330'" onmouseout="this.style.background='#15803D'">
+                                    📥 Télécharger reçu
+                                </button>
+                            </div>`;
+                    } else if (d.credential_status === 'issued') {
+                        // Credential émis mais pas encore scanné → bouton récupérer QR
+                        actionHtml = `
+                            <button onclick="fetchRealQr('${d.id}')" style="background:transparent;border:1px solid #15803D;color:#15803D;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;" onmouseover="this.style.background='rgba(21,128,61,0.05)'" onmouseout="this.style.background='transparent'">
+                                📱 Récupérer dans wallet
+                            </button>`;
+                    } else {
+                        // Credential pas encore émis (pending) → en attente coopérative
+                        actionHtml = `<span class="badge" style="background:rgba(243,244,246,1);color:rgba(107,114,128,1);font-size:12px;">🕐 Émission en cours</span>`;
+                    }
+
+                    return `
+                    <div style="background:#fff; border-radius:12px; padding:20px; border:1px solid rgba(220,252,231,1); transition:border-color 0.2s;" onmouseover="this.style.borderColor='#15803D'" onmouseout="this.style.borderColor='rgba(220,252,231,1)'">
+                        <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px;">
+                            <div>
+                                <p class="font-jakarta" style="font-weight:700; margin-bottom:4px; color:var(--text);">${d.weight_kg} kg — ${d.quality === '1er_choix' ? '1er choix' : '2ème choix'}</p>
+                                <p style="font-size:14px; color:rgba(107,114,128,1);">${formatDate(d.date)} · Lot ${d.lot_number || 'N/A'}</p>
+                            </div>
+                            <span class="badge ${d.payment_status === 'paid' ? 'badge-success' : 'badge-warning'}">
+                                ${d.payment_status === 'paid' ? '✅ Payé' : '⏳ En attente'}
+                            </span>
+                        </div>
+                        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                            <span class="font-jakarta" style="font-size:18px; color:#15803D; font-weight:700;">${formatFCFA(d.total_net)}</span>
+                            ${actionHtml}
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            // Start polling for credentials that haven't been scanned yet
+            startCredentialPolling(deliveries);
+        }
+
+        // Fetch real QR from backend (calls eidStack)
+        async function fetchRealQr(deliveryId) {
+            const qrContainer = document.getElementById('qrCodeContainer');
+            const qrError = document.getElementById('qrError');
+            qrError.style.display = 'none';
+            qrContainer.innerHTML = '<div class="spinner" style="width:32px;height:32px;"></div>';
+            document.getElementById('qrModal').classList.add('open');
+
+            try {
+                const res = await fetch(`${API}/api/producer/credential/${deliveryId}`, { credentials: 'include' });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.message || data.error || 'Erreur serveur');
+                }
+
+                // Use real invitation URL from eidStack
+                if (data.credential && data.credential.qrCodeDataUrl) {
+                    qrContainer.innerHTML = `<img src="${data.credential.qrCodeDataUrl}" alt="QR Credential" style="width:200px;height:200px;" />`;
+                } else if (data.credential && data.credential.invitationUrl) {
+                    const qr = new QRCode({ content: data.credential.invitationUrl, width: 200, height: 200, color: "#14532D", background: "#FFFFFF", padding: 0 });
+                    qrContainer.innerHTML = qr.svg();
+                } else {
+                    throw new Error('Aucune donnée de credential reçue du serveur.');
+                }
+            } catch (err) {
+                console.error('QR fetch error:', err);
+                qrContainer.innerHTML = '<p style="color:#EF4444;font-size:40px;">⚠️</p>';
+                qrError.textContent = err.message;
+                qrError.style.display = 'block';
+            }
+        }
+
+        // Download receipt as PDF-like summary
+        function downloadReceipt(deliveryId) {
+            window.open(`${API}/api/producer/receipt/${deliveryId}`, '_blank');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        function handleLogout() {
+            window.location.href = '/auth/logout';
+        }
+
+        // ========== CREDENTIAL STATUS POLLING ==========
+        // Poll eidStack every 10s for deliveries with credential_status = 'issued'
+        // When a credential is scanned (status → 'accepted'), refresh the dashboard
+        let _pollingInterval = null;
+        let _issuedDeliveryIds = [];
+
+        function startCredentialPolling(deliveries) {
+            // Stop existing polling
+            if (_pollingInterval) clearInterval(_pollingInterval);
+            
+            // Find deliveries with issued (not yet scanned) credentials
+            _issuedDeliveryIds = (deliveries || [])
+                .filter(d => d.credential_status === 'issued' && d.credential_exchange_id)
+                .map(d => d.id);
+
+            if (_issuedDeliveryIds.length === 0) return; // Nothing to poll
+
+            console.log('🔄 Starting credential polling for:', _issuedDeliveryIds);
+
+            _pollingInterval = setInterval(async () => {
+                let anyChanged = false;
+                for (const deliveryId of _issuedDeliveryIds) {
+                    try {
+                        const res = await fetch(`${API}/api/producer/credential-status/${deliveryId}`, { credentials: 'include' });
+                        const data = await res.json();
+                        if (data.credential_status === 'accepted') {
+                            console.log(`✅ Credential ${deliveryId} accepted! Refreshing dashboard...`);
+                            anyChanged = true;
+                        }
+                    } catch (e) {
+                        // Ignore polling errors silently
+                    }
+                }
+                if (anyChanged) {
+                    // Refresh the whole dashboard to show updated status
+                    clearInterval(_pollingInterval);
+                    _pollingInterval = null;
+                    init(); // Reload dashboard
+                }
+            }, 10000); // Every 10 seconds
+        }
+
+        // Click outside modal to close
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
+        });
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

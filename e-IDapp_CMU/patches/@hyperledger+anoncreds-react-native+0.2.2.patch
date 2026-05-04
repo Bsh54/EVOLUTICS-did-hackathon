@@ -1,0 +1,505 @@
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/arm64-v8a/metadata_generation_command.txt b/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/arm64-v8a/metadata_generation_command.txt
+new file mode 100644
+index 0000000..d20437b
+--- /dev/null
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/arm64-v8a/metadata_generation_command.txt
+@@ -0,0 +1,23 @@
++                        -HC:\Users\Uriel\EVOLUTICS_DIGITAL_ID\e-IDapp_CMU\node_modules\@hyperledger\anoncreds-react-native\android
++-DCMAKE_SYSTEM_NAME=Android
++-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
++-DCMAKE_SYSTEM_VERSION=21
++-DANDROID_PLATFORM=android-21
++-DANDROID_ABI=arm64-v8a
++-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a
++-DANDROID_NDK=C:\Users\Uriel\AppData\Local\Android\Sdk\ndk\27.1.12297006
++-DCMAKE_ANDROID_NDK=C:\Users\Uriel\AppData\Local\Android\Sdk\ndk\27.1.12297006
++-DCMAKE_TOOLCHAIN_FILE=C:\Users\Uriel\AppData\Local\Android\Sdk\ndk\27.1.12297006\build\cmake\android.toolchain.cmake
++-DCMAKE_MAKE_PROGRAM=C:\Users\Uriel\AppData\Local\Android\Sdk\cmake\3.22.1\bin\ninja.exe
++-DCMAKE_CXX_FLAGS=-fexceptions -frtti -std=c++17 -DONANDROID
++-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\Users\Uriel\EVOLUTICS_DIGITAL_ID\e-IDapp_CMU\node_modules\@hyperledger\anoncreds-react-native\android\build\intermediates\cxx\RelWithDebInfo\6d5e2b3d\obj\arm64-v8a
++-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:\Users\Uriel\EVOLUTICS_DIGITAL_ID\e-IDapp_CMU\node_modules\@hyperledger\anoncreds-react-native\android\build\intermediates\cxx\RelWithDebInfo\6d5e2b3d\obj\arm64-v8a
++-DCMAKE_BUILD_TYPE=RelWithDebInfo
++-DCMAKE_FIND_ROOT_PATH=C:\Users\Uriel\EVOLUTICS_DIGITAL_ID\e-IDapp_CMU\node_modules\@hyperledger\anoncreds-react-native\android\.cxx\RelWithDebInfo\6d5e2b3d\prefab\arm64-v8a\prefab
++-BC:\Users\Uriel\EVOLUTICS_DIGITAL_ID\e-IDapp_CMU\node_modules\@hyperledger\anoncreds-react-native\android\.cxx\RelWithDebInfo\6d5e2b3d\arm64-v8a
++-GNinja
++-DANDROID_STL=c++_shared
++-DREACT_NATIVE_VERSION=81
++-DNODE_MODULES_DIR=C:\Users\Uriel\EVOLUTICS_DIGITAL_ID\e-IDapp_CMU\node_modules
++                        Build command args: []
++                        Version: 2
+\ No newline at end of file
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/arm64-v8a/prefab_config.json b/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/arm64-v8a/prefab_config.json
+new file mode 100644
+index 0000000..8c32814
+--- /dev/null
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/arm64-v8a/prefab_config.json
+@@ -0,0 +1,8 @@
++{
++  "enabled": true,
++  "prefabPath": "C:\\Users\\Uriel\\.gradle\\caches\\modules-2\\files-2.1\\com.google.prefab\\cli\\2.1.0\\aa32fec809c44fa531f01dcfb739b5b3304d3050\\cli-2.1.0-all.jar",
++  "packages": [
++    "C:\\Users\\Uriel\\.gradle\\caches\\8.14.3\\transforms\\cc20650cd391b22012dd468b7a30b8c4\\transformed\\react-android-0.81.4-release\\prefab",
++    "C:\\Users\\Uriel\\.gradle\\caches\\8.14.3\\transforms\\48f32c88ab848eeaa4d6425b771aa34b\\transformed\\fbjni-0.7.0\\prefab"
++  ]
++}
+\ No newline at end of file
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/hash_key.txt b/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/hash_key.txt
+new file mode 100644
+index 0000000..d4d0e90
+--- /dev/null
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/6d5e2b3d/hash_key.txt
+@@ -0,0 +1,30 @@
++# Values used to calculate the hash in this folder name.
++# Should not depend on the absolute path of the project itself.
++#   - AGP: 8.11.0.
++#   - $NDK is the path to NDK 27.1.12297006.
++#   - $PROJECT is the path to the parent folder of the root Gradle build file.
++#   - $ABI is the ABI to be built with. The specific value doesn't contribute to the value of the hash.
++#   - $HASH is the hash value computed from this text.
++#   - $CMAKE is the path to CMake 3.22.1.
++#   - $NINJA is the path to Ninja.
++-HC:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android
++-DCMAKE_SYSTEM_NAME=Android
++-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
++-DCMAKE_SYSTEM_VERSION=21
++-DANDROID_PLATFORM=android-21
++-DANDROID_ABI=$ABI
++-DCMAKE_ANDROID_ARCH_ABI=$ABI
++-DANDROID_NDK=$NDK
++-DCMAKE_ANDROID_NDK=$NDK
++-DCMAKE_TOOLCHAIN_FILE=$NDK/build/cmake/android.toolchain.cmake
++-DCMAKE_MAKE_PROGRAM=$NINJA
++-DCMAKE_CXX_FLAGS=-fexceptions -frtti -std=c++17 -DONANDROID
++-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/$HASH/obj/$ABI
++-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/$HASH/obj/$ABI
++-DCMAKE_BUILD_TYPE=RelWithDebInfo
++-DCMAKE_FIND_ROOT_PATH=C:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/$HASH/prefab/$ABI/prefab
++-BC:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/$HASH/$ABI
++-GNinja
++-DANDROID_STL=c++_shared
++-DREACT_NATIVE_VERSION=81
++-DNODE_MODULES_DIR=C:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules
+\ No newline at end of file
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/CMakeLists.txt b/node_modules/@hyperledger/anoncreds-react-native/android/CMakeLists.txt
+index 5cc55c5..5c1e8ec 100644
+--- a/node_modules/@hyperledger/anoncreds-react-native/android/CMakeLists.txt
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/CMakeLists.txt
+@@ -6,7 +6,7 @@ set (LIB_NAME "anoncreds")
+ file (GLOB LIBANONCREDS_DIR "${CMAKE_SOURCE_DIR}/../native/mobile/android/${ANDROID_ABI}")
+ 
+ set(CMAKE_VERBOSE_MAKEFILE ON)
+-set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD 17)
+ 
+ set (BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
+ if(${REACT_NATIVE_VERSION} GREATER_EQUAL 71)
+@@ -91,7 +91,7 @@ if(${REACT_NATIVE_VERSION} GREATER_EQUAL 71)
+   target_link_libraries(
+     ${PACKAGE_NAME}
+     ReactAndroid::jsi
+-    ReactAndroid::reactnativejni
++    ReactAndroid::reactnative
+     fbjni::fbjni
+   )
+ elseif(${REACT_NATIVE_VERSION} LESS 66)
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/build.gradle b/node_modules/@hyperledger/anoncreds-react-native/android/build.gradle
+index a38cf8a..13e8879 100644
+--- a/node_modules/@hyperledger/anoncreds-react-native/android/build.gradle
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/build.gradle
+@@ -81,12 +81,12 @@ android {
+   }
+   
+   defaultConfig {
+-    minSdkVersion 21 
++    minSdkVersion 24 
+     targetSdkVersion getExt('targetSdkVersion')
+     
+     externalNativeBuild {
+         cmake {
+-            cppFlags "-fexceptions", "-frtti", "-std=c++1y", "-DONANDROID"
++            cppFlags "-fexceptions", "-frtti", "-std=c++17", "-DONANDROID"
+             abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+             arguments "-DANDROID_STL=c++_shared",
+                       "-DREACT_NATIVE_VERSION=${REACT_NATIVE_VERSION}",
+@@ -211,7 +211,7 @@ repositories {
+ 
+ dependencies {
+   if (REACT_NATIVE_VERSION >= 71) {
+-      implementation "com.facebook.react:react-android:"
++      implementation "com.facebook.react:react-android:${REACT_NATIVE_FULL_VERSION}"
+   } else {
+       // noinspection GradleDynamicVersion
+       implementation 'com.facebook.react:react-native:' + REACT_NATIVE_FULL_VERSION
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/build_model.json b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/build_model.json
+new file mode 100644
+index 0000000..fda6041
+--- /dev/null
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/build_model.json
+@@ -0,0 +1,215 @@
++{
++  "info": {
++    "name": "arm64-v8a",
++    "bitness": 64,
++    "isDefault": true,
++    "isDeprecated": false,
++    "architecture": "arm64",
++    "triple": "aarch64-linux-android",
++    "llvmTriple": "aarch64-none-linux-android"
++  },
++  "cxxBuildFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\.cxx\\RelWithDebInfo\\6d5e2b3d\\arm64-v8a",
++  "soFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\build\\intermediates\\cxx\\RelWithDebInfo\\6d5e2b3d\\obj\\arm64-v8a",
++  "soRepublishFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\build\\intermediates\\cmake\\release\\obj\\arm64-v8a",
++  "abiPlatformVersion": 21,
++  "cmake": {
++    "effectiveConfiguration": {
++      "inheritEnvironments": [],
++      "variables": []
++    }
++  },
++  "variant": {
++    "buildSystemArgumentList": [
++      "-DANDROID_STL\u003dc++_shared",
++      "-DREACT_NATIVE_VERSION\u003d81",
++      "-DNODE_MODULES_DIR\u003dC:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules"
++    ],
++    "cFlagsList": [],
++    "cppFlagsList": [
++      "-fexceptions",
++      "-frtti",
++      "-std\u003dc++17",
++      "-DONANDROID"
++    ],
++    "variantName": "release",
++    "isDebuggableEnabled": false,
++    "validAbiList": [
++      "armeabi-v7a",
++      "arm64-v8a",
++      "x86",
++      "x86_64"
++    ],
++    "buildTargetSet": [],
++    "implicitBuildTargetSet": [],
++    "cmakeSettingsConfiguration": "android-gradle-plugin-predetermined-name",
++    "module": {
++      "cxxFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\.cxx",
++      "intermediatesBaseFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\build\\intermediates",
++      "intermediatesFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\build\\intermediates\\cxx",
++      "gradleModulePathName": ":hyperledger_anoncreds-react-native",
++      "moduleRootFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android",
++      "moduleBuildFile": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\build.gradle",
++      "makeFile": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\CMakeLists.txt",
++      "buildSystem": "CMAKE",
++      "ndkFolder": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006",
++      "ndkFolderBeforeSymLinking": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006",
++      "ndkVersion": "27.1.12297006",
++      "ndkSupportedAbiList": [
++        "armeabi-v7a",
++        "arm64-v8a",
++        "riscv64",
++        "x86",
++        "x86_64"
++      ],
++      "ndkDefaultAbiList": [
++        "armeabi-v7a",
++        "arm64-v8a",
++        "x86",
++        "x86_64"
++      ],
++      "ndkDefaultStl": "LIBCXX_STATIC",
++      "ndkMetaPlatforms": {
++        "min": 21,
++        "max": 35,
++        "aliases": {
++          "20": 19,
++          "25": 24,
++          "J": 16,
++          "J-MR1": 17,
++          "J-MR2": 18,
++          "K": 19,
++          "L": 21,
++          "L-MR1": 22,
++          "M": 23,
++          "N": 24,
++          "N-MR1": 24,
++          "O": 26,
++          "O-MR1": 27,
++          "P": 28,
++          "Q": 29,
++          "R": 30,
++          "S": 31,
++          "Sv2": 32,
++          "Tiramisu": 33,
++          "UpsideDownCake": 34,
++          "VanillaIceCream": 35
++        }
++      },
++      "ndkMetaAbiList": [
++        {
++          "name": "armeabi-v7a",
++          "bitness": 32,
++          "isDefault": true,
++          "isDeprecated": false,
++          "architecture": "arm",
++          "triple": "arm-linux-androideabi",
++          "llvmTriple": "armv7-none-linux-androideabi"
++        },
++        {
++          "name": "arm64-v8a",
++          "bitness": 64,
++          "isDefault": true,
++          "isDeprecated": false,
++          "architecture": "arm64",
++          "triple": "aarch64-linux-android",
++          "llvmTriple": "aarch64-none-linux-android"
++        },
++        {
++          "name": "riscv64",
++          "bitness": 64,
++          "isDefault": false,
++          "isDeprecated": false,
++          "architecture": "riscv64",
++          "triple": "riscv64-linux-android",
++          "llvmTriple": "riscv64-none-linux-android"
++        },
++        {
++          "name": "x86",
++          "bitness": 32,
++          "isDefault": true,
++          "isDeprecated": false,
++          "architecture": "x86",
++          "triple": "i686-linux-android",
++          "llvmTriple": "i686-none-linux-android"
++        },
++        {
++          "name": "x86_64",
++          "bitness": 64,
++          "isDefault": true,
++          "isDeprecated": false,
++          "architecture": "x86_64",
++          "triple": "x86_64-linux-android",
++          "llvmTriple": "x86_64-none-linux-android"
++        }
++      ],
++      "cmakeToolchainFile": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006\\build\\cmake\\android.toolchain.cmake",
++      "cmake": {
++        "cmakeExe": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\cmake.exe"
++      },
++      "stlSharedObjectMap": {
++        "LIBCXX_SHARED": {
++          "armeabi-v7a": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\arm-linux-androideabi\\libc++_shared.so",
++          "arm64-v8a": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\aarch64-linux-android\\libc++_shared.so",
++          "riscv64": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\riscv64-linux-android\\libc++_shared.so",
++          "x86": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\i686-linux-android\\libc++_shared.so",
++          "x86_64": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\x86_64-linux-android\\libc++_shared.so"
++        },
++        "LIBCXX_STATIC": {},
++        "NONE": {},
++        "SYSTEM": {}
++      },
++      "project": {
++        "rootBuildGradleFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\android",
++        "sdkFolder": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk",
++        "isBuildOnlyTargetAbiEnabled": true,
++        "isCmakeBuildCohabitationEnabled": false,
++        "isPrefabEnabled": true
++      },
++      "outputOptions": [],
++      "ninjaExe": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
++      "hasBuildTimeInformation": true
++    },
++    "prefabClassPaths": [
++      "C:\\Users\\Uriel\\.gradle\\caches\\modules-2\\files-2.1\\com.google.prefab\\cli\\2.1.0\\aa32fec809c44fa531f01dcfb739b5b3304d3050\\cli-2.1.0-all.jar"
++    ],
++    "prefabPackages": [
++      "C:\\Users\\Uriel\\.gradle\\caches\\8.14.3\\transforms\\cc20650cd391b22012dd468b7a30b8c4\\transformed\\react-android-0.81.4-release\\prefab",
++      "C:\\Users\\Uriel\\.gradle\\caches\\8.14.3\\transforms\\48f32c88ab848eeaa4d6425b771aa34b\\transformed\\fbjni-0.7.0\\prefab"
++    ],
++    "prefabPackageConfigurations": [],
++    "stlType": "c++_shared",
++    "optimizationTag": "RelWithDebInfo"
++  },
++  "buildSettings": {
++    "environmentVariables": []
++  },
++  "prefabFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\.cxx\\RelWithDebInfo\\6d5e2b3d\\prefab\\arm64-v8a",
++  "isActiveAbi": true,
++  "fullConfigurationHash": "6d5e2b3d502m166b4y4a3s4ao6yo3v4l514g3x1w4n2f6o1h5k232uh1z5i13",
++  "fullConfigurationHashKey": "# Values used to calculate the hash in this folder name.\n# Should not depend on the absolute path of the project itself.\n#   - AGP: 8.11.0.\n#   - $NDK is the path to NDK 27.1.12297006.\n#   - $PROJECT is the path to the parent folder of the root Gradle build file.\n#   - $ABI is the ABI to be built with. The specific value doesn\u0027t contribute to the value of the hash.\n#   - $HASH is the hash value computed from this text.\n#   - $CMAKE is the path to CMake 3.22.1.\n#   - $NINJA is the path to Ninja.\n-HC:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DANDROID_PLATFORM\u003dandroid-21\n-DANDROID_ABI\u003d$ABI\n-DCMAKE_ANDROID_ARCH_ABI\u003d$ABI\n-DANDROID_NDK\u003d$NDK\n-DCMAKE_ANDROID_NDK\u003d$NDK\n-DCMAKE_TOOLCHAIN_FILE\u003d$NDK/build/cmake/android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003d$NINJA\n-DCMAKE_CXX_FLAGS\u003d-fexceptions -frtti -std\u003dc++17 -DONANDROID\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/$HASH/obj/$ABI\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/$HASH/obj/$ABI\n-DCMAKE_BUILD_TYPE\u003dRelWithDebInfo\n-DCMAKE_FIND_ROOT_PATH\u003dC:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/$HASH/prefab/$ABI/prefab\n-BC:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules/@hyperledger/anoncreds-react-native/android/.cxx/RelWithDebInfo/$HASH/$ABI\n-GNinja\n-DANDROID_STL\u003dc++_shared\n-DREACT_NATIVE_VERSION\u003d81\n-DNODE_MODULES_DIR\u003dC:/Users/Uriel/EVOLUTICS_DIGITAL_ID/e-IDapp_CMU/node_modules",
++  "configurationArguments": [
++    "-HC:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android",
++    "-DCMAKE_SYSTEM_NAME\u003dAndroid",
++    "-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON",
++    "-DCMAKE_SYSTEM_VERSION\u003d21",
++    "-DANDROID_PLATFORM\u003dandroid-21",
++    "-DANDROID_ABI\u003darm64-v8a",
++    "-DCMAKE_ANDROID_ARCH_ABI\u003darm64-v8a",
++    "-DANDROID_NDK\u003dC:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006",
++    "-DCMAKE_ANDROID_NDK\u003dC:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006",
++    "-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006\\build\\cmake\\android.toolchain.cmake",
++    "-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
++    "-DCMAKE_CXX_FLAGS\u003d-fexceptions -frtti -std\u003dc++17 -DONANDROID",
++    "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\build\\intermediates\\cxx\\RelWithDebInfo\\6d5e2b3d\\obj\\arm64-v8a",
++    "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\build\\intermediates\\cxx\\RelWithDebInfo\\6d5e2b3d\\obj\\arm64-v8a",
++    "-DCMAKE_BUILD_TYPE\u003dRelWithDebInfo",
++    "-DCMAKE_FIND_ROOT_PATH\u003dC:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\.cxx\\RelWithDebInfo\\6d5e2b3d\\prefab\\arm64-v8a\\prefab",
++    "-BC:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\.cxx\\RelWithDebInfo\\6d5e2b3d\\arm64-v8a",
++    "-GNinja",
++    "-DANDROID_STL\u003dc++_shared",
++    "-DREACT_NATIVE_VERSION\u003d81",
++    "-DNODE_MODULES_DIR\u003dC:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules"
++  ],
++  "stlLibraryFile": "C:\\Users\\Uriel\\AppData\\Local\\Android\\Sdk\\ndk\\27.1.12297006\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\aarch64-linux-android\\libc++_shared.so",
++  "intermediatesParentFolder": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\build\\intermediates\\cxx\\RelWithDebInfo\\6d5e2b3d"
++}
+\ No newline at end of file
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/generate_cxx_metadata_477_timing.txt b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/generate_cxx_metadata_477_timing.txt
+new file mode 100644
+index 0000000..a08c1b4
+--- /dev/null
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/generate_cxx_metadata_477_timing.txt
+@@ -0,0 +1,7 @@
++# C/C++ build system timings
++generate_cxx_metadata
++  generate-prefab-packages
++    exec-prefab 438ms
++  generate-prefab-packages completed in 447ms
++generate_cxx_metadata completed in 455ms
++
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/metadata_generation_record.json b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/metadata_generation_record.json
+new file mode 100644
+index 0000000..269f504
+--- /dev/null
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/metadata_generation_record.json
+@@ -0,0 +1,80 @@
++[
++  {
++    "level_": 0,
++    "message_": "Start JSON generation. Platform version: 21 min SDK version: arm64-v8a",
++    "file_": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\CMakeLists.txt",
++    "tag_": "release|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "rebuilding JSON C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\.cxx\\RelWithDebInfo\\6d5e2b3d\\arm64-v8a\\android_gradle_build.json due to:",
++    "file_": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\CMakeLists.txt",
++    "tag_": "release|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "- no fingerprint file, will remove stale configuration folder",
++    "file_": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\CMakeLists.txt",
++    "tag_": "release|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "@echo off\n\"C:\\\\Program Files\\\\java-21-openjdk-21.0.4.0.7-1.win.jdk.x86_64\\\\bin\\\\java\" ^\n  --class-path ^\n  \"C:\\\\Users\\\\Uriel\\\\.gradle\\\\caches\\\\modules-2\\\\files-2.1\\\\com.google.prefab\\\\cli\\\\2.1.0\\\\aa32fec809c44fa531f01dcfb739b5b3304d3050\\\\cli-2.1.0-all.jar\" ^\n  com.google.prefab.cli.AppKt ^\n  --build-system ^\n  cmake ^\n  --platform ^\n  android ^\n  --abi ^\n  arm64-v8a ^\n  --os-version ^\n  21 ^\n  --stl ^\n  c++_shared ^\n  --ndk-version ^\n  27 ^\n  --output ^\n  \"C:\\\\Users\\\\Uriel\\\\AppData\\\\Local\\\\Temp\\\\agp-prefab-staging10019051239245356699\\\\staged-cli-output\" ^\n  \"C:\\\\Users\\\\Uriel\\\\.gradle\\\\caches\\\\8.14.3\\\\transforms\\\\cc20650cd391b22012dd468b7a30b8c4\\\\transformed\\\\react-android-0.81.4-release\\\\prefab\" ^\n  \"C:\\\\Users\\\\Uriel\\\\.gradle\\\\caches\\\\8.14.3\\\\transforms\\\\48f32c88ab848eeaa4d6425b771aa34b\\\\transformed\\\\fbjni-0.7.0\\\\prefab\"\n",
++    "file_": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\CMakeLists.txt",
++    "tag_": "release|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "Received process result: 0",
++    "file_": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\CMakeLists.txt",
++    "tag_": "release|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 1,
++    "message_": "com.google.prefab.api.NoMatchingLibraryException: No compatible library found for //ReactAndroid/hermestooling. Rejected the following libraries:",
++    "file_": "C:\\Users\\Uriel\\EVOLUTICS_DIGITAL_ID\\e-IDapp_CMU\\node_modules\\@hyperledger\\anoncreds-react-native\\android\\CMakeLists.txt",
++    "tag_": "release|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  }
++]
+\ No newline at end of file
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/prefab_command.bat b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/prefab_command.bat
+new file mode 100644
+index 0000000..a26add0
+--- /dev/null
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/prefab_command.bat
+@@ -0,0 +1,21 @@
++@echo off
++"C:\\Program Files\\java-21-openjdk-21.0.4.0.7-1.win.jdk.x86_64\\bin\\java" ^
++  --class-path ^
++  "C:\\Users\\Uriel\\.gradle\\caches\\modules-2\\files-2.1\\com.google.prefab\\cli\\2.1.0\\aa32fec809c44fa531f01dcfb739b5b3304d3050\\cli-2.1.0-all.jar" ^
++  com.google.prefab.cli.AppKt ^
++  --build-system ^
++  cmake ^
++  --platform ^
++  android ^
++  --abi ^
++  arm64-v8a ^
++  --os-version ^
++  21 ^
++  --stl ^
++  c++_shared ^
++  --ndk-version ^
++  27 ^
++  --output ^
++  "C:\\Users\\Uriel\\AppData\\Local\\Temp\\agp-prefab-staging10019051239245356699\\staged-cli-output" ^
++  "C:\\Users\\Uriel\\.gradle\\caches\\8.14.3\\transforms\\cc20650cd391b22012dd468b7a30b8c4\\transformed\\react-android-0.81.4-release\\prefab" ^
++  "C:\\Users\\Uriel\\.gradle\\caches\\8.14.3\\transforms\\48f32c88ab848eeaa4d6425b771aa34b\\transformed\\fbjni-0.7.0\\prefab"
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/prefab_stderr.txt b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/prefab_stderr.txt
+new file mode 100644
+index 0000000..312383f
+--- /dev/null
++++ b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/prefab_stderr.txt
+@@ -0,0 +1,15 @@
++com.google.prefab.api.NoMatchingLibraryException: No compatible library found for //ReactAndroid/hermestooling. Rejected the following libraries:
++android.arm64-v8a: User has minSdkVersion 21 but library was built for 24
++android.armeabi-v7a: User is targeting arm64-v8a but library is for armeabi-v7a
++android.x86: User is targeting arm64-v8a but library is for x86
++android.x86_64: User is targeting arm64-v8a but library is for x86_64
++com.google.prefab.api.NoMatchingLibraryException: No compatible library found for //ReactAndroid/jsi. Rejected the following libraries:
++android.arm64-v8a: User has minSdkVersion 21 but library was built for 24
++android.armeabi-v7a: User is targeting arm64-v8a but library is for armeabi-v7a
++android.x86: User is targeting arm64-v8a but library is for x86
++android.x86_64: User is targeting arm64-v8a but library is for x86_64
++com.google.prefab.api.NoMatchingLibraryException: No compatible library found for //ReactAndroid/reactnative. Rejected the following libraries:
++android.arm64-v8a: User has minSdkVersion 21 but library was built for 24
++android.armeabi-v7a: User is targeting arm64-v8a but library is for armeabi-v7a
++android.x86: User is targeting arm64-v8a but library is for x86
++android.x86_64: User is targeting arm64-v8a but library is for x86_64
+diff --git a/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/prefab_stdout.txt b/node_modules/@hyperledger/anoncreds-react-native/android/build/intermediates/cxx/RelWithDebInfo/6d5e2b3d/logs/arm64-v8a/prefab_stdout.txt
+new file mode 100644
+index 0000000..e69de29

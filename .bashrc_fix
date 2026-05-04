@@ -1,0 +1,6 @@
+# Minimal .bashrc for Git Bash
+# Prevents exit code 1 on terminal startup
+
+# NVM (si installé)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"

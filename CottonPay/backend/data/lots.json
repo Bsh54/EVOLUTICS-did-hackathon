@@ -1,0 +1,29 @@
+{
+  "lots": [
+    {
+      "id": "LOT-001",
+      "cooperative_id": "coop-001",
+      "created_at": "2026-01-10T08:00:00Z",
+      "closed_at": "2026-01-12T16:30:00Z",
+      "status": "closed",
+      "delivery_count": 10
+    },
+    {
+      "id": "LOT-002",
+      "cooperative_id": "coop-001",
+      "created_at": "2026-02-05T07:30:00Z",
+      "closed_at": "2026-02-08T14:00:00Z",
+      "status": "closed",
+      "delivery_count": 10
+    },
+    {
+      "id": "LOT-003",
+      "cooperative_id": "coop-001",
+      "created_at": "2026-04-01T08:00:00Z",
+      "closed_at": "2026-04-28T16:25:59.187Z",
+      "status": "closed",
+      "delivery_count": 10
+    }
+  ],
+  "lot_size": 10
+}

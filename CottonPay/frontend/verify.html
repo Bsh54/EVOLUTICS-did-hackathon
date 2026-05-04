@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification des Livraisons — CottonPay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Raleway:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary:#15803D; --primary-dark:#0f6330; --secondary:#22C55E;
+            --bg:#F0FDF4; --text:#14532D; --text-light:rgba(20,83,45,0.6);
+            --success:#10B981; --danger:#EF4444; --warning:#F59E0B;
+            --card-bg:rgba(255,255,255,0.85); --card-border:rgba(21,128,61,0.15);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Raleway',sans-serif;background:var(--bg);min-height:100vh;color:var(--text);position:relative;}
+        body::before{content:'';position:fixed;inset:0;background:url('arriere1.jpeg') center/cover no-repeat;opacity:0.4;z-index:0;}
+        body::after{content:'';position:fixed;inset:0;background:linear-gradient(160deg,rgba(240,253,244,0.92),rgba(240,253,244,0.82),rgba(240,253,244,0.92));z-index:0;}
+        .page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px 60px;}
+        .brand{display:flex;align-items:center;gap:10px;margin-bottom:32px;cursor:pointer;}
+        .brand svg{width:28px;height:28px;stroke:#15803D;}
+        .brand span{font-family:'Lora',serif;font-size:24px;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .card{background:var(--card-bg);backdrop-filter:blur(12px);border:1.5px solid var(--card-border);border-radius:20px;padding:32px;max-width:520px;width:100%;box-shadow:0 16px 48px rgba(21,128,61,0.1);animation:fadeUp .5s ease both;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+        .card-title{font-family:'Lora',serif;font-size:20px;font-weight:600;text-align:center;margin-bottom:6px;}
+        .card-sub{font-size:13px;color:var(--text-light);text-align:center;line-height:1.6;margin-bottom:24px;}
+        .step{display:none;}.step.active{display:block;animation:fadeUp .4s ease both;}
+        label{font-size:12px;font-weight:600;color:var(--text-light);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;}
+        input[type="text"]{width:100%;padding:12px 16px;background:#fff;border:1.5px solid var(--card-border);border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;color:var(--text);outline:none;transition:border-color .2s;margin-bottom:16px;}
+        input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(21,128,61,0.08);}
+        input::placeholder{color:rgba(75,122,90,0.4);}
+        .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:12px;font-family:'Raleway',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;}
+        .btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 16px rgba(21,128,61,0.25);}
+        .btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);}
+        .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+        .btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary);margin-top:10px;}
+        .btn-outline:hover{background:rgba(21,128,61,0.04);}
+        .btn-ghost{background:none;border:none;color:var(--text-light);font-size:13px;margin-top:12px;cursor:pointer;}
+        .btn-ghost:hover{color:var(--primary);}
+        .msg{padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;line-height:1.5;}
+        .msg-error{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#B91C1C;}
+        .msg-info{background:rgba(21,128,61,0.06);border:1px solid rgba(21,128,61,0.15);color:var(--text);}
+        .producer-preview{background:rgba(21,128,61,0.04);border:1px solid rgba(21,128,61,0.12);border-radius:12px;padding:16px;margin-bottom:20px;}
+        .producer-preview p{font-size:13px;color:var(--text-light);margin-bottom:4px;}
+        .producer-preview strong{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);font-size:14px;}
+        .otp-note{font-size:12px;color:var(--text-light);text-align:center;margin-top:12px;font-style:italic;}
+        .result-card{background:rgba(21,128,61,0.04);border:1px solid rgba(21,128,61,0.12);border-radius:12px;padding:16px;margin-bottom:16px;}
+        .result-card h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--text);}
+        .stat-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(21,128,61,0.08);}
+        .stat-row:last-child{border:none;}
+        .stat-row span:first-child{color:var(--text-light);}
+        .stat-row span:last-child{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;}
+        .delivery-item{background:#fff;border:1px solid rgba(220,252,231,1);border-radius:10px;padding:14px;margin-bottom:8px;transition:border-color .2s;}
+        .delivery-item:hover{border-color:var(--primary);}
+        .delivery-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+        .delivery-top strong{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;}
+        .delivery-top span{font-size:12px;color:var(--text-light);}
+        .delivery-bottom{font-size:12px;color:var(--text-light);}
+        .delivery-bottom b{color:var(--primary);font-weight:700;font-size:14px;}
+        .spinner-sm{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        .footer-link{text-align:center;margin-top:20px;}
+        .footer-link a{font-size:13px;color:var(--text-light);text-decoration:none;}
+        .footer-link a:hover{color:var(--primary);text-decoration:underline;}
+        @media(max-width:540px){.card{padding:24px;}.page{padding:24px 16px 40px;}}
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="brand" onclick="window.location.href='/'">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span>CottonPay</span>
+    </div>
+
+    <div class="card">
+        <!-- STEP 1: NPI Lookup -->
+        <div class="step active" id="step-npi">
+            <h2 class="card-title">🏦 Vérification des livraisons</h2>
+            <p class="card-sub">Entrez le NPI d'un producteur pour consulter son historique de livraisons certifié sur la blockchain.</p>
+            <div id="npiError" class="msg msg-error" style="display:none;"></div>
+            <label for="npiInput">NPI du producteur</label>
+            <input type="text" id="npiInput" placeholder="ex : 1000000000000001" maxlength="16" autocomplete="off">
+            <button class="btn btn-primary" id="btnLookup" onclick="lookupNpi()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                Rechercher ce producteur
+            </button>
+        </div>
+
+        <!-- STEP 1b: Producer Found → Send OTP -->
+        <div class="step" id="step-found">
+            <h2 class="card-title">Producteur trouvé</h2>
+            <p class="card-sub">Confirmez l'identité ci-dessous et envoyez un code de validation au producteur.</p>
+            <div class="producer-preview" id="producerPreview"></div>
+            <div id="sendError" class="msg msg-error" style="display:none;"></div>
+            <button class="btn btn-primary" id="btnSendOtp" onclick="sendOtp()">
+                📲 Envoyer le code de validation
+            </button>
+            <button class="btn-ghost" onclick="goToStep('npi')">← Modifier le NPI</button>
+        </div>
+
+        <!-- STEP 2: OTP Validation -->
+        <div class="step" id="step-otp">
+            <h2 class="card-title">🔐 Code de validation</h2>
+            <p class="card-sub">Un code a été envoyé au téléphone du producteur (<strong id="otpPhone">***</strong>). Demandez-lui de vous le communiquer.</p>
+            <div id="otpError" class="msg msg-error" style="display:none;"></div>
+            <label for="otpInput">Code OTP (6 chiffres)</label>
+            <input type="text" id="otpInput" placeholder="000000" maxlength="6" autocomplete="off" style="text-align:center;font-size:24px;letter-spacing:8px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">
+            <button class="btn btn-primary" id="btnValidate" onclick="validateOtp()">
+                Valider le code
+            </button>
+            <p class="otp-note">💡 En environnement de test, le code est <strong>111111</strong></p>
+            <button class="btn-ghost" onclick="goToStep('found')">← Revenir en arrière</button>
+        </div>
+
+        <!-- STEP 3: History -->
+        <div class="step" id="step-history">
+            <h2 class="card-title">✅ Historique vérifié</h2>
+            <p class="card-sub">Données publiques de livraisons certifiées pour ce producteur.</p>
+            <div id="historyContent"></div>
+            <button class="btn btn-primary" onclick="resetVerification()" style="margin-top:16px;">
+                🔄 Nouvelle vérification
+            </button>
+        </div>
+    </div>
+
+    <div class="footer-link">
+        <a href="/">← Retour à CottonPay</a>
+    </div>
+</div>
+
+<script>
+    const API = 'http://localhost:3002';
+    let currentNpi = '';
+    let producerInfo = null;
+    const fmtN = n => new Intl.NumberFormat('fr-FR').format(n);
+    const fmtDate = iso => iso ? new Date(iso).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+
+    function goToStep(name) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        const el = document.getElementById('step-' + name);
+        if (el) { el.classList.add('active'); el.style.animation = 'none'; el.offsetHeight; el.style.animation = ''; }
+    }
+
+    function setLoading(btnId, loading) {
+        const btn = document.getElementById(btnId);
+        if (loading) { btn.disabled = true; btn.dataset.orig = btn.innerHTML; btn.innerHTML = '<span class="spinner-sm"></span> Chargement...'; }
+        else { btn.disabled = false; btn.innerHTML = btn.dataset.orig || btn.innerHTML; }
+    }
+
+    // STEP 1: Lookup
+    async function lookupNpi() {
+        const npi = document.getElementById('npiInput').value.trim();
+        const errEl = document.getElementById('npiError');
+        errEl.style.display = 'none';
+        if (!npi || npi.length < 10) { errEl.textContent = 'Veuillez entrer un NPI valide (au moins 10 chiffres).'; errEl.style.display = 'block'; return; }
+        currentNpi = npi;
+        setLoading('btnLookup', true);
+        try {
+            const res = await fetch(`${API}/api/verify/lookup`, { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include', body:JSON.stringify({npi}) });
+            const data = await res.json();
+            if (!res.ok || !data.found) { errEl.textContent = data.message || 'Aucun producteur trouvé avec ce NPI.'; errEl.style.display = 'block'; return; }
+            producerInfo = data.producer;
+            document.getElementById('producerPreview').innerHTML = `
+                <p>Nom : <strong>${data.producer.name_initial}</strong></p>
+                <p>Coopérative : <strong>${data.producer.cooperative}</strong></p>
+                <p>Commune : <strong>${data.producer.commune}</strong></p>
+                <p>Téléphone : <strong>${data.producer.phone_masked}</strong></p>`;
+            goToStep('found');
+        } catch (e) { errEl.textContent = 'Erreur de connexion au serveur.'; errEl.style.display = 'block'; }
+        finally { setLoading('btnLookup', false); }
+    }
+
+    // STEP 1b: Send OTP
+    async function sendOtp() {
+        const errEl = document.getElementById('sendError');
+        errEl.style.display = 'none';
+        setLoading('btnSendOtp', true);
+        try {
+            const res = await fetch(`${API}/api/verify/otp/send`, { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include', body:JSON.stringify({npi:currentNpi}) });
+            const data = await res.json();
+            if (!res.ok) { errEl.textContent = data.error || 'Erreur lors de l\'envoi du code.'; errEl.style.display = 'block'; return; }
+            document.getElementById('otpPhone').textContent = data.phone_masked || producerInfo?.phone_masked || '***';
+            document.getElementById('otpInput').value = '';
+            goToStep('otp');
+        } catch (e) { errEl.textContent = 'Erreur de connexion.'; errEl.style.display = 'block'; }
+        finally { setLoading('btnSendOtp', false); }
+    }
+
+    // STEP 2: Validate OTP
+    async function validateOtp() {
+        const otp = document.getElementById('otpInput').value.trim();
+        const errEl = document.getElementById('otpError');
+        errEl.style.display = 'none';
+        if (!otp || otp.length < 4) { errEl.textContent = 'Veuillez entrer le code OTP.'; errEl.style.display = 'block'; return; }
+        setLoading('btnValidate', true);
+        try {
+            const res = await fetch(`${API}/api/verify/otp/validate`, { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include', body:JSON.stringify({otp}) });
+            const data = await res.json();
+            if (!res.ok || !data.valid) { errEl.textContent = data.message || 'Code incorrect. Réessayez.'; errEl.style.display = 'block'; return; }
+            await loadHistory();
+        } catch (e) { errEl.textContent = 'Erreur de connexion.'; errEl.style.display = 'block'; }
+        finally { setLoading('btnValidate', false); }
+    }
+
+    // STEP 3: Load & render history
+    async function loadHistory() {
+        try {
+            const res = await fetch(`${API}/api/verify/deliveries`, { credentials:'include' });
+            const data = await res.json();
+            if (!res.ok) { alert(data.error || 'Erreur'); return; }
+            const p = data.producer;
+            const s = data.summary;
+            const d = data.deliveries || [];
+            let html = `
+                <div class="result-card">
+                    <h4>👤 Producteur</h4>
+                    <div class="stat-row"><span>Nom</span><span>${p.name}</span></div>
+                    <div class="stat-row"><span>NPI</span><span style="font-family:monospace;">${p.npi}</span></div>
+                    <div class="stat-row"><span>Coopérative</span><span>${p.cooperative}</span></div>
+                    <div class="stat-row"><span>Commune</span><span>${p.commune || '—'}</span></div>
+                    <div class="stat-row"><span>Région</span><span>${p.region || '—'}</span></div>
+                </div>
+                <div class="result-card">
+                    <h4>📊 Résumé campagne</h4>
+                    <div class="stat-row"><span>Nombre de livraisons</span><span>${s.total_deliveries}</span></div>
+                    <div class="stat-row"><span>Poids total livré</span><span>${fmtN(s.total_weight_kg)} kg</span></div>
+                    <div class="stat-row"><span>Montant brut total</span><span>${fmtN(s.total_gross)} FCFA</span></div>
+                </div>
+                <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;margin-bottom:10px;">📦 Détail des livraisons</h4>`;
+            if (d.length === 0) {
+                html += '<p style="text-align:center;color:var(--text-light);font-size:13px;">Aucune livraison enregistrée.</p>';
+            } else {
+                d.forEach(del => {
+                    const quality = del.quality === '1er_choix' ? '1er choix' : '2ème choix';
+                    html += `
+                    <div class="delivery-item">
+                        <div class="delivery-top">
+                            <strong>${fmtN(del.weight_kg)} kg · ${quality}</strong>
+                            <span>${fmtDate(del.date)}</span>
+                        </div>
+                        <div class="delivery-bottom">
+                            <b>${fmtN(del.total_gross)} FCFA</b> · ${fmtN(del.unit_price)} FCFA/kg · Lot ${del.lot_number || '—'}
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('historyContent').innerHTML = html;
+            goToStep('history');
+        } catch (e) { alert('Erreur de chargement de l\'historique.'); }
+    }
+
+    // Reset
+    async function resetVerification() {
+        await fetch(`${API}/api/verify/reset`, { method:'POST', credentials:'include' }).catch(()=>{});
+        currentNpi = ''; producerInfo = null;
+        document.getElementById('npiInput').value = '';
+        document.querySelectorAll('.msg').forEach(m => m.style.display = 'none');
+        goToStep('npi');
+    }
+
+    // Auto-fill NPI from URL params (from landing page or receipt QR)
+    (function autoFill() {
+        const params = new URLSearchParams(window.location.search);
+        const npi = params.get('npi');
+        if (npi && npi.length >= 10) {
+            document.getElementById('npiInput').value = npi;
+            setTimeout(() => lookupNpi(), 300);
+        }
+    })();
+
+    // Enter key support
+    document.getElementById('npiInput').addEventListener('keypress', e => { if (e.key === 'Enter') lookupNpi(); });
+    document.getElementById('otpInput').addEventListener('keypress', e => { if (e.key === 'Enter') validateOtp(); });
+
+    console.log('🏦 CottonPay — Vérification Publique v2');
+</script>
+</body>
+</html>

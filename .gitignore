@@ -1,0 +1,73 @@
+# Claude Code
+.claude/
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Clés privées
+*.pem
+backend/keys/
+
+# Logs
+logs/
+*.log
+/tmp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+build/
+
+# Database
+*.db
+*.sqlite
+
+# Data files
+data/sales.json
+
+# Docker
+docker-compose.override.yml
+
+# Submodules
+eidStack-CMU/node_modules/
+eidStack-CMU/.env
+eidStack-CMU/dist/
+eidStack-CMU/prisma/.env
+
+esignet-master/docker-compose/.env
+
+# APK files (too large for GitHub - use GitHub Releases)
+*.apk
+
+# Debug log dumps
+app_log.txt
+app_only.txt
+crash_log.txt
+debug_log.txt
+full_log.txt
+latest_log.txt
+logcat.txt
+logcat2.txt
+logcat_ascii.txt
+logcat_errors.txt
+phone_log.txt
+
+# Generated seed
+.generated-seed

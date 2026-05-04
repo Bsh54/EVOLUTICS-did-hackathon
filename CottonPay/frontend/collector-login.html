@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Collecteur - CottonPay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #15803D;
+            --color-secondary: #22C55E;
+            --color-cta: #3B82F6;
+            --color-background: #F0FDF4;
+            --color-text: #14532D;
+            --font-heading: 'Lora', serif;
+            --font-body: 'Raleway', sans-serif;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --space-3xl: 4rem;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: var(--color-background);
+        }
+
+        /* Split Screen Layout */
+        .split-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Left Side - Image */
+        .split-left {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: none;
+            min-height: 100vh;
+        }
+
+        .split-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        .split-left::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.88), rgba(34, 197, 94, 0.82));
+            z-index: 1;
+        }
+
+        .image-overlay {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-3xl);
+            color: white;
+            text-align: center;
+        }
+
+        .image-overlay-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-xl);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .image-overlay-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        .image-overlay h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            line-height: 1.2;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-overlay p {
+            font-size: clamp(16px, 2vw, 20px);
+            line-height: 1.6;
+            max-width: 500px;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .image-features {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin-top: var(--space-2xl);
+            max-width: 400px;
+        }
+
+        .image-feature {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .image-feature svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            color: white;
+        }
+
+        .image-feature span {
+            font-size: 15px;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        /* Right Side - Form */
+        .split-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-xl);
+            background: var(--color-background);
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .logo-small {
+            position: absolute;
+            top: var(--space-xl);
+            left: var(--space-xl);
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+            transition: transform 200ms ease;
+        }
+
+        .logo-small:hover {
+            transform: scale(1.05);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+        }
+
+        .auth-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: rgba(21, 128, 61, 0.1);
+            color: var(--color-primary);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            border: 1px solid rgba(21, 128, 61, 0.2);
+        }
+
+        .auth-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .auth-header h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-md);
+            line-height: 1.2;
+        }
+
+        .auth-header p {
+            font-size: 16px;
+            color: rgba(20, 83, 45, 0.7);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 24px;
+            padding: var(--space-2xl);
+            box-shadow: 0 8px 32px rgba(21, 128, 61, 0.12);
+            border: 2px solid rgba(21, 128, 61, 0.08);
+            transition: all 200ms ease;
+        }
+
+        .auth-card:hover {
+            box-shadow: 0 12px 40px rgba(21, 128, 61, 0.15);
+            border-color: rgba(21, 128, 61, 0.12);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.05), rgba(34, 197, 94, 0.03));
+            border-left: 4px solid var(--color-primary);
+            padding: var(--space-lg);
+            border-radius: 12px;
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(21, 128, 61, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .info-box-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+
+        .info-box-header svg {
+            width: 20px;
+            height: 20px;
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        .info-box-header strong {
+            font-weight: 600;
+            color: var(--color-primary);
+            font-size: 15px;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            color: var(--color-text);
+            line-height: 1.6;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-esignet {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+            padding: 18px 32px;
+            background: var(--color-primary);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: var(--font-body);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 200ms ease;
+            box-shadow: 0 4px 16px rgba(21, 128, 61, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-esignet::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-esignet:hover::before {
+            left: 100%;
+        }
+
+        .btn-esignet:hover {
+            background: #166534;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(21, 128, 61, 0.35);
+        }
+
+        .btn-esignet:active {
+            transform: translateY(0);
+        }
+
+        .btn-esignet:focus-visible {
+            outline: 3px solid var(--color-cta);
+            outline-offset: 3px;
+        }
+
+        .btn-esignet svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+            color: rgba(20, 83, 45, 0.4);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(21, 128, 61, 0.15);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 200ms ease;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 8px;
+        }
+
+        .back-link:hover {
+            transform: translateX(-4px);
+            background: rgba(21, 128, 61, 0.05);
+        }
+
+        .back-link:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .back-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive */
+        @media (min-width: 1024px) {
+            .split-left {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .split-right {
+                padding: var(--space-lg);
+            }
+
+            .logo-small {
+                top: var(--space-lg);
+                left: var(--space-lg);
+                font-size: 24px;
+            }
+
+            .auth-container {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .split-right {
+                padding: var(--space-md);
+            }
+
+            .logo-small {
+                top: var(--space-md);
+                left: var(--space-md);
+                font-size: 22px;
+            }
+
+            .auth-card {
+                padding: var(--space-xl);
+            }
+
+            .auth-header {
+                margin-bottom: var(--space-xl);
+            }
+
+            .auth-badge {
+                font-size: 13px;
+                padding: 6px var(--space-md);
+            }
+        }
+
+        @media (max-width: 375px) {
+            .auth-card {
+                padding: var(--space-lg);
+            }
+
+            .btn-esignet {
+                padding: 16px 24px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left Side - Image -->
+        <div class="split-left">
+            <div class="image-overlay">
+                <div class="image-overlay-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+                <h2>Facilitez les transactions de coton</h2>
+                <p>Enregistrez les ventes, émettez des reçus vérifiables et aidez les agriculteurs à bâtir leur crédibilité financière</p>
+
+                <div class="image-features">
+                    <div class="image-feature">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Authentification sécurisée via eSignet</span>
+                    </div>
+                    <div class="image-feature">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Paiement instantané Mobile Money</span>
+                    </div>
+                    <div class="image-feature">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span>Reçus vérifiables cryptographiques</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Auth Form -->
+        <div class="split-right">
+            <div class="logo-small" onclick="window.location.href='/'">CottonPay</div>
+
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>Espace Collecteurs</h1>
+                </div>
+
+                <div class="auth-card">
+                    <div class="info-box">
+                        <div class="info-box-header">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <strong>Pour les collecteurs</strong>
+                        </div>
+                        <p>L'agriculteur doit s'authentifier avec son NPI (Numéro Personnel d'Identification) et sa biométrie via eSignet pour valider la transaction de vente.</p>
+                    </div>
+
+                    <button class="btn-esignet" onclick="handleLogin()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        Se connecter avec eSignet
+                    </button>
+
+                    <div class="divider">ou</div>
+
+                    <center>
+                        <a href="/" class="back-link">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            Retour à l'accueil
+                        </a>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin() {
+            // Rediriger vers le flux d'authentification eSignet
+            window.location.href = '/auth/login';
+        }
+    </script>
+</body>
+</html>

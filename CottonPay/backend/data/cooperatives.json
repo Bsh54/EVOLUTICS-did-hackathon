@@ -1,0 +1,28 @@
+{
+  "cooperatives": [
+    {
+      "id": "coop-001",
+      "name": "CVPC Borgou-Nord",
+      "region": "Borgou",
+      "commune": "Parakou",
+      "campaign": "2025-2026",
+      "members_npi": ["9876543210987654", "8765432109876543"],
+      "members": [
+        {
+          "npi": "9876543210987654",
+          "name": "Agossou",
+          "firstname": "Kokou",
+          "phone": "+22996000001",
+          "role": "president"
+        },
+        {
+          "npi": "8765432109876543",
+          "name": "Ahouansou",
+          "firstname": "Sèna",
+          "phone": "+22996000002",
+          "role": "secretaire"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+diff --git a/node_modules/@hyperledger/indy-vdr-react-native/android/CMakeLists.txt b/node_modules/@hyperledger/indy-vdr-react-native/android/CMakeLists.txt
+index c84556e..6ab127f 100644
+--- a/node_modules/@hyperledger/indy-vdr-react-native/android/CMakeLists.txt
++++ b/node_modules/@hyperledger/indy-vdr-react-native/android/CMakeLists.txt
+@@ -6,7 +6,7 @@ set (LIB_NAME "indyvdr")
+ file (GLOB LIBINDY_VDR_DIR "${CMAKE_SOURCE_DIR}/../native/mobile/android/${ANDROID_ABI}")
+ 
+ set(CMAKE_VERBOSE_MAKEFILE ON)
+-set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD 17)
+ 
+ set (BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
+ if(${REACT_NATIVE_VERSION} GREATER_EQUAL 71)
+@@ -91,7 +91,7 @@ if(${REACT_NATIVE_VERSION} GREATER_EQUAL 71)
+   target_link_libraries(
+     ${PACKAGE_NAME}
+     ReactAndroid::jsi
+-    ReactAndroid::reactnativejni
++    ReactAndroid::reactnative
+     fbjni::fbjni
+   )
+ elseif(${REACT_NATIVE_VERSION} LESS 66)
+diff --git a/node_modules/@hyperledger/indy-vdr-react-native/android/build.gradle b/node_modules/@hyperledger/indy-vdr-react-native/android/build.gradle
+index 9017d77..2a7faa0 100644
+--- a/node_modules/@hyperledger/indy-vdr-react-native/android/build.gradle
++++ b/node_modules/@hyperledger/indy-vdr-react-native/android/build.gradle
+@@ -81,12 +81,12 @@ android {
+   }
+   
+   defaultConfig {
+-    minSdkVersion 21 
++    minSdkVersion getExt('minSdkVersion')
+     targetSdkVersion getExt('targetSdkVersion')
+     
+     externalNativeBuild {
+         cmake {
+-            cppFlags "-fexceptions", "-frtti", "-std=c++1y", "-DONANDROID"
++            cppFlags "-fexceptions", "-frtti", "-std=c++17", "-DONANDROID"
+             abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+             arguments "-DANDROID_STL=c++_shared",
+                       "-DREACT_NATIVE_VERSION=${REACT_NATIVE_VERSION}",
+@@ -211,7 +211,7 @@ repositories {
+ 
+ dependencies {
+   if (REACT_NATIVE_VERSION >= 71) {
+-      implementation "com.facebook.react:react-android:"
++      implementation "com.facebook.react:react-android:${REACT_NATIVE_FULL_VERSION}"
+   } else {
+       // noinspection GradleDynamicVersion
+       implementation 'com.facebook.react:react-native:' + REACT_NATIVE_FULL_VERSION
