@@ -4,8 +4,7 @@
  * 
  * Architecture :
  *  - /auth/*           → Authentification eSignet (OIDC + PKCE)
- *  - /api/coop/*       → Espace Coopérative (membres authentifiés)
- *  - /api/producer/*   → Espace Producteur (producteurs authentifiés)
+ *  - /api/coop/*       → Espace Coopérative (membres authentifiés + fiche producteur)
  *  - /api/verify/*     → Vérification Publique (OTP éphémère)
  *  - /api/identity/*   → Vérification NPI (Mock Identity System)
  *  - /certification/*  → Legacy : émission credential (ancien flux)
@@ -21,6 +20,7 @@ const path = require('path');
 // Routes
 const authRoutes = require('./src/routes/auth');
 const coopRoutes = require('./src/routes/coop');
+// Note: producer routes kept for potential future mobile API use
 const producerRoutes = require('./src/routes/producer');
 const verifyRoutes = require('./src/routes/verify');
 const identityRoutes = require('./src/routes/identity');
@@ -63,8 +63,8 @@ app.use(session({
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Logo depuis la racine du projet
-app.get('/logo.png', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../logo.png'));
+app.get('/logo.jpeg', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../logo.jpeg'));
 });
 
 // ============================================
@@ -77,7 +77,7 @@ app.use('/auth', authRoutes);
 // Espace Coopérative (dashboard, producteurs, livraisons, lots, paiements)
 app.use('/api/coop', coopRoutes);
 
-// Espace Producteur (dashboard lecture seule, credential QR)
+// API Producteur (conservée pour usage futur mobile, non exposée en frontend)
 app.use('/api/producer', producerRoutes);
 
 // Vérification Publique (lookup, OTP, historique)
@@ -104,7 +104,7 @@ app.get('/certification/auth/callback', (req, res) => {
     // Ancien flux legacy
     res.redirect(`/certification/callback?${queryString}`);
   } else {
-    // Nouveau flux (coop ou producer)
+    // Nouveau flux (coop)
     res.redirect(`/auth/callback?${queryString}`);
   }
 });
@@ -127,12 +127,12 @@ app.get('/coop/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/coop/index.html'));
 });
 
-// Espace Producteur — servir index.html
+// Espace Producteur — redirige vers coop (migration)
 app.get('/producer', (req, res) => {
-  res.redirect('/producer/');
+  res.redirect('/coop/');
 });
 app.get('/producer/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/producer/index.html'));
+  res.redirect('/coop/');
 });
 
 // Page de vérification
@@ -152,9 +152,8 @@ app.get('/health', (req, res) => {
     esignet_configured: !!process.env.CLIENT_ID,
     eidstack_url: process.env.EIDSTACK_URL || 'http://localhost:4000',
     routes: {
-      auth: '/auth/login?flow=coop|producer',
+      auth: '/auth/login?flow=coop',
       coop_api: '/api/coop/*',
-      producer_api: '/api/producer/*',
       verify_api: '/api/verify/*',
       identity_api: '/api/identity/verify'
     }
@@ -192,7 +191,7 @@ app.listen(PORT, () => {
   console.log(`
 ╔══════════════════════════════════════════════════════════╗
 ║                                                          ║
-║   🌿 CottonPay Backend v2                                ║
+║   🌿 CottonPay Backend v3                                ║
 ║                                                          ║
 ║   Port: ${PORT}                                            ║
 ║   Environment: ${(process.env.NODE_ENV || 'development').padEnd(15)}                    ║
@@ -202,13 +201,11 @@ app.listen(PORT, () => {
 ║   Routes:                                                ║
 ║     Landing   → http://localhost:${PORT}/                   ║
 ║     Coop      → http://localhost:${PORT}/coop/              ║
-║     Producer  → http://localhost:${PORT}/producer/           ║
 ║     Verify    → http://localhost:${PORT}/verify              ║
 ║     Health    → http://localhost:${PORT}/health              ║
 ║                                                          ║
 ║   Auth:                                                  ║
-║     Login Coop     → /auth/login?flow=coop               ║
-║     Login Producer → /auth/login?flow=producer           ║
+║     Login     → /auth/login?flow=coop                    ║
 ║                                                          ║
 ║   ✅ Ready!                                               ║
 ║                                                          ║

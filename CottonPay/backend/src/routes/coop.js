@@ -448,6 +448,63 @@ router.post('/payments/:deliveryId', (req, res) => {
 });
 
 // ============================================
+// CREDENTIAL (QR) — pour la fiche producteur
+// ============================================
+
+/**
+ * GET /api/coop/deliveries/:deliveryId/credential
+ * Ré-affiche ou régénère le QR code d'un credential
+ * Accessible depuis la fiche producteur dans l'espace coopérative
+ */
+router.get('/deliveries/:deliveryId/credential', async (req, res) => {
+  try {
+    const delivery = deliveryService.getDeliveryById(req.params.deliveryId);
+
+    if (!delivery) {
+      return res.status(404).json({ error: 'Livraison non trouvée' });
+    }
+
+    // Vérifier que la livraison appartient à cette coopérative
+    if (delivery.cooperative_id !== req.coop.id) {
+      return res.status(403).json({ error: 'Cette livraison n\'appartient pas à votre coopérative' });
+    }
+
+    if (delivery.credential_status === 'accepted') {
+      return res.status(400).json({
+        error: 'Credential déjà scanné',
+        message: 'Ce credential est déjà dans le wallet du producteur.'
+      });
+    }
+
+    if (!delivery.credential_exchange_id) {
+      return res.status(400).json({
+        error: 'Pas de credential',
+        message: 'Aucun credential n\'a été émis pour cette livraison.'
+      });
+    }
+
+    // Ré-émettre le credential via eidStack
+    const producer = coopService.getProducerByNpi(delivery.farmer_npi);
+    const credential = await deliveryService.issueDeliveryCredential(
+      delivery,
+      producer,
+      req.coop,
+      'Ré-émission via espace coopérative'
+    );
+
+    res.json({
+      success: true,
+      message: 'QR code régénéré.',
+      delivery_id: delivery.id,
+      credential
+    });
+  } catch (error) {
+    console.error('❌ Credential re-issue error:', error);
+    res.status(500).json({ error: error.message || 'Erreur lors de la régénération du QR code' });
+  }
+});
+
+// ============================================
 // REÇU / BORDEREAU
 // ============================================
 
@@ -556,7 +613,7 @@ router.get('/receipt/:deliveryId', (req, res) => {
 <!-- Header -->
 <div class="header">
   <div class="header-left">
-    <div class="logo">C</div>
+    <img src="${appUrl}/logo.jpeg" alt="CottonPay" style="width:48px;height:48px;object-fit:contain;border-radius:12px;">
     <div class="brand">
       <h1>CottonPay</h1>
       <p>Plateforme de traçabilité cotonnière</p>

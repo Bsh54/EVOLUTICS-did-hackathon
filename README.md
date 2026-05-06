@@ -1,7 +1,7 @@
 # CottonPay - Système d'Identité Numérique et de Paiement pour Producteurs de Coton
 
 <p align="center">
-  <img src="logo.png" alt="CottonPay Logo" width="200"/>
+  <img src="logo.jpeg" alt="CottonPay Logo" width="200"/>
 </p>
 
 CottonPay est une plateforme complète d'identité numérique et de paiement destinée aux producteurs de coton au Bénin. Le système combine l'authentification par OTP via eSignet (MOSIP) et l'émission de credentials vérifiables via eidStack-CMU.
@@ -98,7 +98,7 @@ EVOLUTICS_DIGITAL_ID/
 ├── start.sh                # Démarrage CottonPay + eSignet (Windows)
 ├── install-eidstack.sh     # Installation eidStack-CMU (WSL)
 ├── setup-agent.sh          # Initialisation agent SSI (WSL, une fois)
-├── logo.png                # Logo CottonPay
+├── logo.jpeg                # Logo CottonPay
 │
 ├── CottonPay/              # Application Web principale
 │   ├── frontend/           # Interface utilisateur (HTML/CSS/JS)

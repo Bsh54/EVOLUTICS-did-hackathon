@@ -18,7 +18,7 @@
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
         <div class="sidebar-brand-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <img src="../logo.jpeg" alt="CottonPay" style="width:28px;height:28px;object-fit:contain;">
         </div>
         <div class="sidebar-brand-text">
             <div class="sidebar-title">CottonPay</div>
@@ -35,10 +35,7 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
             Enregistrer livraison
         </button>
-        <button class="sidebar-item" data-page="payments" onclick="navigateTo('payments')">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Paiements
-        </button>
+
         <button class="sidebar-item" data-page="register-producer" onclick="navigateTo('register-producer')">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
             Enregistrer producteur
@@ -56,7 +53,7 @@
      ============================================ -->
 <div class="mobile-header" id="mobileHeader">
     <div class="flex items-center" style="gap:8px;">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#15803D" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <img src="../logo.jpeg" alt="CottonPay" style="width:28px;height:28px;object-fit:contain;">
         <span class="font-lora" style="font-weight:700;color:var(--primary);">CottonPay</span>
     </div>
     <span class="font-jakarta" style="font-size:13px;color:rgba(107,114,128,1);" id="mobileGreeting"></span>
@@ -72,10 +69,7 @@
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
         <span>Livraison</span>
     </button>
-    <button class="bottom-nav-item" data-page="payments" onclick="navigateTo('payments')">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span>Paiements</span>
-    </button>
+
     <button class="bottom-nav-item" data-page="register-producer" onclick="navigateTo('register-producer')">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
         <span>Producteur</span>
@@ -167,7 +161,7 @@
 
         <!-- ========== PAGE 2: ENREGISTRER LIVRAISON ========== -->
         <section class="page" id="page-delivery">
-            <div style="max-width:640px;" class="animate-fadeInUp">
+            <div style="max-width:640px;margin:0 auto;" class="animate-fadeInUp">
                 <div class="glass-card no-hover" style="padding:24px 32px;">
                     <h2 class="font-lora" style="font-size:24px;font-weight:700;margin-bottom:24px;">Enregistrer une livraison</h2>
 
@@ -260,39 +254,11 @@
             </div>
         </section>
 
-        <!-- ========== PAGE 3: PAIEMENTS ========== -->
-        <section class="page" id="page-payments">
-            <h2 class="font-lora" style="font-size:24px;font-weight:700;margin-bottom:24px;">Gestion des paiements</h2>
-            <!-- Lot list view -->
-            <div id="lotsListView">
-                <div id="lotsContainer" style="display:flex;flex-direction:column;gap:16px;"></div>
-                <div class="empty-state hidden" id="lotsEmpty">
-                    <div class="empty-state-icon">💰</div>
-                    <div class="empty-state-text">Aucun lot de paiement disponible.<br>Enregistrez des livraisons pour créer des lots.</div>
-                    <button class="btn btn-cta" onclick="navigateTo('delivery')">Enregistrer une livraison</button>
-                </div>
-            </div>
-            <!-- Lot detail view (inline) -->
-            <div id="lotDetailView" class="hidden">
-                <button onclick="closeLotDetail()" style="display:flex;align-items:center;gap:8px;color:rgba(107,114,128,1);background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;padding:0;margin-bottom:16px;transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='rgba(107,114,128,1)'">
-                    ← Retour aux lots
-                </button>
-                <div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:16px;" id="lotDetailCard"></div>
-                <div class="glass-card no-hover" style="padding:24px 32px;background:rgba(240,253,244,0.5);" id="lotDeductionCard">
-                    <h4 class="font-jakarta" style="font-weight:600;margin-bottom:16px;">Détail des déductions (exemple)</h4>
-                    <div class="deductions">
-                        <div class="row"><span>Montant brut:</span><span>500 × 300 = 150 000 FCFA</span></div>
-                        <div class="row red"><span>Crédit intrants:</span><span>- 45 000 FCFA</span></div>
-                        <div class="row red"><span>Prélèvements AIC:</span><span>- 9 000 FCFA</span></div>
-                        <div class="row total"><span>Net à payer:</span><span>96 000 FCFA</span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+
 
         <!-- ========== PAGE 4: ENREGISTRER PRODUCTEUR ========== -->
         <section class="page" id="page-register-producer">
-            <div style="max-width:640px;" class="animate-fadeInUp">
+            <div style="max-width:640px;margin:0 auto;" class="animate-fadeInUp">
                 <div class="glass-card no-hover" style="padding:24px 32px;">
                     <h2 class="font-lora" style="font-size:24px;font-weight:700;margin-bottom:24px;">Enregistrer un nouveau producteur</h2>
 
@@ -324,16 +290,108 @@
             </div>
         </section>
 
+        <!-- ========== PAGE 5: FICHE PRODUCTEUR ========== -->
+        <section class="page" id="page-producer-detail">
+            <div class="animate-fadeInUp">
+                <!-- Back button -->
+                <button onclick="backFromProducerDetail()" style="display:flex;align-items:center;gap:8px;color:rgba(107,114,128,1);background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;padding:0;margin-bottom:20px;transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='rgba(107,114,128,1)'">
+                    ← Retour au tableau de bord
+                </button>
+
+                <!-- Profile Card -->
+                <div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:20px;">
+                    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+                        <div id="pdAvatar" style="width:80px;height:80px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0;box-shadow:0 4px 15px rgba(21,128,61,0.3);">--</div>
+                        <div style="flex:1;min-width:200px;">
+                            <h2 class="font-jakarta" style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:14px;" id="pdName">Chargement...</h2>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;">
+                                <div>
+                                    <p style="color:rgba(107,114,128,1);margin-bottom:2px;">NPI</p>
+                                    <p class="font-mono" style="font-weight:600;" id="pdNpi">---</p>
+                                </div>
+                                <div>
+                                    <p style="color:rgba(107,114,128,1);margin-bottom:2px;">Téléphone</p>
+                                    <p style="font-weight:600;" id="pdPhone">---</p>
+                                </div>
+                                <div>
+                                    <p style="color:rgba(107,114,128,1);margin-bottom:2px;">Coopérative</p>
+                                    <p style="font-weight:600;" id="pdCoop">---</p>
+                                </div>
+                                <div>
+                                    <p style="color:rgba(107,114,128,1);margin-bottom:2px;">Commune</p>
+                                    <p style="font-weight:600;" id="pdCommune">---</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-cta" onclick="startDeliveryForProducer()" id="pdDeliveryBtn" style="gap:6px;align-self:flex-start;">
+                            📦 Enregistrer une livraison
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Deliveries List -->
+                <div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:20px;">
+                    <h3 class="font-jakarta" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Historique des livraisons</h3>
+                    <div id="pdDeliveries" style="display:flex;flex-direction:column;gap:14px;"></div>
+                    <div class="empty-state hidden" id="pdDeliveriesEmpty">
+                        <div class="empty-state-icon">📦</div>
+                        <div class="empty-state-text">Aucune livraison enregistrée pour ce producteur.</div>
+                    </div>
+                </div>
+
+                <!-- Financial Summary -->
+                <div class="glass-card no-hover" style="padding:24px 32px;background:linear-gradient(to bottom right,rgba(240,253,244,0.9),rgba(209,250,229,0.9));">
+                    <h3 class="font-jakarta" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Résumé financier</h3>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:14px;">
+                            <span style="color:rgba(75,85,99,1);">Total livré</span>
+                            <span class="font-jakarta" id="pdStatWeight" style="font-weight:600;">0 kg</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:14px;">
+                            <span style="color:rgba(75,85,99,1);">Nombre de livraisons</span>
+                            <span class="font-jakarta" id="pdStatCount" style="font-weight:600;">0</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:14px;">
+                            <span style="color:rgba(75,85,99,1);">Total brut</span>
+                            <span class="font-jakarta" id="pdStatGross" style="font-weight:600;">0 F</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:14px;">
+                            <span style="color:rgba(75,85,99,1);">Total déductions</span>
+                            <span class="font-jakarta" id="pdStatDeductions" style="color:rgba(220,38,38,1);font-weight:600;">- 0 F</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:15px;">
+                            <span style="color:rgba(75,85,99,1);font-weight:600;">Net à payer</span>
+                            <span class="font-jakarta" id="pdStatNet" style="font-weight:700;color:var(--primary);">0 F</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;font-size:14px;">
+                            <span style="color:rgba(75,85,99,1);">Total payé</span>
+                            <span class="font-jakarta" id="pdStatPaid" style="color:rgba(22,163,74,1);font-weight:600;">0 F ✅</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px;">
+                            <span style="color:rgba(75,85,99,1);">En attente</span>
+                            <span class="font-jakarta" id="pdStatPending" style="color:rgba(217,119,6,1);font-weight:600;">0 F ⏳</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </div>
 </main>
 
 <!-- ============================================
      MODALS
      ============================================ -->
-<!-- Producer Detail Modal -->
-<div class="modal-overlay" id="producerModal">
-    <div class="modal-content glass-card" style="padding:24px 32px;">
-        <div id="producerModalContent"></div>
+<!-- QR Code Modal (for producer detail credential viewing) -->
+<div class="modal-overlay" id="producerQrModal">
+    <div class="modal-content glass-card" style="padding:32px;text-align:center;max-width:420px;">
+        <h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:8px;">Credential Numérique</h3>
+        <p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:24px;">Scannez ce QR code avec <strong>IDS Wallet</strong> pour récupérer le reçu certifié.</p>
+        <div id="pdQrContainer" style="background:#fff;padding:16px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid rgba(229,231,235,1);min-height:232px;min-width:232px;">
+            <div class="spinner" style="width:32px;height:32px;"></div>
+        </div>
+        <p id="pdQrError" style="color:#EF4444;font-size:13px;margin-bottom:16px;display:none;"></p>
+        <button class="btn btn-outline btn-block" onclick="closeModal('producerQrModal')">Fermer</button>
     </div>
 </div>
 
@@ -344,12 +402,8 @@
     </div>
 </div>
 
-<!-- Payment Confirm Modal -->
-<div class="modal-overlay" id="paymentModal">
-    <div class="modal-content glass-card" style="padding:24px 32px;">
-        <div id="paymentModalContent"></div>
-    </div>
-</div>
+
+
 
 <script src="app.js"></script>
 </body>

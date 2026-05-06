@@ -32,14 +32,7 @@ function navigateTo(pageName) {
   document.querySelectorAll(`.sidebar-item[data-page="${pageName}"]`).forEach(i => i.classList.add('active'));
   document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
   document.querySelectorAll(`.bottom-nav-item[data-page="${pageName}"]`).forEach(i => i.classList.add('active'));
-  if (pageName === 'payments') {
-    // Reset to list view
-    const listView = document.getElementById('lotsListView');
-    const detailView = document.getElementById('lotDetailView');
-    if (listView) listView.classList.remove('hidden');
-    if (detailView) { detailView.classList.add('hidden'); detailView.style.display = ''; }
-    loadLots();
-  }
+
 }
 
 function handleLogout() { window.location.href = '/auth/logout'; }
@@ -117,27 +110,130 @@ function handleProducerSearch() {
   searchTimeout = setTimeout(() => loadProducers(q), 300);
 }
 
+let _currentProducerNpi = null;
+
 async function showProducerDetail(npi) {
+  _currentProducerNpi = npi;
+  navigateTo('producer-detail');
   try {
     const res = await fetch(`${API}/api/coop/producers/${npi}`, { credentials: 'include' });
     const data = await res.json();
-    const p = data.producer, s = data.summary;
-    const initials = (p.firstname[0]||'') + (p.name[0]||'');
-    document.getElementById('producerModalContent').innerHTML = `
-      <div style="text-align:center;margin-bottom:24px;">
-        <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;font-weight:700;margin:0 auto 16px;">${initials.toUpperCase()}</div>
-        <h3 class="font-jakarta" style="font-weight:700;font-size:20px;">${p.firstname} ${p.name}</h3>
-        <p style="font-size:13px;color:rgba(107,114,128,1);font-family:monospace;">NPI: ${p.npi}</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <div style="display:flex;justify-content:space-between;padding:12px;background:rgba(240,253,244,1);border-radius:8px;font-size:14px;"><span style="color:rgba(107,114,128,1);">Téléphone</span><span style="font-weight:500;">${p.phone}</span></div>
-        <div style="display:flex;justify-content:space-between;padding:12px;background:rgba(240,253,244,1);border-radius:8px;font-size:14px;"><span style="color:rgba(107,114,128,1);">Commune</span><span style="font-weight:500;">${p.commune}</span></div>
-        <div style="display:flex;justify-content:space-between;padding:12px;background:rgba(240,253,244,1);border-radius:8px;font-size:14px;"><span style="color:rgba(107,114,128,1);">Livraisons</span><span class="font-jakarta" style="font-weight:700;color:var(--primary);">${s.total_deliveries}</span></div>
-        <div style="display:flex;justify-content:space-between;padding:12px;background:rgba(240,253,244,1);border-radius:8px;font-size:14px;"><span style="color:rgba(107,114,128,1);">Dernière livraison</span><span style="font-weight:500;">${p.last_delivery_date ? formatDate(p.last_delivery_date) : '—'}</span></div>
-      </div>
-      <button class="btn btn-cta btn-block" style="margin-top:20px;" onclick="closeModal('producerModal');navigateTo('delivery');">📦 Enregistrer une livraison</button>`;
-    document.getElementById('producerModal').classList.add('open');
-  } catch (err) { console.error('Producer detail error:', err); }
+    if (!data.success) { alert(data.error || 'Erreur'); backFromProducerDetail(); return; }
+    renderProducerDetailPage(data.producer, data.deliveries || [], data.summary);
+  } catch (err) {
+    console.error('Producer detail error:', err);
+    alert('Erreur de chargement du producteur.');
+    backFromProducerDetail();
+  }
+}
+
+function renderProducerDetailPage(producer, deliveries, summary) {
+  const fullName = ((producer.firstname || '') + ' ' + (producer.name || '')).trim() || 'Producteur';
+  const initials = ((producer.firstname || '')[0] || '') + ((producer.name || '')[0] || '');
+
+  // Profile
+  document.getElementById('pdAvatar').textContent = initials.toUpperCase() || 'PR';
+  document.getElementById('pdName').textContent = fullName;
+  document.getElementById('pdNpi').textContent = producer.npi;
+  document.getElementById('pdPhone').textContent = producer.phone || '—';
+  document.getElementById('pdCoop').textContent = currentCoop ? currentCoop.name : (producer.cooperative_id || '—');
+  document.getElementById('pdCommune').textContent = producer.commune || '—';
+
+  // Financial summary
+  const totalWeight = summary.total_weight_kg || 0;
+  const totalGross = summary.total_gross || 0;
+  const totalNet = summary.total_net || 0;
+  const totalPaid = summary.total_paid || 0;
+  const totalDeductions = totalGross - totalNet;
+  const totalPending = totalNet - totalPaid;
+
+  document.getElementById('pdStatWeight').textContent = `${totalWeight} kg`;
+  document.getElementById('pdStatCount').textContent = summary.total_deliveries || 0;
+  document.getElementById('pdStatGross').textContent = formatFCFA(totalGross);
+  document.getElementById('pdStatDeductions').textContent = `- ${formatFCFA(totalDeductions)}`;
+  document.getElementById('pdStatNet').textContent = formatFCFA(totalNet);
+  document.getElementById('pdStatPaid').textContent = `${formatFCFA(totalPaid)} ✅`;
+  document.getElementById('pdStatPending').textContent = `${formatFCFA(totalPending)} ⏳`;
+
+  // Deliveries
+  const container = document.getElementById('pdDeliveries');
+  const empty = document.getElementById('pdDeliveriesEmpty');
+
+  if (!deliveries || deliveries.length === 0) {
+    container.innerHTML = '';
+    empty.classList.remove('hidden');
+  } else {
+    empty.classList.add('hidden');
+    container.innerHTML = deliveries.map(d => {
+      let actionHtml = '';
+      if (d.credential_status === 'accepted') {
+        actionHtml = `
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="badge badge-success" style="font-size:12px;">✅ Dans le wallet</span>
+            <button onclick="window.open('${API}/api/coop/receipt/${d.id}','_blank')" style="background:#15803D;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#0f6330'" onmouseout="this.style.background='#15803D'">📥 Reçu</button>
+          </div>`;
+      } else if (d.credential_status === 'issued') {
+        actionHtml = `
+          <button onclick="showProducerQr('${d.id}')" style="background:transparent;border:1px solid #15803D;color:#15803D;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;" onmouseover="this.style.background='rgba(21,128,61,0.05)'" onmouseout="this.style.background='transparent'">📱 QR Credential</button>`;
+      } else {
+        actionHtml = `<span class="badge" style="background:rgba(243,244,246,1);color:rgba(107,114,128,1);font-size:12px;">🕐 Émission en cours</span>`;
+      }
+
+      return `
+        <div style="background:#fff;border-radius:12px;padding:20px;border:1px solid rgba(220,252,231,1);transition:border-color 0.2s;" onmouseover="this.style.borderColor='#15803D'" onmouseout="this.style.borderColor='rgba(220,252,231,1)'">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;">
+            <div>
+              <p class="font-jakarta" style="font-weight:700;margin-bottom:4px;color:var(--text);">${d.weight_kg} kg — ${d.quality === '1er_choix' ? '1er choix' : '2ème choix'}</p>
+              <p style="font-size:14px;color:rgba(107,114,128,1);">${formatDate(d.date)} · ${d.id || ''}</p>
+            </div>
+            <span class="badge ${d.payment_status === 'paid' ? 'badge-success' : 'badge-warning'}">
+              ${d.payment_status === 'paid' ? '✅ Payé' : '⏳ En attente'}
+            </span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <span class="font-jakarta" style="font-size:18px;color:#15803D;font-weight:700;">${formatFCFA(d.total_net)}</span>
+            ${actionHtml}
+          </div>
+        </div>`;
+    }).join('');
+  }
+}
+
+function backFromProducerDetail() {
+  _currentProducerNpi = null;
+  navigateTo('dashboard');
+}
+
+function startDeliveryForProducer() {
+  if (_currentProducerNpi) {
+    navigateTo('delivery');
+    document.getElementById('deliveryNpi').value = _currentProducerNpi;
+    verifyDeliveryNpi();
+  }
+}
+
+async function showProducerQr(deliveryId) {
+  const qrContainer = document.getElementById('pdQrContainer');
+  const qrError = document.getElementById('pdQrError');
+  qrError.style.display = 'none';
+  qrContainer.innerHTML = '<div class="spinner" style="width:32px;height:32px;"></div>';
+  document.getElementById('producerQrModal').classList.add('open');
+
+  try {
+    const res = await fetch(`${API}/api/coop/deliveries/${deliveryId}/credential`, { credentials: 'include' });
+    const data = await res.json();
+    if (data.credential && data.credential.qrCodeDataUrl) {
+      qrContainer.innerHTML = `<img src="${data.credential.qrCodeDataUrl}" alt="QR Credential" style="width:200px;height:200px;" />`;
+    } else if (data.credential && data.credential.invitationUrl) {
+      qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.credential.invitationUrl)}&color=14532D" alt="QR" style="width:200px;" />`;
+    } else {
+      throw new Error(data.error || 'Aucune donnée de credential');
+    }
+  } catch (err) {
+    qrContainer.innerHTML = '<p style="color:#EF4444;font-size:40px;">⚠️</p>';
+    qrError.textContent = err.message;
+    qrError.style.display = 'block';
+  }
 }
 
 // ============ DELIVERY ============
@@ -235,105 +331,7 @@ function resetDelivery() {
   loadDashboard();
 }
 
-// ============ PAYMENTS (inline detail, matching React reference) ============
-async function loadLots() {
-  try {
-    const res = await fetch(`${API}/api/coop/lots`, { credentials:'include' });
-    const data = await res.json();
-    const c = document.getElementById('lotsContainer'), e = document.getElementById('lotsEmpty');
-    if (!data.lots || data.lots.length===0) { c.innerHTML=''; e.classList.remove('hidden'); return; }
-    e.classList.add('hidden');
-    c.innerHTML = data.lots.map(lot => {
-      const pct = lot.payment_progress||0;
-      const isComplete = lot.is_fully_paid;
-      return `<div class="glass-card" style="padding:24px;cursor:pointer;" onclick="showLotDetail('${lot.id}')">
-        <div class="flex items-center justify-between" style="margin-bottom:16px;">
-          <div>
-            <h3 class="font-jakarta" style="font-weight:700;font-size:18px;">${lot.id}</h3>
-            <p style="font-size:13px;color:rgba(107,114,128,1);">${lot.created_at?formatDate(lot.created_at):''}</p>
-          </div>
-          <svg width="20" height="20" fill="none" stroke="rgba(107,114,128,1)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </div>
-        <div class="progress-bar" style="margin-bottom:12px;"><div class="progress-fill" style="width:${pct}%"></div></div>
-        <div class="flex items-center justify-between" style="font-size:14px;">
-          <span style="color:${isComplete?'#059669':'rgba(107,114,128,1)'};font-weight:${isComplete?'600':'400'};">${lot.paid_count}/${lot.delivery_count} payées${isComplete?' — Complété':''}</span>
-          <span class="font-jakarta" style="font-weight:700;">${formatFCFA(lot.total_net)}</span>
-        </div>
-      </div>`;
-    }).join('');
-  } catch (err) { console.error('Lots error:', err); }
-}
 
-async function showLotDetail(lotId) {
-  try {
-    const res = await fetch(`${API}/api/coop/lots/${lotId}`, { credentials:'include' });
-    const data = await res.json();
-    const lot = data.lot;
-    // Hide list, show detail
-    document.getElementById('lotsListView').classList.add('hidden');
-    const detailView = document.getElementById('lotDetailView');
-    detailView.classList.remove('hidden');
-    detailView.style.display = 'flex';
-    detailView.style.flexDirection = 'column';
-    detailView.style.gap = '16px';
-
-    document.getElementById('lotDetailCard').innerHTML = `
-      <div class="flex items-center justify-between" style="margin-bottom:20px;">
-        <h3 class="font-jakarta" style="font-weight:700;font-size:20px;">${lot.id}</h3>
-        <span class="badge badge-warning">${lot.created_at?formatDate(lot.created_at):lot.status}</span>
-      </div>
-      ${data.deliveries.length>0 ? `<div style="overflow-x:auto;">
-        <table style="font-size:13px;">
-          <thead><tr>
-            <th>N°</th><th>Producteur</th><th>Poids</th><th>Qualité</th><th>Brut</th><th>Net</th><th>Statut</th>
-          </tr></thead>
-          <tbody>${data.deliveries.map((d,i)=>`<tr>
-            <td class="font-mono">${String(i+1).padStart(3,'0')}</td>
-            <td style="font-weight:600;">${d.farmer_name}</td>
-            <td>${d.weight_kg} kg</td>
-            <td>${d.quality==='1er_choix'?'1er choix':'2ème choix'}</td>
-            <td>${formatFCFA(d.gross_amount||d.total_gross)}</td>
-            <td class="font-jakarta" style="font-weight:700;">${formatFCFA(d.total_net)}</td>
-            <td>${d.payment_status==='paid'
-              ?'<span class="badge badge-success">Payé</span>'
-              :`<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showPaymentConfirm('${d.id}','${lotId}','${d.farmer_name}','${d.total_net}')">Approuver</button>`
-            }</td>
-          </tr>`).join('')}</tbody>
-        </table>
-      </div>` : '<p style="text-align:center;color:rgba(107,114,128,1);padding:24px;">Aucune livraison dans ce lot.</p>'}`;
-  } catch (err) { console.error('Lot detail error:', err); }
-}
-
-function closeLotDetail() {
-  document.getElementById('lotDetailView').classList.add('hidden');
-  document.getElementById('lotDetailView').style.display = '';
-  document.getElementById('lotsListView').classList.remove('hidden');
-}
-
-function showPaymentConfirm(deliveryId, lotId, farmerName, amount) {
-  document.getElementById('paymentModalContent').innerHTML = `
-    <div style="text-align:center;">
-      <div style="width:64px;height:64px;background:rgba(240,253,244,1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-        <svg width="28" height="28" fill="none" stroke="var(--primary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      </div>
-      <h3 class="font-jakarta" style="font-weight:700;font-size:18px;margin-bottom:8px;">Confirmer le paiement</h3>
-      <p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:24px;">Confirmez-vous le paiement de <strong>${formatFCFA(amount)}</strong> à ${farmerName} ?</p>
-      <div style="display:flex;gap:12px;">
-        <button class="btn btn-danger flex-1" onclick="closeModal('paymentModal')">Annuler</button>
-        <button class="btn btn-primary flex-1" onclick="doApprovePayment('${deliveryId}','${lotId}')">Confirmer</button>
-      </div>
-    </div>`;
-  document.getElementById('paymentModal').classList.add('open');
-}
-
-async function doApprovePayment(deliveryId, lotId) {
-  closeModal('paymentModal');
-  try {
-    const res = await fetch(`${API}/api/coop/payments/${deliveryId}`, { method:'POST', credentials:'include' });
-    const data = await res.json();
-    if (data.success) { showLotDetail(lotId); loadLots(); loadDashboard(); }
-  } catch (err) { alert('Erreur.'); }
-}
 
 // ============ REGISTER PRODUCER ============
 function showRegisterStep(n) {

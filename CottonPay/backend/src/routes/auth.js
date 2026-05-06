@@ -2,9 +2,8 @@
  * Authentication Routes
  * Gestion du flux OIDC avec eSignet
  * 
- * Supporte 2 flux d'authentification :
- *  - ?flow=coop     → redirect vers /coop/ après callback
- *  - ?flow=producer → redirect vers /producer/ après callback
+ * Flux unique : authentification coopérative
+ * Le producteur accède à ses données via l'espace coopérative.
  */
 
 const express = require('express');
@@ -181,41 +180,18 @@ router.get('/callback', async (req, res, next) => {
       if (coop) {
         redirectUrl = '/coop/';
       } else {
-        // Peut-être un producteur qui s'est trompé de bouton ?
-        const producer = coopService.getProducerByNpi(userNpi);
-        if (producer) {
-          console.log(`⚠️ NPI ${userNpi} is a producer, not a coop member — redirecting to producer space`);
-          req.session.loginFlow = 'producer';
-          redirectUrl = '/producer/';
-        } else {
-          console.log(`❌ NPI ${userNpi} is neither coop member nor producer`);
-          // IMPORTANT: Détruire la session AVANT de rediriger vers l'erreur
-          // pour éviter la boucle de session bloquante
-          return req.session.destroy(() => {
-            res.redirect('/?error=not_coop_member');
-          });
-        }
+        console.log(`❌ NPI ${userNpi} is not a coop member`);
+        return req.session.destroy(() => {
+          res.redirect('/?error=not_coop_member');
+        });
       }
-    } else if (flow === 'producer') {
-      // Vérifier que le NPI est bien un producteur
-      const producer = coopService.getProducerByNpi(userNpi);
-      if (producer) {
-        redirectUrl = '/producer/';
-      } else {
-        // Peut-être un membre coop ?
-        const coop = coopService.getCoopByMemberNpi(userNpi);
-        if (coop) {
-          console.log(`⚠️ NPI ${userNpi} is a coop member, not a producer — redirecting to coop space`);
-          req.session.loginFlow = 'coop';
-          redirectUrl = '/coop/';
-        } else {
-          console.log(`❌ NPI ${userNpi} is neither producer nor coop member`);
-          // IMPORTANT: Détruire la session AVANT de rediriger vers l'erreur
-          return req.session.destroy(() => {
-            res.redirect('/?error=not_producer');
-          });
-        }
-      }
+    } else if (flow === 'verify') {
+      // Flux de vérification publique via eSignet
+      // Le producteur s'est authentifié → on stocke son NPI vérifié
+      req.session.verifiedNpi = userNpi;
+      req.session.verifiedAt = Date.now();
+      console.log(`🏦 Verify flow: NPI ${userNpi} authenticated via eSignet`);
+      redirectUrl = '/verify?authenticated=1';
     } else {
       redirectUrl = '/coop/';
     }

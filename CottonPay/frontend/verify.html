@@ -35,6 +35,8 @@
         .btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 16px rgba(21,128,61,0.25);}
         .btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);}
         .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+        .btn-esignet{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;box-shadow:0 4px 16px rgba(30,64,175,0.3);font-size:15px;padding:15px;}
+        .btn-esignet:hover{background:linear-gradient(135deg,#1e3a8a,#2563eb);transform:translateY(-1px);}
         .btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary);margin-top:10px;}
         .btn-outline:hover{background:rgba(21,128,61,0.04);}
         .btn-ghost{background:none;border:none;color:var(--text-light);font-size:13px;margin-top:12px;cursor:pointer;}
@@ -45,7 +47,8 @@
         .producer-preview{background:rgba(21,128,61,0.04);border:1px solid rgba(21,128,61,0.12);border-radius:12px;padding:16px;margin-bottom:20px;}
         .producer-preview p{font-size:13px;color:var(--text-light);margin-bottom:4px;}
         .producer-preview strong{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);font-size:14px;}
-        .otp-note{font-size:12px;color:var(--text-light);text-align:center;margin-top:12px;font-style:italic;}
+        .esignet-note{font-size:12px;color:var(--text-light);text-align:center;margin-top:14px;line-height:1.5;padding:12px;background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.12);border-radius:10px;}
+        .esignet-note strong{color:#1e40af;}
         .result-card{background:rgba(21,128,61,0.04);border:1px solid rgba(21,128,61,0.12);border-radius:12px;padding:16px;margin-bottom:16px;}
         .result-card h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--text);}
         .stat-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(21,128,61,0.08);}
@@ -64,13 +67,14 @@
         .footer-link{text-align:center;margin-top:20px;}
         .footer-link a{font-size:13px;color:var(--text-light);text-decoration:none;}
         .footer-link a:hover{color:var(--primary);text-decoration:underline;}
+        .shield-icon{width:64px;height:64px;background:linear-gradient(135deg,rgba(21,128,61,0.1),rgba(34,197,94,0.1));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
         @media(max-width:540px){.card{padding:24px;}.page{padding:24px 16px 40px;}}
     </style>
 </head>
 <body>
 <div class="page">
     <div class="brand" onclick="window.location.href='/'">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <img src="logo.jpeg" alt="CottonPay" style="width:32px;height:32px;object-fit:contain;">
         <span>CottonPay</span>
     </div>
 
@@ -88,36 +92,29 @@
             </button>
         </div>
 
-        <!-- STEP 1b: Producer Found → Send OTP -->
+        <!-- STEP 2: Producer Found → Redirect to eSignet -->
         <div class="step" id="step-found">
             <h2 class="card-title">Producteur trouvé</h2>
-            <p class="card-sub">Confirmez l'identité ci-dessous et envoyez un code de validation au producteur.</p>
+            <p class="card-sub">Le producteur doit s'authentifier via <strong>eSignet</strong> pour autoriser la consultation de son historique.</p>
             <div class="producer-preview" id="producerPreview"></div>
             <div id="sendError" class="msg msg-error" style="display:none;"></div>
-            <button class="btn btn-primary" id="btnSendOtp" onclick="sendOtp()">
-                📲 Envoyer le code de validation
+            <button class="btn btn-esignet" id="btnEsignet" onclick="redirectToEsignet()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                🔐 Authentification eSignet (OTP)
             </button>
+            <div class="esignet-note">
+                💡 Le producteur doit être <strong>physiquement présent</strong>. Il saisira son NPI dans eSignet et recevra un <strong>OTP sur son téléphone</strong> pour autoriser l'accès à ses données.
+            </div>
             <button class="btn-ghost" onclick="goToStep('npi')">← Modifier le NPI</button>
         </div>
 
-        <!-- STEP 2: OTP Validation -->
-        <div class="step" id="step-otp">
-            <h2 class="card-title">🔐 Code de validation</h2>
-            <p class="card-sub">Un code a été envoyé au téléphone du producteur (<strong id="otpPhone">***</strong>). Demandez-lui de vous le communiquer.</p>
-            <div id="otpError" class="msg msg-error" style="display:none;"></div>
-            <label for="otpInput">Code OTP (6 chiffres)</label>
-            <input type="text" id="otpInput" placeholder="000000" maxlength="6" autocomplete="off" style="text-align:center;font-size:24px;letter-spacing:8px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">
-            <button class="btn btn-primary" id="btnValidate" onclick="validateOtp()">
-                Valider le code
-            </button>
-            <p class="otp-note">💡 En environnement de test, le code est <strong>111111</strong></p>
-            <button class="btn-ghost" onclick="goToStep('found')">← Revenir en arrière</button>
-        </div>
-
-        <!-- STEP 3: History -->
+        <!-- STEP 3: History (after eSignet callback) -->
         <div class="step" id="step-history">
-            <h2 class="card-title">✅ Historique vérifié</h2>
-            <p class="card-sub">Données publiques de livraisons certifiées pour ce producteur.</p>
+            <div class="shield-icon">
+                <svg width="28" height="28" fill="none" stroke="#15803D" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h2 class="card-title">✅ Identité vérifiée via eSignet</h2>
+            <p class="card-sub">Le producteur a autorisé l'accès à son historique. Données certifiées sur la blockchain.</p>
             <div id="historyContent"></div>
             <button class="btn btn-primary" onclick="resetVerification()" style="margin-top:16px;">
                 🔄 Nouvelle vérification
@@ -131,9 +128,10 @@
 </div>
 
 <script>
-    const API = 'http://localhost:3002';
+    const API = window.location.origin;
     let currentNpi = '';
     let producerInfo = null;
+    let esignetAuthUrl = null;
     const fmtN = n => new Intl.NumberFormat('fr-FR').format(n);
     const fmtDate = iso => iso ? new Date(iso).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}) : '—';
 
@@ -162,6 +160,7 @@
             const data = await res.json();
             if (!res.ok || !data.found) { errEl.textContent = data.message || 'Aucun producteur trouvé avec ce NPI.'; errEl.style.display = 'block'; return; }
             producerInfo = data.producer;
+            esignetAuthUrl = data.auth_url;
             document.getElementById('producerPreview').innerHTML = `
                 <p>Nom : <strong>${data.producer.name_initial}</strong></p>
                 <p>Coopérative : <strong>${data.producer.cooperative}</strong></p>
@@ -172,39 +171,16 @@
         finally { setLoading('btnLookup', false); }
     }
 
-    // STEP 1b: Send OTP
-    async function sendOtp() {
-        const errEl = document.getElementById('sendError');
-        errEl.style.display = 'none';
-        setLoading('btnSendOtp', true);
-        try {
-            const res = await fetch(`${API}/api/verify/otp/send`, { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include', body:JSON.stringify({npi:currentNpi}) });
-            const data = await res.json();
-            if (!res.ok) { errEl.textContent = data.error || 'Erreur lors de l\'envoi du code.'; errEl.style.display = 'block'; return; }
-            document.getElementById('otpPhone').textContent = data.phone_masked || producerInfo?.phone_masked || '***';
-            document.getElementById('otpInput').value = '';
-            goToStep('otp');
-        } catch (e) { errEl.textContent = 'Erreur de connexion.'; errEl.style.display = 'block'; }
-        finally { setLoading('btnSendOtp', false); }
+    // STEP 2: Redirect to eSignet
+    function redirectToEsignet() {
+        if (esignetAuthUrl) {
+            window.location.href = esignetAuthUrl;
+        } else {
+            window.location.href = `/auth/login?flow=verify&npi=${currentNpi}`;
+        }
     }
 
-    // STEP 2: Validate OTP
-    async function validateOtp() {
-        const otp = document.getElementById('otpInput').value.trim();
-        const errEl = document.getElementById('otpError');
-        errEl.style.display = 'none';
-        if (!otp || otp.length < 4) { errEl.textContent = 'Veuillez entrer le code OTP.'; errEl.style.display = 'block'; return; }
-        setLoading('btnValidate', true);
-        try {
-            const res = await fetch(`${API}/api/verify/otp/validate`, { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include', body:JSON.stringify({otp}) });
-            const data = await res.json();
-            if (!res.ok || !data.valid) { errEl.textContent = data.message || 'Code incorrect. Réessayez.'; errEl.style.display = 'block'; return; }
-            await loadHistory();
-        } catch (e) { errEl.textContent = 'Erreur de connexion.'; errEl.style.display = 'block'; }
-        finally { setLoading('btnValidate', false); }
-    }
-
-    // STEP 3: Load & render history
+    // STEP 3: Load & render history (after eSignet callback)
     async function loadHistory() {
         try {
             const res = await fetch(`${API}/api/verify/deliveries`, { credentials:'include' });
@@ -254,15 +230,33 @@
     // Reset
     async function resetVerification() {
         await fetch(`${API}/api/verify/reset`, { method:'POST', credentials:'include' }).catch(()=>{});
-        currentNpi = ''; producerInfo = null;
+        currentNpi = ''; producerInfo = null; esignetAuthUrl = null;
         document.getElementById('npiInput').value = '';
         document.querySelectorAll('.msg').forEach(m => m.style.display = 'none');
+        // Clean URL params
+        history.replaceState(null, '', '/verify');
         goToStep('npi');
     }
 
-    // Auto-fill NPI from URL params (from landing page or receipt QR)
-    (function autoFill() {
+    // Auto-detect: if returning from eSignet callback (?authenticated=1), load history
+    (async function init() {
         const params = new URLSearchParams(window.location.search);
+
+        if (params.get('authenticated') === '1') {
+            // Returning from eSignet → check session and load history
+            try {
+                const statusRes = await fetch(`${API}/api/verify/status`, { credentials:'include' });
+                const statusData = await statusRes.json();
+                if (statusData.authenticated) {
+                    // Clean URL
+                    history.replaceState(null, '', '/verify');
+                    await loadHistory();
+                    return;
+                }
+            } catch (e) { console.error('Status check error:', e); }
+        }
+
+        // Auto-fill NPI from URL params (from landing page or receipt QR)
         const npi = params.get('npi');
         if (npi && npi.length >= 10) {
             document.getElementById('npiInput').value = npi;
@@ -272,9 +266,8 @@
 
     // Enter key support
     document.getElementById('npiInput').addEventListener('keypress', e => { if (e.key === 'Enter') lookupNpi(); });
-    document.getElementById('otpInput').addEventListener('keypress', e => { if (e.key === 'Enter') validateOtp(); });
 
-    console.log('🏦 CottonPay — Vérification Publique v2');
+    console.log('🏦 CottonPay — Vérification Publique v3 (eSignet)');
 </script>
 </body>
 </html>
