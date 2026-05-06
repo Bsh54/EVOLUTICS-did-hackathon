@@ -12,7 +12,7 @@ CottonPay est une plateforme complète d'identité numérique et de paiement des
 
 ## 🎥 Vidéo de Démonstration
 
-**<a href="https://youtu.be/t82CBL8v7Ik" target="_blank">Voir la démo sur YouTube</a>**
+**<a href="https://youtu.be/4Qb5R3kSnQI" target="_blank">Voir la démo sur YouTube</a>**
 
 ## 🎬 Vidéo de Présentation
 
@@ -22,18 +22,19 @@ CottonPay est une plateforme complète d'identité numérique et de paiement des
 
 **<a href="https://drive.google.com/drive/folders/1BX5NdTjXHq6yUXGQthe9Kd3KibYA479C" target="_blank">Accéder au dossier Google Drive avec les vidéos</a>**
 
----
-
 ## Prérequis
 
-Avant de lancer le script d'installation automatique, vous devez installer ces outils sur votre machine.
+### Pour Windows
 
-### 1. Windows 10/11 avec WSL 2
+- **Windows 10/11** avec WSL 2 activé
+- **Docker Desktop** (version 20.10+)
+- **Git Bash** ou terminal compatible bash
 
-WSL 2 permet d'exécuter Linux (Ubuntu) directement dans Windows. C'est indispensable car l'agent SSI (eidStack-CMU) nécessite un environnement Linux.
+### Installation de WSL 2
+
+Si WSL n'est pas encore installé, ouvrez PowerShell en tant qu'administrateur et tapez :
 
 ```powershell
-# Ouvrir PowerShell en tant qu'administrateur
 wsl --install
 ```
 
@@ -45,111 +46,11 @@ wsl --install -d Ubuntu-24.04
 
 Créez un nom d'utilisateur et mot de passe pour Ubuntu.
 
-### 2. Docker Desktop (version 20.10+)
-
-Docker est utilisé pour exécuter le système d'authentification eSignet (MOSIP) avec ses services : PostgreSQL, Redis, Mock Identity System.
-
-Téléchargez et installez depuis : https://www.docker.com/products/docker-desktop/
-
-### 3. Node.js v18+ et npm v9+
-
-Node.js est le moteur d'exécution de tous les serveurs du projet (CottonPay, eidStack-CMU).
-
-**Sur Windows** (via le site officiel) : https://nodejs.org/
-
-**Sur WSL/Ubuntu** (sera installé automatiquement par le script si manquant) :
-
-```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt install -y nodejs
-```
-
-### 4. PostgreSQL (WSL)
-
-PostgreSQL stocke les données de l'agent SSI (schemas, credentials, connexions DIDComm).
-
-```bash
-# Dans un terminal WSL
-sudo apt install -y postgresql postgresql-contrib
-sudo service postgresql start
-```
-
-### 5. ADB (Android Debug Bridge)
-
-ADB permet d'installer l'APK pré-compilé sur le téléphone et de configurer la connexion USB.
-
-```bash
-# Vérifier qu'ADB est disponible
-adb devices
-```
-
-### 6. Câble USB
-
-Un câble USB est nécessaire pour connecter le téléphone Android au PC. Le téléphone doit avoir le **débogage USB activé** (Paramètres → Options développeur → Débogage USB).
-
----
-
-## Architecture du Projet
-
-```
-EVOLUTICS_DIGITAL_ID/
-├── setup.sh                # 🔧 Script de configuration (.env, seed, APK)
-├── install.sh              # Installation CottonPay + eSignet (Windows)
-├── start.sh                # Démarrage CottonPay + eSignet (Windows)
-├── install-eidstack.sh     # Installation eidStack-CMU (WSL)
-├── setup-agent.sh          # Initialisation agent SSI (WSL, une fois)
-├── logo.jpeg                # Logo CottonPay
-│
-├── CottonPay/              # Application Web principale
-│   ├── frontend/           # Interface utilisateur (HTML/CSS/JS)
-│   │   ├── index.html      # Page d'accueil
-│   │   └── dashboard.html  # Dashboard agriculteur + QR Code
-│   ├── backend/            # API REST Node.js + Express
-│   │   ├── server.js       # Point d'entrée du serveur
-│   │   └── src/            # Routes et services
-│   └── scripts/            # Scripts d'enregistrement OIDC
-│
-├── esignet-master/         # Infrastructure d'authentification (Docker)
-│   └── docker-compose/     # PostgreSQL, Redis, eSignet, Mock Identity
-│
-├── eidStack-CMU/           # Service d'émission de credentials (WSL)
-│   ├── src/                # API REST NestJS
-│   │   ├── credo-agent/    # Agent SSI (Credo/Aries)
-│   │   ├── issuance/       # Service d'émission de credentials
-│   │   ├── short-url/      # Service de Short URLs pour QR codes
-│   │   └── connection/     # Gestion des connexions DIDComm
-│   └── prisma/             # Schéma et migrations PostgreSQL
-│
-└── e-IDapp_CMU/            # Application Mobile (idsWallet)
-    ├── src/                # Code source React Native TypeScript
-    │   ├── screens/        # Écrans (ScanQR, Credentials, etc.)
-    │   ├── services/       # Services (CredoAgent, Connection, etc.)
-    │   └── store/          # Redux (gestion d'état)
-    ├── android/            # Projet Android natif
-    └── ios/                # Projet iOS natif
-```
-
-## Services et Ports
-
-| Port | Service               | Description                        | Environnement     |
-| ---- | --------------------- | ---------------------------------- | ----------------- |
-| 3000 | eSignet UI            | Interface d'authentification MOSIP | Docker (Windows)  |
-| 3002 | CottonPay             | Application web principale         | Node.js (Windows) |
-| 3021 | Agent DIDComm         | Transport des credentials SSI      | WSL Ubuntu        |
-| 4000 | eidStack-CMU          | API d'émission de credentials      | WSL Ubuntu        |
-| 5432 | PostgreSQL (eidStack) | Base de données agent SSI          | WSL Ubuntu        |
-| 5455 | PostgreSQL (eSignet)  | Base de données eSignet            | Docker (Windows)  |
-| 6379 | Redis                 | Cache de sessions eSignet          | Docker (Windows)  |
-| 8082 | Mock Identity         | Système d'identité de test         | Docker (Windows)  |
-| 8088 | eSignet Backend       | API OIDC/OAuth2                    | Docker (Windows)  |
-
----
-
-## 🚀 Installation et Démarrage
+## Installation et Démarrage
 
 **NB :** Tous les chemins relatifs supposent que vous êtes à la racine du projet EVOLUTICS-did-hackathon.
 
-### PARTIE 1 : CottonPay + eSignet (Windows)
+### PARTIE 1
 
 #### Étape 1 : Cloner le projet
 
@@ -176,17 +77,35 @@ Dans Git Bash ou terminal Windows :
 
 #### Étape 3 : Démarrage
 
+Dans Git Bash ou terminal Windows :
+
 ```bash
 ./start.sh
 ```
 
 **Ce script effectue :**
 
-- Démarrage des conteneurs Docker eSignet (authentification MOSIP)
+- Démarrage des conteneurs Docker eSignet
 - Attente du démarrage complet d'eSignet (2-4 minutes)
 - Enregistrement du client OIDC avec génération des clés RSA
 - Création de l'utilisateur de test
-- Démarrage du backend CottonPay sur le port 3002
+- Démarrage du backend CottonPay
+
+#### Étape 4 : Accéder à l'application
+
+Ouvrez votre navigateur : **http://localhost:3002**
+
+**Identifiants de test :**
+
+- **NPI** : `1234567890123456`
+- **OTP** : `111111`
+
+**Flux d'authentification :**
+
+1. Cliquez sur **"Accéder"** sur la page d'accueil
+2. Cliquez sur **"Se connecter avec eSignet"**
+3. Entrez les identifiants de test
+4. Vous êtes redirigé vers le dashboard
 
 ---
 
@@ -196,18 +115,26 @@ Dans Git Bash ou terminal Windows :
 
 #### Étape 0 : Correction des fins de ligne (obligatoire)
 
-Les scripts bash clonés depuis Windows/GitHub peuvent avoir des fins de ligne Windows (CRLF `\r\n`). Linux attend des fins de ligne Unix (LF `\n`). Si ce n'est pas corrigé, vous obtiendrez des erreurs `\r: command not found`.
+Avant l'installation, convertissez les fins de ligne des scripts bash :
+
+Ouvrez un terminal WSL
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom>/EVOLUTICS-did-hackathon
-sed -i 's/\r$//' install-eidstack.sh setup-agent.sh setup.sh
-chmod +x install-eidstack.sh setup-agent.sh setup.sh
+cd /mnt/c/Users/EVOLUTICS-did-hackathon
+sed -i 's/\r$//' install-eidstack.sh
+sed -i 's/\r$//' setup-agent.sh
 ```
+
+**Note :** Cette étape est nécessaire car les scripts peuvent avoir des fins de ligne Windows (CRLF) qui causent des erreurs sur Linux/WSL.
 
 #### Étape 1 : Installation
 
+Ouvrez un terminal WSL :
+
 ```bash
+wsl
+cd /mnt/c/Users/EVOLUTICS-did-hackathon
 ./install-eidstack.sh
 ```
 
@@ -215,92 +142,84 @@ chmod +x install-eidstack.sh setup-agent.sh setup.sh
 
 - Installation automatique de Node.js v18.17.1 via nvm
 - Installation de PostgreSQL et création de la base de données
-- Installation des outils de compilation (build-essential)
+- Installation des outils de compilation
 - Installation des dépendances npm avec --legacy-peer-deps
 - Configuration de Prisma et migrations
 
----
+#### Étape 2 : Démarrage
 
-### PARTIE 3 : Configuration de l'environnement (WSL)
-
-Le script `setup.sh` configure automatiquement les fichiers `.env`, le seed BCovrin, et installe l'APK mobile. **À exécuter après les deux scripts d'installation ci-dessus.**
-
-```bash
-./setup.sh
-```
-
-**Ce script effectue automatiquement :**
-
-1. ✅ Vérifie les prérequis (Node.js, PostgreSQL, ADB, curl)
-2. ✅ Configure la connexion USB (localhost + adb reverse)
-3. ✅ Détecte la configuration PostgreSQL et crée la base de données `ids-db`
-4. ✅ Génère tous les fichiers `.env` (eidStack-CMU, CottonPay)
-5. ✅ Génère un seed unique pour BCovrin et vous guide pour l'enregistrement
-6. ✅ Met à jour `setup-agent.sh` avec le seed
-7. ✅ Télécharge l'APK pré-compilé depuis GitHub Releases
-8. ✅ Installe l'APK sur votre téléphone et configure `adb reverse`
-
-#### Enregistrement du DID sur BCovrin (seule action manuelle)
-
-Pendant l'exécution de `setup.sh`, il vous sera demandé d'enregistrer votre DID sur le réseau BCovrin Testnet. C'est un registre blockchain public où votre agent SSI enregistre son identité.
-
-1. Accédez à : **http://test.bcovrin.vonx.io/**
-2. Remplissez le formulaire avec les valeurs affichées par le script :
-   - **Seed** : Le seed généré (32 caractères)
-   - **Alias** : `CottonPay-Issuer`
-   - **Role** : Sélectionnez **ENDORSER** (obligatoire pour émettre des credentials)
-3. Cliquez sur **"Register DID"**
-4. Revenez dans le terminal et confirmez
-
-### Étape 5 : Démarrage des services
-
-Après l'installation, 3 services doivent tourner simultanément. Ouvrez 3 terminaux :
-
-**Terminal 1 (Windows/Git Bash) - CottonPay + eSignet :**
-
-```bash
-./start.sh
-```
-
-**Ce script effectue :**
-
-- Démarrage des conteneurs Docker eSignet (authentification MOSIP)
-- Attente du démarrage complet d'eSignet (2-4 minutes)
-- Enregistrement du client OIDC avec génération des clés RSA
-- Création de l'utilisateur de test
-- Démarrage du backend CottonPay sur le port 3002
-
-**Terminal 2 (WSL) - eidStack-CMU :**
+Dans un terminal WSL :
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom>/EVOLUTICS-did-hackathon/eidStack-CMU
+cd /mnt/c/Users/EVOLUTICS-did-hackathon/eidStack-CMU
+
+# Démarrer PostgreSQL si nécessaire
 sudo service postgresql start
+
+# Démarrer le serveur
 npm run start:dev
 ```
 
-Le serveur NestJS démarre sur **http://localhost:4000**. Il fournit l'API d'émission de credentials et l'agent DIDComm sur le port 3021.
+Le serveur démarre sur **http://localhost:4000**
 
-> **Note :** Si eidStack-CMU était déjà en cours d'exécution avant le lancement de `setup.sh` (qui modifie le seed et les `.env`), vous devez le redémarrer : `Ctrl+C` puis `npm run start:dev`.
+#### Étape 3 : Initialisation de l'agent SSI
 
-**Terminal 3 (WSL) - Initialisation de l'agent SSI (une seule fois) :**
+**IMPORTANT : Avant d'exécuter ce script, vous devez enregistrer manuellement le DID sur BCovrin.**
 
-> **Important :** Attendez que le Terminal 2 affiche `Server listening on 0.0.0.0:4000` avant de lancer ce script.
+**Étape 3a : Enregistrement du DID sur BCovrin**
+
+1. Accédez à : **http://test.bcovrin.vonx.io/**
+2. Remplissez le formulaire d'enregistrement :
+   - **Seed** : Entrez un seed unique (exemple : `CottonPayBenin2024Issuer00000000`)
+   - **Alias** : `CottonPay-Issuer`
+   - **Role** : Sélectionnez **ENDORSER** (obligatoire)
+3. Cliquez sur **"Register DID"**
+4. Notez le **Seed** et le **DID** retournés
+
+**Étape 3b : Mise à jour du script setup-agent.sh**
+
+Modifiez la ligne 13 du fichier `setup-agent.sh` avec le seed obtenu :
+
+```bash
+SEED="<votre-seed-bcovrin>"
+```
+
+**Étape 3c : Redémarrage du serveur eidStack**
+
+Le serveur eidStack doit être redémarré après chaque modification du seed :
+
+```bash
+# Dans le terminal WSL où tourne npm run start:dev
+# Appuyez sur Ctrl+C pour arrêter le serveur
+
+# Relancez le serveur
+npm run start:dev
+```
+
+**Étape 3d : Initialisation de l'agent**
+
+Dans un **autre terminal WSL** :
 
 ```bash
 wsl
-cd /mnt/c/Users/<votre-nom>/EVOLUTICS-did-hackathon
+cd /mnt/c/Users/EVOLUTICS-did-hackathon
 ./setup-agent.sh
 ```
 
+Le script vous demandera confirmation que vous avez bien enregistré le DID sur BCovrin avec le rôle ENDORSER.
+
 **Ce script effectue :**
 
-- Nettoyage de l'ancien wallet (si existe)
-- Initialisation de l'agent SSI avec le DID enregistré sur BCovrin
+- Initialisation de l'agent SSI avec le DID enregistré
 - Création des schémas (FarmerIdentityCredential, CottonSaleReceiptCredential)
-- Création des Credential Definitions (nécessaires pour émettre des credentials signés)
+- Création des Credential Definitions
 
-> **Note :** Ce script ne s'exécute qu'une seule fois. Les schémas et CredDefs sont persistés sur le ledger BCovrin.
+---
+
+## PARTIE 3 : e-IDapp_CMU (Portefeuille Mobile)
+
+**e-IDapp_CMU** est l'application mobile qui permet aux producteurs de recevoir et stocker leurs credentials vérifiables sur leur smartphone.
 
 ### Étape 6 : Configurer la connexion USB (à chaque reconnexion)
 
@@ -310,7 +229,8 @@ adb reverse tcp:4000 tcp:4000
 adb reverse tcp:3021 tcp:3021
 ```
 
-**Pourquoi ?** `adb reverse` redirige le `localhost` du téléphone vers le `localhost` du PC. Sans ça, l'application mobile ne peut pas atteindre le serveur.
+**Pourquoi ?** `adb reverse` redirige le `localhost` du téléphone vers le `localhost` du PC. Sans ça, l'application mobile ne
+peut pas atteindre le serveur.
 
 > **Important :** Cette commande doit être relancée à chaque fois que le téléphone est débranché/rebranché.
 
@@ -409,7 +329,7 @@ Credential stocké dans le wallet avec tous ses attributs
 
 ### Flux de vérification (Proof Request)
 
-```
+````
 Vérificateur → POST http://localhost:4000/verification/request
     ↓ Création proof request
 idsWallet reçoit la requête
@@ -417,157 +337,42 @@ idsWallet reçoit la requête
 idsWallet → Présentation cryptographique (Zero-Knowledge Proof)
     ↓ Vérification par l'agent
 Résultat : Vérifié ✅ ou Rejeté ❌
-```
 
----
+## Structure du projet```
+EVOLUTICS-did-hackathon/
+├── install.sh              # Installation CottonPay + eSignet (Windows)
+├── start.sh                # Démarrage CottonPay + eSignet (Windows)
+├── install-eidstack.sh     # Installation eidStack-CMU (WSL)
+├── setup-agent.sh          # Initialisation agent SSI (WSL, une fois)
+├── logo.jpeg                # Logo CottonPay
+├── CottonPay/              # Application principale
+│   ├── frontend/           # Interface utilisateur (HTML/CSS/JS)
+│   ├── backend/            # API REST Node.js + Express
+│   └── scripts/            # Scripts d'enregistrement OIDC
+├── esignet-master/         # Infrastructure d'authentification (Docker)
+│   └── docker-compose/     # PostgreSQL, Redis, eSignet, Mock Identity
+├── eidStack-CMU/           # Service d'émission de credentials (WSL)
+│   ├── src/                # API REST NestJS
+│   └── prisma/             # Base de données PostgreSQL
+└── e-IDapp_CMU/            # Application mobile portefeuille (Android/iOS)
+    ├── src/                # Code source React Native
+    ├── android/            # Projet Android natif
+    └── ios/                # Projet iOS natif
+````
 
-## Configuration des fichiers d'environnement
+## Services disponibles
 
-> **Note :** Le script `setup.sh` génère automatiquement ces fichiers. Cette section est fournie à titre de référence pour une configuration manuelle.
-
-### eidStack-CMU/.env
-
-```env
-DATABASE_URL="postgresql://postgres:<mot_de_passe>@localhost:5432/ids-db?schema=public"
-AGENT_PUBLIC_URL="http://localhost:3021"
-AGENT_PORT=3021
-BCOVRIN_TESTNET_URL="http://test.bcovrin.vonx.io/register"
-INDY_NETWORK_NAMESPACE="bcovrin:test"
-ISSUER_LABEL="CottonPay-Issuer"
-CREDENTIAL_PROTOCOL_VERSION="v2"
-API_BASE_URL="http://localhost:4000"
-```
-
-| Variable                      | Description                                                                            |
-| ----------------------------- | -------------------------------------------------------------------------------------- |
-| `DATABASE_URL`                | URL de connexion PostgreSQL. Le mot de passe est celui de votre utilisateur PostgreSQL |
-| `AGENT_PUBLIC_URL`            | URL publique de l'agent DIDComm (localhost via USB)                                    |
-| `AGENT_PORT`                  | Port de l'agent DIDComm (par défaut 3021)                                              |
-| `BCOVRIN_TESTNET_URL`         | URL de l'API BCovrin Testnet pour l'enregistrement des DIDs                            |
-| `INDY_NETWORK_NAMESPACE`      | Espace de noms du réseau Indy (bcovrin:test pour le testnet)                           |
-| `ISSUER_LABEL`                | Nom de l'émetteur affiché dans les credentials                                         |
-| `CREDENTIAL_PROTOCOL_VERSION` | Version du protocole (v2 recommandé)                                                   |
-| `API_BASE_URL`                | URL de l'API eidStack. Utilisée pour générer les Short URLs dans les QR codes          |
-
-### eidStack-CMU/.env.development
-
-Même contenu que `.env`. Les deux fichiers doivent être synchronisés car NestJS charge `.env` via `dotenv.config()` et `setup-agent.sh` charge `.env.development`.
-
-### CottonPay/.env
-
-```env
-NODE_ENV=development
-APP_PORT=3002
-APP_URL=http://localhost:3002
-FRONTEND_URL=http://localhost:3002
-ESIGNET_BASE_URL=http://localhost:8088/v1/esignet
-ESIGNET_AUTHORIZE_URL=http://localhost:3000/authorize
-ESIGNET_TOKEN_URL=http://localhost:8088/v1/esignet/oauth/v2/token
-ESIGNET_USERINFO_URL=http://localhost:8088/v1/esignet/oidc/userinfo
-ESIGNET_JWKS_URL=http://localhost:8088/v1/esignet/oauth/.well-known/jwks.json
-OIDC_ISSUER=http://localhost:8088/v1/esignet
-OIDC_CLIENT_ID=cottonpay-client
-OIDC_REDIRECT_URI=http://localhost:3002/auth/callback
-OIDC_SCOPES=openid profile phone
-CLIENT_ID=cottonpay-client
-CLIENT_REDIRECT_URI=http://localhost:3002/auth/callback
-CLIENT_PRIVATE_KEY_PATH=./backend/keys/private-key.pem
-CLIENT_PUBLIC_KEY_PATH=./backend/keys/public-key.pem
-SESSION_SECRET=change-this-to-a-random-secret-in-production
-ACR_VALUES=mosip:idp:acr:generated-code
-EIDSTACK_URL=http://localhost:4000
-MOCK_IDENTITY_URL=http://localhost:8082
-LOG_LEVEL=debug
-```
-
-### e-IDapp_CMU/.env
-
-```env
-MEDIATOR_URL=https://polyid-mediator.onrender.com/createMediatorInvitation
-GENESIS_URL=https://test.bcovrin.vonx.io/genesis
-```
-
-| Variable       | Description                                                                                     |
-| -------------- | ----------------------------------------------------------------------------------------------- |
-| `MEDIATOR_URL` | URL du service de médiation DIDComm. Permet la communication entre l'agent mobile et le serveur |
-| `GENESIS_URL`  | URL du fichier genesis du réseau BCovrin. Nécessaire pour se connecter au ledger Indy           |
-
----
-
-## Troubleshooting
-
-### Erreur : "Failed to accept invitation" / "Network request failed"
-
-**Cause :** L'application mobile ne peut pas atteindre le serveur. Cela peut être dû à :
-
-- `adb reverse` non configuré ou expiré (téléphone débranché/rebranché)
-- Le trafic HTTP est bloqué par Android (`usesCleartextTraffic` non activé)
-
-**Solution :**
-
-```bash
-# Vérifier la connexion USB
-adb devices
-
-# Configurer les ports
-adb reverse tcp:4000 tcp:4000
-adb reverse tcp:3021 tcp:3021
-
-# Vérifier les ports actifs
-adb reverse --list
-```
-
-### Erreur : "InvitationUrl is invalid. It needs to contain oob, c_i or d_m"
-
-**Cause :** Le Short URL dans le QR code n'a pas pu être résolu vers l'URL complète contenant le paramètre `?oob=`.
-
-**Solution :**
-
-1. Vérifiez que le serveur eidStack-CMU tourne sur le port 4000
-2. Vérifiez que `API_BASE_URL` dans `.env` pointe vers la bonne adresse
-3. Redémarrez le serveur : `Ctrl+C` puis `npm run start:dev`
-
-### Erreur : "Permission denied: DID lacks ENDORSER role"
-
-**Cause :** Le DID n'a pas le rôle ENDORSER sur BCovrin, ou le serveur utilise un ancien DID en mémoire.
-
-**Solution :**
-
-1. Vérifiez que le DID est bien enregistré avec le rôle **ENDORSER** sur http://test.bcovrin.vonx.io/
-2. Redémarrez le serveur eidStack (`Ctrl+C` puis `npm run start:dev`)
-3. Relancez `./setup-agent.sh`
-
-### Erreur : "Unexpected token \r in JSON"
-
-**Cause :** Les scripts bash ont des fins de ligne Windows (CRLF) au lieu de Unix (LF).
-
-**Solution :**
-
-```bash
-sed -i 's/\r$//' setup-agent.sh install-eidstack.sh setup.sh
-```
-
-### Erreur : "Agent initialized" mais "hasIssuerDid: false"
-
-**Cause :** L'agent a été initialisé en mémoire lors d'un précédent appel mais le DID n'a pas été enregistré (erreur réseau, mediator indisponible, etc.).
-
-**Solution :**
-
-1. Arrêtez le serveur (`Ctrl+C`)
-2. Relancez `npm run start:dev` (réinitialise la mémoire)
-3. Relancez `./setup-agent.sh`
-
-### Le credential reçu affiche "0 Attributes" ou "Processing"
-
-**Cause :** Le cycle d'échange de credential n'est pas terminé. Cela peut être dû à une connexion réseau instable entre le téléphone et le serveur.
-
-**Solution :**
-
-1. Vérifiez que les ports `adb reverse` sont actifs
-2. Supprimez les données de l'app : `adb shell pm clear com.idsWallet`
-3. Rouvrez l'app, re-scannez le QR code
-
----
+| Port | Service               | Description                  | Environnement     |
+| ---- | --------------------- | ---------------------------- | ----------------- |
+| 3000 | eSignet UI            | Interface d'authentification | Docker (Windows)  |
+| 3002 | CottonPay             | Application principale       | Node.js (Windows) |
+| 3021 | Agent DIDComm         | Transport credentials        | WSL Ubuntu        |
+| 4000 | eidStack-CMU          | API émission credentials     | WSL Ubuntu        |
+| 5432 | PostgreSQL (eidStack) | Base de données eidStack     | WSL Ubuntu        |
+| 5455 | PostgreSQL (eSignet)  | Base de données eSignet      | Docker (Windows)  |
+| 6379 | Redis                 | Cache eSignet                | Docker (Windows)  |
+| 8082 | Mock Identity         | Système d'identité de test   | Docker (Windows)  |
+| 8088 | eSignet Backend       | API OIDC                     | Docker (Windows)  |
 
 ## Logs
 
@@ -579,10 +384,7 @@ tail -f CottonPay/logs/backend.log
 docker compose -f esignet-master/docker-compose/docker-compose.yml logs -f
 
 # eidStack-CMU (WSL)
-# Les logs s'affichent directement dans le terminal npm run start:dev
-
-# Application mobile (Android - via USB)
-adb logcat -s ReactNativeJS:V
+# Les logs s'affichent directement dans le terminal où tourne npm run start:dev
 ```
 
 ## Arrêt des services
@@ -605,40 +407,37 @@ Dans le terminal WSL où tourne le serveur, tapez `Ctrl+C`
 
 ---
 
-## Sécurité
+## Troubleshooting
 
-### Authentification OIDC
+### Erreur : "Permission denied: DID lacks ENDORSER role"
 
-- **PKCE (Proof Key for Code Exchange)** : Protection contre les attaques d'interception de code
-- **private_key_jwt** : Authentification du client via JWT signé avec clé privée RSA
-- **State parameter** : Protection contre les attaques CSRF
-- **Nonce** : Protection contre les attaques de replay
+**Cause :** Le DID n'a pas le rôle ENDORSER sur BCovrin, ou le serveur eidStack utilise un ancien DID en mémoire.
 
-### Credentials Vérifiables
+**Solution :**
 
-- **AnonCreds** : Format de credential anonyme basé sur la cryptographie à connaissance zéro (ZKP)
-- **DIDComm v2** : Protocole de communication sécurisé entre agents
-- **BCovrin Testnet** : Registre blockchain public pour les DIDs et schémas
+1. Vérifiez que le DID est bien enregistré avec le rôle **ENDORSER** sur http://test.bcovrin.vonx.io/
+2. Redémarrez le serveur eidStack :
+   ```bash
+   # Dans le terminal WSL où tourne npm run start:dev
+   # Appuyez sur Ctrl+C
+   npm run start:dev
+   ```
+3. Relancez le script d'initialisation :
+   ```bash
+   ./setup-agent.sh
+   ```
 
-### Clés RSA
+### Erreur : "Unexpected token \r in JSON"
 
-- **Algorithme** : RSA 2048 bits
-- **Format** : PEM (PKCS#8 pour la clé privée, SPKI pour la clé publique)
-- **Stockage** : `backend/keys/` (ne pas commiter dans Git)
+**Cause :** Les scripts bash ont des fins de ligne Windows (CRLF) au lieu de Unix (LF).
 
----
+**Solution :**
 
-## Technologies utilisées
+```bash
+sed -i 's/\r$//' setup-agent.sh install-eidstack.sh
+```
 
-| Composant          | Technologies                                           |
-| ------------------ | ------------------------------------------------------ |
-| CottonPay Frontend | HTML5, CSS3, JavaScript (Vanilla)                      |
-| CottonPay Backend  | Node.js, Express.js, express-session, jose             |
-| eidStack-CMU       | NestJS, Credo-ts (Aries Framework), Prisma, PostgreSQL |
-| e-IDapp_CMU        | React Native, TypeScript, Credo-ts, Redux Toolkit      |
-| Authentification   | eSignet (MOSIP), OIDC, PKCE, private_key_jwt           |
-| Credentials        | AnonCreds, Indy VDR, BCovrin Testnet                   |
-| Infrastructure     | Docker, WSL 2, ADB                                     |
+Puis relancez le script.
 
 ---
 
