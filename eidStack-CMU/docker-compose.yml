@@ -1,0 +1,45 @@
+version: '3.8'
+
+networks:
+  mosip_network:
+    external: true
+
+services:
+  eidstack-db:
+    image: postgres:15-alpine
+    container_name: eidstack-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres18
+      POSTGRES_DB: ids-db
+    ports:
+      - "5432:5432"
+    networks:
+      - mosip_network
+    volumes:
+      - eidstack_pgdata:/var/lib/postgresql/data
+
+  eidstack-app:
+    build: .
+    container_name: eidstack-cmu-app
+    restart: unless-stopped
+    depends_on:
+      - eidstack-db
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres18@eidstack-db:5432/ids-db?schema=public"
+      AGENT_PORT: "3021"
+      BCOVRIN_TESTNET_URL: "http://test.bcovrin.vonx.io/register"
+      INDY_NETWORK_NAMESPACE: "bcovrin:test"
+      ISSUER_LABEL: "CottonPay-Issuer"
+      CREDENTIAL_PROTOCOL_VERSION: "v2"
+      AGENT_PUBLIC_URL: "http://host.docker.internal:3021"
+      API_BASE_URL: "http://localhost:4000"
+    ports:
+      - "4000:4000"  
+      - "3021:3021"  
+    networks:
+      - mosip_network
+
+volumes:
+  eidstack_pgdata:

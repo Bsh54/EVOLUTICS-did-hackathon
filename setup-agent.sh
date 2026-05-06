@@ -13,12 +13,14 @@ API_URL="http://localhost:4000"
 SEED="CottonPaySecretSeedPourUriel2024"
 
 # Charger les variables d'environnement depuis .env.development
+# IMPORTANT: tr -d '\r' pour supprimer les retours chariot Windows
 if [ -f "$SCRIPT_DIR/eidStack-CMU/.env.development" ]; then
-    export $(grep -v '^#' "$SCRIPT_DIR/eidStack-CMU/.env.development" | xargs)
+    export $(grep -v '^#' "$SCRIPT_DIR/eidStack-CMU/.env.development" | tr -d '\r' | xargs)
 fi
 
 # Utiliser AGENT_PUBLIC_URL depuis .env ou fallback sur localhost
-AGENT_ENDPOINT="${AGENT_PUBLIC_URL:-http://localhost:3021}"
+AGENT_ENDPOINT=$(echo "${AGENT_PUBLIC_URL:-http://localhost:3021}" | tr -d '\r')
+SEED=$(echo "$SEED" | tr -d '\r')
 
 echo ""
 echo "============================================================"
@@ -103,15 +105,22 @@ echo ""
 echo "[3/6] Initialisation de l'agent SSI..."
 echo ""
 
+# Nettoyer toutes les variables de \r residuels (Windows/WSL)
+API_URL=$(printf '%s' "$API_URL" | tr -d '\r')
+SEED=$(printf '%s' "$SEED" | tr -d '\r')
+AGENT_ENDPOINT=$(printf '%s' "$AGENT_ENDPOINT" | tr -d '\r')
+
+# Construire le JSON
+INIT_JSON=$(printf '{"walletId":"cottonpay-issuer-wallet","walletKey":"cottonpay-secure-key-2024","endpoint":"%s","label":"CottonPay-Issuer","seed":"%s"}' "$AGENT_ENDPOINT" "$SEED")
+
+# Debug
+echo "[DEBUG] JSON: $INIT_JSON"
+echo "[DEBUG] Verification \\r:"
+echo "$INIT_JSON" | cat -v
+
 INIT_RESPONSE=$(curl -s -X POST "$API_URL/credo-agent/initAgent" \
   -H "Content-Type: application/json" \
-  -d "{
-    \"walletId\": \"cottonpay-issuer-wallet\",
-    \"walletKey\": \"cottonpay-secure-key-2024\",
-    \"endpoint\": \"$AGENT_ENDPOINT\",
-    \"label\": \"CottonPay-Issuer\",
-    \"seed\": \"$SEED\"
-  }")
+  -d "$INIT_JSON")
 
 if echo "$INIT_RESPONSE" | grep -q "issuerDid"; then
     ISSUER_DID=$(echo "$INIT_RESPONSE" | grep -o '"issuerDid":"[^"]*"' | cut -d'"' -f4)

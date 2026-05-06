@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculatrice de Vente - CottonPay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Fira Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #F0FFF4;
+            color: #1A3320;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            border: 1.5px solid #C6E6C6;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(74, 124, 35, 0.08);
+        }
+
+        .farmer-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1A3320;
+            margin-bottom: 12px;
+        }
+
+        .farmer-phone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #5a7a5a;
+            font-size: 16px;
+        }
+
+        .farmer-phone svg {
+            width: 20px;
+            height: 20px;
+            color: #4A7C23;
+        }
+
+        /* Calculator Card */
+        .calculator-card {
+            background: #fff;
+            border: 1.5px solid #C6E6C6;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(74, 124, 35, 0.08);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1A3320;
+            text-align: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #C6E6C6;
+        }
+
+        /* Weight Section */
+        .weight-section {
+            margin-bottom: 28px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #5a7a5a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .weight-control {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .weight-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .weight-input {
+            width: 100%;
+            background: #F0FFF4;
+            border: 2px solid #C6E6C6;
+            border-radius: 16px;
+            padding: 20px;
+            font-size: 48px;
+            font-weight: 700;
+            color: #4A7C23;
+            text-align: center;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .weight-input:focus {
+            outline: none;
+            border-color: #4A7C23;
+            box-shadow: 0 0 0 4px rgba(74, 124, 35, 0.15);
+        }
+
+        .weight-unit {
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            font-weight: 600;
+            color: #87CEEB;
+            pointer-events: none;
+        }
+
+        .weight-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .weight-btn {
+            width: 56px;
+            height: 56px;
+            background: #4A7C23;
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(74, 124, 35, 0.3);
+        }
+
+        .weight-btn:hover {
+            background: #3a6219;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 124, 35, 0.4);
+        }
+
+        .weight-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Price Section */
+        .price-section {
+            margin-bottom: 28px;
+        }
+
+        .price-display {
+            background: #F0FFF4;
+            border: 1.5px solid #C6E6C6;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A3320;
+        }
+
+        .price-value {
+            color: #4A7C23;
+            font-weight: 700;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #C6E6C6, transparent);
+            margin: 28px 0;
+        }
+
+        /* Total Section */
+        .total-section {
+            margin-bottom: 28px;
+        }
+
+        .total-card {
+            background: linear-gradient(135deg, #4A7C23 0%, #5a9c2d 100%);
+            border-radius: 18px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(74, 124, 35, 0.3);
+        }
+
+        .total-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .total-amount {
+            font-size: 52px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Confirm Button */
+        .btn-confirm {
+            width: 100%;
+            background: #F97316;
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn-confirm:hover {
+            background: #ea580c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-confirm:active {
+            transform: translateY(0);
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid #DC2626;
+            color: #991B1B;
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .logout-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border: 2px solid #C6E6C6;
+            box-shadow: 0 8px 32px rgba(74, 124, 35, 0.2);
+            border-radius: 20px;
+            padding: 36px;
+            max-width: 500px;
+            width: 100%;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1A3320;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-summary {
+            background: #F0FFF4;
+            border: 1px solid #C6E6C6;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 28px;
+            color: #1A3320;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .modal-summary strong {
+            color: #4A7C23;
+            font-weight: 700;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .modal-btn {
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-btn-cancel {
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid #DC2626;
+            color: #991B1B;
+        }
+
+        .modal-btn-cancel:hover {
+            background: rgba(239, 68, 68, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .modal-btn-confirm {
+            background: #4A7C23;
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 124, 35, 0.3);
+        }
+
+        .modal-btn-confirm:hover {
+            background: #3a6219;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 124, 35, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+            }
+
+            .farmer-name {
+                font-size: 24px;
+            }
+
+            .weight-input {
+                font-size: 40px;
+                padding: 16px;
+            }
+
+            .weight-unit {
+                font-size: 20px;
+            }
+
+            .weight-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+
+            .total-amount {
+                font-size: 42px;
+            }
+
+            .modal {
+                padding: 28px 20px;
+            }
+
+            .modal-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logout Button -->
+    <button class="logout-btn" onclick="handleLogout()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+        Déconnexion
+    </button>
+
+    <div class="container">
+        <!-- Farmer Header -->
+        <div class="header">
+            <div class="farmer-name" id="farmerName">Chargement...</div>
+            <div class="farmer-phone">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>
+                <span>Mobile Money: <strong id="farmerPhone">-</strong></span>
+            </div>
+        </div>
+
+        <!-- Calculator Card -->
+        <div class="calculator-card">
+            <h2 class="card-title">NOUVELLE VENTE DE COTON</h2>
+
+            <!-- Weight Section -->
+            <div class="weight-section">
+                <div class="section-label">Poids</div>
+                <div class="weight-control">
+                    <div class="weight-input-wrapper">
+                        <input type="number" id="weightInput" class="weight-input" value="200" min="1" max="10000">
+                        <span class="weight-unit">kg</span>
+                    </div>
+                    <div class="weight-buttons">
+                        <button class="weight-btn" onclick="incrementWeight()">+</button>
+                        <button class="weight-btn" onclick="decrementWeight()">−</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Section -->
+            <div class="price-section">
+                <div class="section-label">Prix unitaire (fixé)</div>
+                <div class="price-display">
+                    <span class="price-value" id="unitPrice">300</span> FCFA par kilogramme
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Total Section -->
+            <div class="total-section">
+                <div class="total-card">
+                    <div class="total-label">Montant Total</div>
+                    <div class="total-amount" id="totalAmount">50 000 FCFA</div>
+                </div>
+            </div>
+
+            <!-- Confirm Button -->
+            <button class="btn-confirm" onclick="showConfirmationModal()">
+                Confirmer la vente
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <h3 class="modal-title">Confirmation de vente</h3>
+            <div class="modal-summary" id="modalSummary">
+                Vous vendez <strong id="modalWeight">200 kg</strong> de coton au prix de <strong id="modalUnitPrice">250 FCFA/kg</strong>.<br><br>
+                Vous allez recevoir <strong id="modalTotal">50 000 FCFA</strong> sur votre compte MTN <strong id="modalPhone">97 12 34 56</strong>.
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal()">
+                    Annuler
+                </button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmSale()">
+                    Confirmer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3002';
+        const UNIT_PRICE = 300;
+
+        // Load farmer info
+        async function loadFarmerInfo() {
+            try {
+                // Vérifier si un agriculteur est authentifié en session
+                const response = await fetch(`${API_URL}/farmer-auth/check`, {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    // Pas d'agriculteur authentifié, rediriger vers dashboard
+                    window.location.href = '/dashboard.html';
+                    return;
+                }
+
+                const data = await response.json();
+                const farmer = data.farmer;
+
+                document.getElementById('farmerName').textContent = farmer.name || 'Agriculteur';
+                document.getElementById('farmerPhone').textContent = farmer.phone_number || '-';
+
+            } catch (error) {
+                console.error('Error loading farmer info:', error);
+                window.location.href = '/dashboard.html';
+            }
+        }
+
+        // Calculate total
+        function calculateTotal() {
+            const weight = parseInt(document.getElementById('weightInput').value) || 0;
+            const total = weight * UNIT_PRICE;
+            document.getElementById('totalAmount').textContent = total.toLocaleString('fr-FR') + ' FCFA';
+            return total;
+        }
+
+        // Increment weight
+        function incrementWeight() {
+            const input = document.getElementById('weightInput');
+            const currentValue = parseInt(input.value) || 0;
+            input.value = currentValue + 10;
+            calculateTotal();
+        }
+
+        // Decrement weight
+        function decrementWeight() {
+            const input = document.getElementById('weightInput');
+            const currentValue = parseInt(input.value) || 0;
+            if (currentValue > 10) {
+                input.value = currentValue - 10;
+                calculateTotal();
+            }
+        }
+
+        // Show confirmation modal
+        function showConfirmationModal() {
+            const weight = parseInt(document.getElementById('weightInput').value) || 0;
+
+            if (weight <= 0) {
+                alert('Veuillez entrer un poids valide');
+                return;
+            }
+
+            const total = weight * UNIT_PRICE;
+            const phone = document.getElementById('farmerPhone').textContent;
+
+            document.getElementById('modalWeight').textContent = weight + ' kg';
+            document.getElementById('modalUnitPrice').textContent = UNIT_PRICE + ' FCFA/kg';
+            document.getElementById('modalTotal').textContent = total.toLocaleString('fr-FR') + ' FCFA';
+            document.getElementById('modalPhone').textContent = phone;
+
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // Close modal on overlay click
+        function closeModalOnOverlay(event) {
+            if (event.target.id === 'modalOverlay') {
+                closeModal();
+            }
+        }
+
+        // Confirm sale
+        async function confirmSale() {
+            const weight = parseInt(document.getElementById('weightInput').value) || 0;
+
+            if (weight <= 0) {
+                alert('Veuillez entrer un poids valide');
+                return;
+            }
+
+            closeModal();
+
+            try {
+                const response = await fetch(`${API_URL}/sales/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        weight_kg: weight,
+                        unit_price_fcfa: UNIT_PRICE,
+                        collection_point: 'Point de collecte principal'
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erreur lors de la création de la vente');
+                }
+
+                const result = await response.json();
+
+                // Vérifier si un Verifiable Credential a été retourné par eidStack-CMU
+                if (result.data.credential && result.data.credential.invitationUrl) {
+                    const cred = result.data.credential;
+
+                    // Créer un overlay pour afficher le QR code
+                    const qrOverlay = document.createElement('div');
+                    qrOverlay.id = 'qrOverlay';
+                    qrOverlay.style.cssText = `
+                        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                        background: rgba(0, 0, 0, 0.8); z-index: 9999;
+                        display: flex; align-items: center; justify-content: center; padding: 20px;
+                        backdrop-filter: blur(5px);
+                    `;
+
+                    qrOverlay.innerHTML = `
+                        <div style="background: white; border-radius: 20px; padding: 32px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: modalSlideIn 0.3s ease-out;">
+                            <div style="width: 60px; height: 60px; background: #E8F5E9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 32px; height: 32px; color: #4A7C23;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <h2 style="font-size: 24px; font-weight: 700; color: #1A3320; margin-bottom: 8px;">Vente Enregistrée !</h2>
+                            <p style="color: #5a7a5a; font-size: 15px; margin-bottom: 24px;">La vente de <strong>${result.data.sale.weight_kg} kg</strong> a été confirmée.</p>
+
+                            <div style="background: #F0FFF4; border: 1.5px dashed #4A7C23; border-radius: 16px; padding: 20px; margin-bottom: 24px;">
+                                <h3 style="font-size: 16px; color: #1A3320; margin-bottom: 12px;">Votre Reçu Numérique</h3>
+                                <p style="font-size: 13px; color: #5a7a5a; margin-bottom: 16px;">Scannez ce QR code avec l'application <strong>e-IDapp_CMU</strong> pour recevoir votre reçu officiel sécurisé sur votre téléphone.</p>
+                                <img src="${cred.invitationQr}" alt="QR Code Credential" style="width: 200px; height: 200px; border-radius: 8px; margin-bottom: 8px;">
+                                <div style="font-size: 12px; color: #888;">ID: ${cred.credentialExchangeId.substring(0, 8)}...</div>
+                            </div>
+
+                            <button id="finishQrBtn" style="width: 100%; background: #4A7C23; color: white; border: none; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                Terminer
+                            </button>
+                        </div>
+                    `;
+
+                    document.body.appendChild(qrOverlay);
+
+                    // Gestionnaire du clic sur "Terminer"
+                    document.getElementById('finishQrBtn').addEventListener('click', async () => {
+                        document.getElementById('finishQrBtn').textContent = 'Fermeture...';
+                        document.getElementById('finishQrBtn').style.opacity = '0.7';
+
+                        try {
+                            await fetch(`${API_URL}/farmer-auth/clear`, {
+                                method: 'POST',
+                                credentials: 'include'
+                            });
+                        } catch(e) { console.error('Clear session error', e); }
+
+                        window.location.href = '/dashboard.html';
+                    });
+
+                } else {
+                    // Fallback normal si pas de credential retourné
+                    alert(`✅ Vente enregistrée avec succès !\n\nMontant: ${result.data.sale.total_amount_fcfa.toLocaleString('fr-FR')} FCFA\nRéférence: ${result.data.sale.payment_reference}`);
+
+                    await fetch(`${API_URL}/farmer-auth/clear`, {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+
+                    window.location.href = '/dashboard.html';
+                }
+
+            } catch (error) {
+                console.error('Sale creation error:', error);
+                alert('❌ Erreur: ' + error.message);
+            }
+        }
+
+        // Logout
+        async function handleLogout() {
+            try {
+                await fetch(`${API_URL}/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFarmerInfo();
+            calculateTotal();
+
+            const weightInput = document.getElementById('weightInput');
+            weightInput.addEventListener('input', calculateTotal);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
