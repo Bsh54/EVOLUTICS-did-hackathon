@@ -1,10 +1,10 @@
-# CottonPay - Système d'Identité Numérique et de Paiement pour Producteurs de Coton
+# CottonPay — Traçabilité Numérique et Identité Économique pour Producteurs de Coton
 
 <p align="center">
   <img src="logo.jpeg" alt="CottonPay Logo" width="200"/>
 </p>
 
-CottonPay est une plateforme complète d'identité numérique et de paiement destinée aux producteurs de coton au Bénin. Le système combine l'authentification par OTP via eSignet (MOSIP) et l'émission de credentials vérifiables via eidStack-CMU.
+CottonPay est une plateforme de traçabilité numérique destinée aux producteurs de coton au Bénin. Elle permet aux coopératives (CVPC) d'enregistrer chaque livraison de coton et d'émettre un **credential vérifiable** que le producteur stocke dans son wallet mobile **e-IDapp**. Le système combine l'authentification nationale via **eSignet (MOSIP)** avec le NPI et l'émission de credentials via **eidStack-CMU**, ancrés sur le registre **BCovrin**.
 
 ## 📊 Présentation du Projet
 
@@ -95,17 +95,17 @@ Dans Git Bash ou terminal Windows :
 
 Ouvrez votre navigateur : **http://localhost:3002**
 
-**Identifiants de test :**
+**Identifiants de test (représentant coopérative) :**
 
-- **NPI** : `1234567890123456`
+- **NPI** : `9876543210987654` (Kokou Agossou, président CVPC)
 - **OTP** : `111111`
 
 **Flux d'authentification :**
 
-1. Cliquez sur **"Accéder"** sur la page d'accueil
-2. Cliquez sur **"Se connecter avec eSignet"**
-3. Entrez les identifiants de test
-4. Vous êtes redirigé vers le dashboard
+1. Cliquez sur **"Espace Coopérative"** dans la barre de navigation
+2. Vous êtes redirigé vers eSignet
+3. Entrez le NPI et le code OTP
+4. Vous accédez au dashboard coopérative
 
 ---
 
@@ -238,53 +238,53 @@ peut pas atteindre le serveur.
 
 Ouvrez votre navigateur : **http://localhost:3002**
 
-**Identifiants de test :**
+**Identifiants de test (représentant coopérative) :**
 
-- **NPI** : `1234567890123456`
+- **NPI** : `9876543210987654` (Kokou Agossou, président CVPC)
 - **OTP** : `111111`
 
 **Flux d'authentification :**
 
-1. Cliquez sur **"Accéder"** sur la page d'accueil (carte "Espace collecteurs & coopératives")
-2. Cliquez sur **"Se connecter avec eSignet"**
-3. Entrez le NPI puis l'OTP de test
-4. Vous êtes redirigé vers le dashboard agriculteur
+1. Cliquez sur **"Espace Coopérative"** dans la barre de navigation
+2. Vous êtes redirigé vers eSignet
+3. Entrez le NPI puis le code OTP
+4. Vous accédez au dashboard coopérative
 
-> **Note :** La page d'accueil propose aussi le téléchargement de l'application mobile idsWallet (carte "Télécharger IDS Wallet").
+> **Note :** La page d'accueil propose aussi un portail de vérification publique et l'application e-IDapp pour les producteurs.
 
 ---
 
 ## Utilisation
 
-### Enregistrer une vente et émettre un credential
+### Enregistrer une livraison
 
-1. Sur le dashboard CottonPay, remplissez le formulaire :
-   - **Poids de coton** (kg)
-   - **Prix unitaire** (FCFA/kg)
-2. Cliquez sur **"Enregistrer la vente"**
-3. Le système :
-   - Calcule le montant total
-   - Simule le paiement Mobile Money
+1. Sur le dashboard, cliquez sur **"Enregistrer une livraison"**
+2. Saisissez le NPI du producteur — le système vérifie son identité
+3. Entrez le poids (kg) et la qualité :
+   - **1er choix** : 300 FCFA/kg
+   - **2ème choix** : 250 FCFA/kg
+4. Cliquez sur **"Enregistrer la livraison"**
+5. Le système :
+   - Calcule le montant total et les déductions (crédit intrants, redevance AIC)
    - Émet un credential vérifiable via eidStack-CMU
    - Génère un QR code contenant l'invitation DIDComm
-4. Un QR code s'affiche sur l'écran
+6. Un QR code + bordereau PDF s'affichent sur l'écran
 
 ### Recevoir le credential sur le téléphone
 
-1. Ouvrez l'application **idsWallet** sur votre téléphone Android
+1. Ouvrez l'application **e-IDapp (IDS Wallet)** sur votre téléphone Android
 2. Appuyez sur **"Scan QR"**
-3. Scannez le QR code affiché sur l'écran du PC
+3. Scannez le QR code affiché sur le bordereau
 4. L'application affiche les détails du credential (type, émetteur, attributs)
 5. Appuyez sur **"Accept"** pour stocker le credential dans votre wallet
-6. Le credential est maintenant stocké de manière sécurisée dans l'application
+6. Le credential est stocké de manière souveraine dans le wallet du producteur
 
-### Partager via WhatsApp
+### Vérification publique
 
-Sur la page du QR code, cliquez sur **"Envoyer par WhatsApp"**. Le système :
-
-- Génère une image PNG du QR code avec le titre CottonPay
-- Utilise le Web Share API du navigateur pour envoyer l'image directement via WhatsApp
-- En fallback (PC), télécharge l'image et ouvre WhatsApp avec le message texte
+1. Accédez à **http://localhost:3002/verify.html**
+2. Saisissez le NPI du producteur
+3. Le producteur s'authentifie via eSignet (OTP)
+4. L'historique certifié de ses livraisons s'affiche — vérifiable par une banque ou institution
 
 ---
 
@@ -327,18 +327,21 @@ Agent (port 3021) ↔ idsWallet
 Credential stocké dans le wallet avec tous ses attributs
 ```
 
-### Flux de vérification (Proof Request)
+### Flux de vérification publique (verify.html)
 
-````
-Vérificateur → POST http://localhost:4000/verification/request
-    ↓ Création proof request
-idsWallet reçoit la requête
-    ↓ Sélection du credential approprié
-idsWallet → Présentation cryptographique (Zero-Knowledge Proof)
-    ↓ Vérification par l'agent
-Résultat : Vérifié ✅ ou Rejeté ❌
+```
+Banque/Institution → CottonPay (localhost:3002/verify.html)
+    ↓ Saisie du NPI du producteur
+Redirection vers eSignet → Producteur s'authentifie (NPI + OTP)
+    ↓ Identité vérifiée, consentement obtenu
+CottonPay Backend → Récupération des livraisons certifiées
+    ↓ Affichage de l'historique complet
+Résultat : Historique vérifié avec statut des credentials ✅
+```
 
-## Structure du projet```
+## Structure du projet
+
+```
 EVOLUTICS-did-hackathon/
 ├── install.sh              # Installation CottonPay + eSignet (Windows)
 ├── start.sh                # Démarrage CottonPay + eSignet (Windows)
