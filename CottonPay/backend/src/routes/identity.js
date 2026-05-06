@@ -33,7 +33,7 @@ router.post('/verify', async (req, res) => {
     if (!identity) {
       return res.json({
         found: false,
-        message: 'Ce NPI n\'existe pas dans le registre national (ANIP)'
+        message: 'Ce NPI n\'existe pas dans le registre national '
       });
     }
 

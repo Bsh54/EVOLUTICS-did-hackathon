@@ -190,7 +190,7 @@ router.post('/producers', async (req, res) => {
     if (!identity) {
       return res.status(404).json({
         error: 'NPI non trouvé',
-        message: 'Ce NPI n\'existe pas dans le registre national (ANIP)'
+        message: 'Ce NPI n\'existe pas dans le registre national'
       });
     }
 

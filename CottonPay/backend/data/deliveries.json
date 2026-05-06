@@ -649,7 +649,61 @@
       "lot_number": "LOT-004",
       "payment_status": "pending",
       "credential_status": "issued",
-      "credential_exchange_id": "0d0f481d-0bfb-4bb2-848c-87344f320a50"
+      "credential_exchange_id": "93430375-f947-4b4f-81d1-16863caac13c"
+    },
+    {
+      "id": "LIV-20260506-002",
+      "farmer_npi": "1000000000000012",
+      "cooperative_id": "coop-001",
+      "registered_by_npi": "9876543210987654",
+      "date": "2026-05-06T12:54:06.444Z",
+      "weight_kg": 550,
+      "quality": "2eme_choix",
+      "unit_price": 250,
+      "total_gross": 137500,
+      "input_credit_deduction": 49500,
+      "aic_deduction": 9900,
+      "total_net": 78100,
+      "lot_number": "LOT-004",
+      "payment_status": "pending",
+      "credential_status": "issued",
+      "credential_exchange_id": "aed787b1-fc79-4a5e-b252-a573f3b9bb9d"
+    },
+    {
+      "id": "LIV-20260506-003",
+      "farmer_npi": "1000000000000012",
+      "cooperative_id": "coop-001",
+      "registered_by_npi": "9876543210987654",
+      "date": "2026-05-06T12:57:50.086Z",
+      "weight_kg": 506,
+      "quality": "1er_choix",
+      "unit_price": 300,
+      "total_gross": 151800,
+      "input_credit_deduction": 45540,
+      "aic_deduction": 9108,
+      "total_net": 97152,
+      "lot_number": "LOT-004",
+      "payment_status": "pending",
+      "credential_status": "issued",
+      "credential_exchange_id": "202549ee-43ad-48e6-aaa0-06b6dacc8732"
+    },
+    {
+      "id": "LIV-20260506-004",
+      "farmer_npi": "1000000000000012",
+      "cooperative_id": "coop-001",
+      "registered_by_npi": "9876543210987654",
+      "date": "2026-05-06T13:07:44.223Z",
+      "weight_kg": 510,
+      "quality": "1er_choix",
+      "unit_price": 300,
+      "total_gross": 153000,
+      "input_credit_deduction": 45900,
+      "aic_deduction": 9180,
+      "total_net": 97920,
+      "lot_number": "LOT-004",
+      "payment_status": "pending",
+      "credential_status": "issued",
+      "credential_exchange_id": "2be443ac-7210-458a-b524-04d34e97997d"
     }
   ]
 }
