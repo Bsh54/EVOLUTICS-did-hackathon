@@ -1,4 +1,4 @@
-﻿/* =============================================
+/* =============================================
    TOKENS & RESET
 ============================================= */
 :root {
@@ -924,27 +924,136 @@ footer {
 /* =============================================
    RESPONSIVE
 ============================================= */
+
+/* ---- Tablet ---- */
 @media (max-width: 1024px) {
   nav { padding: 0 24px; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
   section { padding: 72px 24px; }
+  #producer { padding: 48px 24px; }
   footer { padding: 32px 24px; }
+
+  .hero-inner { gap: 40px; }
+  .how-grid { grid-template-columns: repeat(2, 1fr); }
+  .coop-inner { gap: 48px; }
+  .prod-inner { gap: 36px; }
 }
 
+/* ---- Mobile landscape / small tablet ---- */
 @media (max-width: 768px) {
+  section { padding: 56px 20px; }
+  #producer { padding: 40px 20px; }
+
+  /* Grids → single column */
   .hero-inner,
   .coop-inner,
-  .prod-inner { grid-template-columns: 1fr; gap: 40px; }
-  .how-grid { grid-template-columns: 1fr; }
+  .prod-inner { grid-template-columns: 1fr; gap: 32px; }
+  .how-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* Hero */
+  #hero { min-height: auto; padding-top: calc(var(--nav-h) + 40px); padding-bottom: 48px; }
   .hero-right { display: none; }
   .hero-btns { flex-direction: column; }
-  .btn { justify-content: center; }
-  footer { flex-direction: column; text-align: center; }
+  .btn { justify-content: center; width: 100%; }
+  .hero-sub { max-width: 100%; }
+
+  /* How cards */
+  .how-card { padding: 28px 22px; }
+  .how-card::after { font-size: 3.5rem; }
+
+  /* Coop section */
+  .coop-visual { padding: 20px; }
+  .mock-table th, .mock-table td { font-size: .7rem; padding: 6px 4px; }
+  .mock-stat-val { font-size: 1.125rem; }
+
+  /* Producer section — phone frame centered */
+  .phone-wrap { order: -1; }
+  .phone-frame { width: 220px; }
+
+  /* Verify */
+  .verify-card { padding: 28px 20px; }
+
+  /* Wallet */
+  .wallet-card { padding: 32px 20px; }
+
+  /* Footer */
+  footer { flex-direction: column; text-align: center; gap: 12px; }
   .footer-team { text-align: center; }
+  .footer-tech { text-align: center; }
+
+  /* Section titles */
+  h2.section-title { font-size: clamp(1.5rem, 5vw, 2rem); }
+  p.section-desc { font-size: .9375rem; max-width: 100%; }
 }
 
+/* ---- Mobile portrait ---- */
 @media (max-width: 480px) {
-  h1.hero-title { font-size: 2rem; }
-  section { padding: 56px 16px; }
+  nav { padding: 0 16px; height: 60px; }
+  :root { --nav-h: 60px; }
+  .nav-logo img { height: 32px; }
+
+  section { padding: 40px 16px; }
+  #producer { padding: 32px 16px; }
+  #hero { padding-top: calc(var(--nav-h) + 24px); padding-bottom: 32px; }
+
+  h1.hero-title { font-size: 1.75rem; margin-bottom: 16px; }
+  .hero-sub { font-size: .9375rem; margin-bottom: 24px; }
+  .hero-eyebrow { font-size: .6875rem; margin-bottom: 16px; }
+
+  /* Buttons */
+  .btn { padding: 12px 20px; font-size: .875rem; }
+  .nav-cta { padding: 8px 16px; font-size: .8125rem !important; }
+
+  /* How cards compact */
+  .how-card { padding: 22px 18px; }
+  .how-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 16px; }
+  .how-icon svg { width: 20px; height: 20px; }
+  .how-card h3 { font-size: 1.0625rem; }
+  .how-card p { font-size: .875rem; }
+
+  /* Coop */
+  .coop-list li { font-size: .875rem; }
+  .mock-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mock-stat { padding: 10px; }
+  .mock-stat-val { font-size: 1rem; }
+  .mock-stat-lbl { font-size: .6875rem; }
+  .mock-table th { font-size: .625rem; }
+  .mock-table td { font-size: .75rem; padding: 6px 4px; }
+
+  /* Producer phone */
+  .phone-frame { width: 200px; border-radius: 28px; padding: 8px; }
+  .phone-frame::before { width: 60px; height: 5px; margin: 3px auto 6px; }
+  .phone-screenshot { border-radius: 20px; }
+
+  /* Verify */
+  .verify-card { padding: 24px 16px; }
+  .verify-input { padding: 12px 14px; font-size: .9375rem; }
+
+  /* Wallet / Download */
+  .wallet-card { padding: 24px 16px; }
+  .wallet-icon { width: 56px; height: 56px; border-radius: 16px; }
+  .wallet-icon svg { width: 28px; height: 28px; }
+  .wallet-card h3 { font-size: 1.25rem; }
+  .wallet-card p { font-size: .875rem; margin-bottom: 24px; }
+  .playstore-btn { padding: 12px 20px; }
+  .ps-name { font-size: 1rem; }
+
+  /* Footer compact */
+  footer { padding: 24px 16px; }
+  .footer-logo { font-size: 1.0625rem; }
+  .footer-tech, .footer-team { font-size: .75rem; }
+
+  /* Section label */
+  .section-label { font-size: .6875rem; padding: 4px 12px; }
+
+  /* Hero card (if visible) */
+  .hero-card { padding: 24px; }
+  .hero-stats { gap: 12px; }
+  .hero-stat { padding: 14px; }
+  .hero-stat-val { font-size: 1.5rem; }
+
+  /* Mobile nav */
+  .mobile-nav { padding: 16px 16px 24px; gap: 14px; }
+  .mobile-nav a { font-size: .9375rem; }
 }
