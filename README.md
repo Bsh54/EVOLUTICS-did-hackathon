@@ -12,7 +12,7 @@ CottonPay est une plateforme complète d'identité numérique et de paiement des
 
 ## 🎥 Vidéo de Démonstration
 
-**<a href="https://youtu.be/4Qb5R3kSnQI" target="_blank">Voir la démo sur YouTube</a>**
+**<a href="https://youtu.be/4Qb5R3kSnQI?feature=shared" target="_blank">Voir la démo sur YouTube</a>**
 
 ## 🎬 Vidéo de Présentation
 
