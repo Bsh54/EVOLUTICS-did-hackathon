@@ -8,7 +8,7 @@ CottonPay est une plateforme de traçabilité numérique destinée aux producteu
 
 ## 📊 Présentation du Projet
 
-**<a href="EVOLUTICS-presentation.pptx">Télécharger la présentation PowerPoint</a>**
+**<a href="/EVOLUTICS-presentation.pptx">Télécharger la présentation PowerPoint</a>**
 
 ## 🎥 Vidéo de Démonstration
 
@@ -361,7 +361,7 @@ EVOLUTICS-did-hackathon/
     ├── src/                # Code source React Native
     ├── android/            # Projet Android natif
     └── ios/                # Projet iOS natif
-````
+```
 
 ## Services disponibles
 
