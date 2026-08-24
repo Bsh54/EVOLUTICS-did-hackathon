@@ -13,6 +13,95 @@
   // DICTIONNAIRE  (clé = texte français exact, valeur = anglais)
   // ============================================================
   var DICT = {
+    // ---- NOUVELLE LANDING (2026) ----
+    "CottonPay — La preuve infalsifiable de chaque livraison de coton": "CottonPay — Tamper-proof evidence for every cotton delivery",
+    "Le problème": "The problem",
+    "La solution": "The solution",
+    "Chaque livraison de coton, une": "Every cotton delivery,",
+    "preuve infalsifiable": "tamper-proof evidence",
+    "CottonPay transforme le bordereau papier en preuve numérique signée sur la blockchain. Le tonnage ne peut plus être trafiqué, et chaque producteur bâtit sa crédibilité financière.":
+      "CottonPay turns the paper receipt into digital evidence signed on the blockchain. Tonnage can no longer be tampered with, and every producer builds financial credibility.",
+    "Voir comment ça marche": "See how it works",
+    "Preuve vérifiable sur la blockchain BCovrin — sans compte requis": "Evidence verifiable on the BCovrin blockchain — no account required",
+    "Reçu de livraison": "Delivery receipt",
+    "Certifié": "Certified",
+    "Poids pesé": "Weighed amount",
+    "Point de collecte": "Collection point",
+    "Date": "Date",
+    "Gravé sur la blockchain. Scannez pour vérifier l'authenticité — impossible à modifier.":
+      "Recorded on the blockchain. Scan to verify authenticity — impossible to alter.",
+    "du PIB du Bénin repose sur le coton": "of Benin's GDP relies on cotton",
+    "perdus par les producteurs sur des tonnages trafiqués": "lost by producers to tampered tonnages",
+    "producteur de coton de la zone CFA": "cotton producer in the CFA zone",
+    "Sans preuve, le producteur est vulnérable.": "Without proof, the producer is vulnerable.",
+    "À la pesée, c'est la coopérative qui note le poids. Le paysan doit faire confiance à un chiffre qu'il ne peut pas contester.":
+      "At weighing, the cooperative records the weight. The farmer must trust a figure they cannot contest.",
+    "Tonnages sous-estimés": "Underestimated tonnages",
+    "On inscrit 900 kg pour 1000 kg livrés. Les 100 kg « disparus » sont autant d'argent perdu pour le producteur.":
+      "900 kg is recorded for 1000 kg delivered. The 100 \"missing\" kg is money lost by the producer.",
+    "Retards de paiement": "Payment delays",
+    "Livré en mars, parfois seulement 20 % payé en juin. Sans document fiable, difficile de réclamer son dû.":
+      "Delivered in March, sometimes only 20% paid by June. Without reliable proof, hard to claim what's owed.",
+    "Aucun historique": "No history",
+    "Le producteur reste invisible pour les banques : pas de trace vérifiable de ce qu'il a réellement livré.":
+      "The producer stays invisible to banks: no verifiable record of what they actually delivered.",
+    "Une preuve que personne ne peut trafiquer.": "Evidence no one can tamper with.",
+    "À la pesée, le poids réel est enregistré et signé par l'identité numérique du producteur, puis gravé sur la blockchain. Le reçu devient une preuve définitive.":
+      "At weighing, the real weight is recorded and signed by the producer's digital identity, then written to the blockchain. The receipt becomes definitive evidence.",
+    "Infalsifiable": "Tamper-proof",
+    "— une fois émis, le reçu ne peut plus être modifié par personne.": "— once issued, the receipt can no longer be modified by anyone.",
+    "Vérifiable par tous": "Verifiable by anyone",
+    "— banque, acheteur ou union scannent le QR, sans compte.": "— bank, buyer or union scan the QR, no account.",
+    "Un historique de confiance": "A trusted history",
+    "— la base du futur accès au crédit.": "— the basis for future access to credit.",
+    "Identité nationale (NPI)": "National identity (NPI)",
+    "Le producteur est authentifié de façon fiable.": "The producer is reliably authenticated.",
+    "Blockchain": "Blockchain",
+    "Le reçu est scellé et impossible à altérer.": "The receipt is sealed and impossible to alter.",
+    "Wallet e-ID": "e-ID wallet",
+    "Le producteur garde sa preuve dans son téléphone.": "The producer keeps their proof on their phone.",
+    "Trois étapes, quelques secondes.": "Three steps, a few seconds.",
+    "On pèse la livraison": "Weigh the delivery",
+    "Le chef de coopérative enregistre le producteur et le poids réel du coton livré.":
+      "The cooperative lead records the producer and the real weight of cotton delivered.",
+    "On émet le reçu": "Issue the receipt",
+    "Un reçu numérique est signé par l'identité et gravé sur la blockchain, avec un QR.":
+      "A digital receipt is signed by the identity and written to the blockchain, with a QR.",
+    "La preuve circule": "The proof travels",
+    "Le producteur repart avec sa preuve. N'importe qui peut la vérifier en scannant le QR.":
+      "The producer leaves with their proof. Anyone can verify it by scanning the QR.",
+    "Du champ au marché, chaque kilo est tracé.": "From field to market, every kilo is traced.",
+    "De la pesée à la vérification, la filière gagne en transparence et le producteur en crédibilité.":
+      "From weighing to verification, the sector gains transparency and the producer gains credibility.",
+    "Aujourd'hui": "Today",
+    "La preuve de chaque livraison.": "Proof of every delivery.",
+    "Demain": "Tomorrow",
+    "L'historique devient un accès au crédit.": "The history becomes access to credit.",
+    "La vision": "The vision",
+    "L'infrastructure de confiance de la filière coton.": "The trust infrastructure of the cotton sector.",
+    "Au-delà de la preuve": "Beyond the proof",
+    "De la preuve au financement.": "From proof to financing.",
+    "Un historique de livraisons vérifié, c'est ce qui manque aux banques et IMF pour prêter en confiance aux producteurs. CottonPay fournit ce maillon — nous sommes le rail de confiance, pas le prêteur.":
+      "A verified delivery history is what banks and MFIs lack to lend to producers with confidence. CottonPay provides that link — we are the trust rail, not the lender.",
+    "Ce qu'on nous demande souvent.": "What we're often asked.",
+    "Le producteur a-t-il besoin d'un smartphone ?": "Does the producer need a smartphone?",
+    "Non. C'est le chef de coopérative qui utilise l'application. Le producteur reçoit une preuve (QR) et n'a rien à installer.":
+      "No. The cooperative lead uses the app. The producer receives a proof (QR) and installs nothing.",
+    "En quoi le reçu est-il « infalsifiable » ?": "Why is the receipt \"tamper-proof\"?",
+    "Le reçu est signé par l'identité nationale et scellé sur la blockchain. Une fois émis, il ne peut plus être modifié — le poids enregistré est définitif.":
+      "The receipt is signed by the national identity and sealed on the blockchain. Once issued, it cannot be modified — the recorded weight is final.",
+    "Qui peut vérifier un reçu ?": "Who can verify a receipt?",
+    "N'importe qui — banque, acheteur, union — en scannant le QR du reçu. Aucun compte n'est nécessaire pour vérifier l'authenticité.":
+      "Anyone — bank, buyer, union — by scanning the receipt QR. No account is needed to verify authenticity.",
+    "CottonPay prête-t-il de l'argent ?": "Does CottonPay lend money?",
+    "Non. CottonPay fournit la couche de confiance (la preuve et l'historique) qui permet aux banques et IMF de prêter aux producteurs. Nous sommes le rail, pas le prêteur.":
+      "No. CottonPay provides the trust layer (the proof and history) that lets banks and MFIs lend to producers. We are the rail, not the lender.",
+    "Prêt à sécuriser vos livraisons ?": "Ready to secure your deliveries?",
+    "Rejoignez l'espace coopérative et émettez votre premier reçu infalsifiable dès aujourd'hui.":
+      "Join the cooperative portal and issue your first tamper-proof receipt today.",
+    "Traçabilité et paiement cotonnier · Campagne 2025-2026 · République du Bénin":
+      "Cotton traceability & payment · 2025-2026 Season · Republic of Benin",
+
     // ---- <title> ----
     "CottonPay — Certifiez chaque livraison de coton": "CottonPay — Certify every cotton delivery",
     "CottonPay — Espace Coopérative": "CottonPay — Cooperative Portal",
@@ -343,14 +432,14 @@
     var css = document.createElement('style');
     css.textContent =
       '#cpLangSwitch{position:fixed;bottom:22px;right:22px;top:auto;z-index:99999;display:flex;' +
-      'gap:4px;padding:5px;border-radius:999px;background:#fff;' +
-      'border:2px solid rgba(21,128,61,.35);box-shadow:0 6px 22px rgba(21,128,61,.30);' +
-      'backdrop-filter:blur(8px);font-family:system-ui,sans-serif;}' +
-      '#cpLangSwitch button{border:none;background:none;cursor:pointer;font-size:16px;' +
-      'font-weight:800;padding:10px 20px;border-radius:999px;color:#15803D;line-height:1;' +
+      'gap:4px;padding:5px;border-radius:10px;background:#fff;' +
+      'border:1px solid #D8DEE7;box-shadow:0 6px 22px rgba(20,32,46,.14);' +
+      'font-family:Arial,Helvetica,sans-serif;}' +
+      '#cpLangSwitch button{border:none;background:none;cursor:pointer;font-size:15px;' +
+      'font-weight:800;padding:9px 18px;border-radius:8px;color:#2554B0;line-height:1;' +
       'letter-spacing:.5px;transition:all .15s;}' +
-      '#cpLangSwitch button:hover{background:rgba(21,128,61,.08);}' +
-      '#cpLangSwitch button.on{background:#15803D;color:#fff;}' +
+      '#cpLangSwitch button:hover{background:rgba(37,84,176,.08);}' +
+      '#cpLangSwitch button.on{background:#2554B0;color:#fff;}' +
       /* sur mobile, remonter au-dessus de la barre de navigation basse (espace coop) */
       '@media(max-width:768px){#cpLangSwitch{bottom:84px;right:14px;}' +
       '#cpLangSwitch button{font-size:15px;padding:9px 17px;}}';
