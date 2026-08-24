@@ -81,3 +81,7 @@ cloudflare-login-link.txt
 CottonPay/.cottonpay.pid
 node_modules/
 CottonPay/backend/keys/
+
+# APK volumineux (disponible en release + servi sur le serveur)
+CottonPay/frontend/idsWallet.apk
+*.apk
