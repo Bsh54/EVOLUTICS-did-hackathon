@@ -1,517 +1,311 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CottonPay — Certifiez chaque livraison de coton</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="i18n.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CottonPay — La preuve infalsifiable de chaque livraison de coton</title>
+<meta name="description" content="CottonPay transforme chaque livraison de coton en preuve numérique infalsifiable grâce à l'identité nationale et la blockchain. Transparence pour la filière, crédibilité financière pour les producteurs.">
+<style>
+:root{
+  --blue:#2554B0; --blue-dark:#1C4090; --gold:#B8863B;
+  --ink:#14202E; --muted:#5A6678; --line:#E1E5EC; --canvas:#F7F8FA; --white:#FFFFFF;
+  --success:#2E7D52;
+  --font:Arial,Helvetica,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);color:var(--ink);background:var(--white);line-height:1.5;-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+section{padding:88px 0}
+.eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:rgba(37,84,176,.08);border:1px solid rgba(37,84,176,.18);padding:6px 14px;border-radius:6px;margin-bottom:20px;}
+h1,h2,h3{line-height:1.15;letter-spacing:-.01em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:none;border-radius:10px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;min-height:50px;padding:0 24px;transition:background .15s ease;}
+.btn svg{width:18px;height:18px}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-dark)}
+.btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--blue)}
 
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);height:66px;display:flex;align-items:center;}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;width:100%}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;color:var(--ink)}
+.logo .mk{width:34px;height:34px;border-radius:8px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:800}
+.nav-links{display:flex;align-items:center;gap:30px}
+.nav-links a{font-size:14px;font-weight:600;color:var(--muted)}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--blue);color:#fff !important;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:700}
+.nav-cta:hover{background:var(--blue-dark)}
+@media(max-width:820px){.nav-links a:not(.nav-cta){display:none}}
+
+/* HERO */
+.hero{padding:72px 0 64px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(30px,4.4vw,50px);font-weight:800;margin-bottom:20px}
+.hero h1 span{color:var(--blue)}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:520px;margin-bottom:28px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.hero-trust{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.hero-trust .dot{width:8px;height:8px;border-radius:50%;background:var(--success)}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+
+/* Receipt visual */
+.receipt{background:var(--canvas);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:16px;padding:26px;box-shadow:0 20px 50px rgba(20,32,46,.08);}
+.receipt .rhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.receipt .rtitle{font-weight:800;font-size:15px}
+.receipt .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--success);background:rgba(46,125,82,.1);padding:5px 11px;border-radius:6px}
+.receipt .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--success)}
+.receipt .rrow{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+.receipt .rrow span:first-child{color:var(--muted)}
+.receipt .rrow b{font-weight:700}
+.receipt .rfoot{display:flex;align-items:center;gap:14px;margin-top:18px}
+.receipt .qr{width:74px;height:74px;border:1px solid var(--line);border-radius:8px;flex:none;background:
+  repeating-linear-gradient(0deg,#14202E 0 5px,transparent 5px 10px),
+  repeating-linear-gradient(90deg,#14202E 0 5px,transparent 5px 10px);
+  background-blend-mode:multiply;opacity:.85}
+.receipt .rfoot p{font-size:12px;color:var(--muted)}
+
+/* STATS band */
+.band{background:var(--blue)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:center}
+.stats .s b{display:block;font-size:40px;font-weight:800;color:#fff;line-height:1}
+.stats .s p{color:rgba(255,255,255,.8);font-size:14px;margin-top:8px}
+@media(max-width:700px){.stats{grid-template-columns:1fr;gap:28px}}
+
+/* SECTION HEADERS */
+.shead{max-width:640px;margin-bottom:44px}
+.shead h2{font-size:clamp(26px,3.4vw,36px);font-weight:800;margin-bottom:14px}
+.shead p{color:var(--muted);font-size:17px}
+.center{margin-left:auto;margin-right:auto;text-align:center}
+
+/* PROBLEM cards */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px}
+.card .ic{width:44px;height:44px;border-radius:10px;background:rgba(37,84,176,.08);display:grid;place-items:center;margin-bottom:16px}
+.card .ic svg{width:22px;height:22px;stroke:var(--blue)}
+.card h3{font-size:17px;font-weight:700;margin-bottom:8px}
+.card p{color:var(--muted);font-size:15px}
+@media(max-width:820px){.cards{grid-template-columns:1fr}}
+
+/* HOW steps */
+.alt{background:var(--canvas)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{padding-top:8px}
+.step .n{width:38px;height:38px;border-radius:10px;background:var(--blue);color:#fff;font-weight:800;display:grid;place-items:center;margin-bottom:16px}
+.step h3{font-size:17px;font-weight:700;margin-bottom:8px}
+.step p{color:var(--muted);font-size:15px}
+@media(max-width:820px){.steps{grid-template-columns:1fr}}
+
+/* TECH split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.split ul{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:14px}
+.split li{display:flex;gap:12px;font-size:15px}
+.split li svg{width:22px;height:22px;stroke:var(--success);flex:none;margin-top:1px}
+.techbox{background:var(--ink);border-radius:16px;padding:32px;color:#fff}
+.techbox .tline{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.techbox .tline:last-child{border-bottom:none}
+.techbox .tdot{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.1);display:grid;place-items:center;flex:none}
+.techbox .tdot svg{width:18px;height:18px;stroke:#fff}
+.techbox b{display:block;font-size:15px}
+.techbox small{color:rgba(255,255,255,.6);font-size:13px}
+@media(max-width:820px){.split{grid-template-columns:1fr;gap:32px}}
+
+/* FAQ */
+.faq{max-width:760px;margin:0 auto}
+.qa{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden;background:var(--white)}
+.qa button{width:100%;text-align:left;background:none;border:none;padding:18px 22px;font-family:inherit;font-size:16px;font-weight:700;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.qa .ans{max-height:0;overflow:hidden;transition:max-height .25s ease;color:var(--muted);font-size:15px;padding:0 22px}
+.qa.open .ans{max-height:240px;padding-bottom:20px}
+.qa .chev{transition:transform .2s ease;flex:none}
+.qa.open .chev{transform:rotate(180deg)}
+
+/* CTA final */
+.finalcta{background:var(--blue);border-radius:20px;padding:56px;text-align:center;color:#fff}
+.finalcta h2{font-size:clamp(24px,3.2vw,34px);font-weight:800;margin-bottom:14px}
+.finalcta p{color:rgba(255,255,255,.85);font-size:17px;max-width:520px;margin:0 auto 26px}
+.finalcta .btn-primary{background:#fff;color:var(--blue)}
+.finalcta .btn-primary:hover{background:#eef2fb}
+
+/* FOOTER */
+footer{background:var(--ink);color:rgba(255,255,255,.6);padding:40px 0}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+footer .logo{color:#fff}
+footer .logo .mk{background:rgba(255,255,255,.15)}
+footer small{font-size:13px}
+</style>
 </head>
 <body>
 
-<!-- ==================== BACKGROUND ==================== -->
-<div class="site-bg"></div>
-<div class="site-bg-overlay"></div>
-
-<div class="content">
-
-<!-- ==================== NAVBAR ==================== -->
-<nav id="navbar">
-  <a href="#" class="nav-logo"><img src="logo.jpeg" alt="CottonPay"></a>
-
-  <ul class="nav-links">
-    <li><a href="#how">Comment ça marche</a></li>
-    <li><a href="#coop">Coopératives</a></li>
-    <li><a href="#producer">Producteurs</a></li>
-    <li><a href="#verify">Vérification </a></li>
-    <li><a href="#wallet">FAQ</a></li>
-    <li><a href="/coop/login.html" class="nav-cta">Espace Coopérative</a></li>
-  </ul>
-
-  <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
+<nav>
+  <div class="wrap">
+    <a href="/" class="logo"><span class="mk">C</span> CottonPay</a>
+    <div class="nav-links">
+      <a href="#probleme">Le problème</a>
+      <a href="#solution">La solution</a>
+      <a href="#comment">Comment ça marche</a>
+      <a href="#faq">FAQ</a>
+      <a href="/coop/login.html" class="nav-cta">Espace Coopérative</a>
+    </div>
   </div>
 </nav>
 
-<!-- Mobile Nav -->
-<div class="mobile-nav" id="mobileNav">
-  <a href="#how" onclick="toggleMenu()">Comment ça marche</a>
-  <a href="#coop" onclick="toggleMenu()">Coopératives</a>
-  <a href="#producer" onclick="toggleMenu()">Producteurs</a>
-  <a href="#verify" onclick="toggleMenu()">Vérification</a>
-  <a href="#wallet" onclick="toggleMenu()">FAQ</a>
-  <a href="/coop/login.html" class="btn-cta">Espace Coopérative</a>
-</div>
-
-<!-- ==================== HERO ==================== -->
-<section id="hero">
-  <div class="container">
-    <div class="hero-inner">
-
-      <div class="hero-left">
-        <div class="hero-eyebrow">
-          <span></span>
-        
-        </div>
-
-        <h1 class="hero-title">
-          Certifiez chaque<br>
-          livraison de coton.<br>
-          <em>Bâtissez la crédibilité</em><br>
-          financière.
-        </h1>
-
-        <p class="hero-sub">
-          CottonPay transforme le bordereau papier en preuve numérique infalsifiable, grâce à l'identité nationale (NPI) et la blockchain. Les producteurs existent enfin dans le système financier formel.
-        </p>
-
-        <div class="hero-btns">
-          <a href="/coop/login.html" class="btn btn-cta">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            Espace Coopérative
-          </a>
-          <a href="#verify" class="btn btn-outline">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            Vérifier un producteur
-          </a>
-        </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Identité nationale + Blockchain</span>
+      <h1>Chaque livraison de coton, une <span>preuve infalsifiable</span>.</h1>
+      <p class="lead">CottonPay transforme le bordereau papier en preuve numérique signée sur la blockchain. Le tonnage ne peut plus être trafiqué, et chaque producteur bâtit sa crédibilité financière.</p>
+      <div class="hero-actions">
+        <a href="/coop/login.html" class="btn btn-primary">Accéder à l'espace coopérative
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#comment" class="btn btn-ghost">Voir comment ça marche</a>
       </div>
-
-      <div class="hero-right">
-        <div class="glass hero-card">
-          <div class="hero-card-label">Campagne 2025–2026 · En direct</div>
-
-          <div class="hero-stats">
-            <div class="hero-stat">
-              <div class="hero-stat-val">647k</div>
-              <div class="hero-stat-lbl">tonnes produites</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-val">500k+</div>
-              <div class="hero-stat-lbl">producteurs ciblés</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-val">90%</div>
-              <div class="hero-stat-lbl">réduction délai paiement</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-val">40%</div>
-              <div class="hero-stat-lbl">femmes agricultrices</div>
-            </div>
-          </div>
-
-          <div class="hero-badge">
-            <div class="hero-badge-icon">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            </div>
-            <div class="hero-badge-text">
-              <strong>Propulsé par eSignet · MOSIP</strong>
-              <span>Infrastructure nationale d'identité du Bénin</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <div class="hero-trust"><span class="dot"></span> Preuve vérifiable sur la blockchain BCovrin — sans compte requis</div>
     </div>
-  </div>
-</section>
-
-<!-- ==================== HOW IT WORKS ==================== -->
-<section id="how">
-  <div class="container">
-    <div class="how-header fade-up">
-      <div class="section-label">Comment ça marche</div>
-      <h2 class="section-title">Trois piliers, un système de confiance</h2>
-      <p class="section-desc">De l'identité nationale au crédit bancaire, CottonPay connecte chaque maillon de la chaîne cotonnière.</p>
-    </div>
-
-    <div class="how-grid">
-      <div class="glass how-card fade-up" data-num="01">
-        <div class="how-icon">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
-        </div>
-        <h3>Identité vérifiée</h3>
-        <p>Chaque acteur producteur, représentant CVPC, usine est authentifié via son NPI grâce à eSignet. Une identité nationale, un NPI, une personne réelle.</p>
+    <div class="receipt">
+      <div class="rhead">
+        <div class="rtitle">Reçu de livraison</div>
+        <span class="badge"><span class="dot"></span>Certifié</span>
       </div>
-
-      <div class="glass how-card fade-up" data-num="02" style="transition-delay:.12s">
-        <div class="how-icon">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-        </div>
-        <h3>Livraisons certifiées</h3>
-        <p>Chaque livraison génère un credential numérique signé sur blockchain Hyperledger Indy. Infalsifiable, horodaté, stocké dans le wallet du producteur via un QR code.</p>
-      </div>
-
-      <div class="glass how-card fade-up" data-num="03" style="transition-delay:.24s">
-        <div class="how-icon">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-        </div>
-        <h3>Crédit accessible</h3>
-        <p>L'historique vérifiable des livraisons ouvre l'accès au crédit formel à des taux bancaires. Fini l'endettement informel à 200% d'intérêt annuel.</p>
+      <div class="rrow"><span>Producteur</span><b>NPI ···0012</b></div>
+      <div class="rrow"><span>Poids pesé</span><b>842 kg</b></div>
+      <div class="rrow"><span>Point de collecte</span><b>Coop. Banikoara</b></div>
+      <div class="rrow"><span>Date</span><b>24/08/2026 · 09:14</b></div>
+      <div class="rfoot">
+        <div class="qr"></div>
+        <p>Gravé sur la blockchain. Scannez pour vérifier l'authenticité — impossible à modifier.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== COOPÉRATIVES ==================== -->
-<section id="coop">
-  <div class="container">
-    <div class="coop-inner">
-
-      <div class="fade-up">
-        <div class="section-label">Espace Coopérative</div>
-        <h2 class="section-title">Gérez vos producteurs et certifiez leurs livraisons</h2>
-        <p class="section-desc">Enregistrez les livraisons au point de collecte, émettez des credentials numériques vérifiables et gérez vos producteurs. Tout est tracé, horodaté et signé sur la blockchain.</p>
-
-        <ul class="coop-list">
-          <li>Gestion des producteurs affiliés à votre CVPC</li>
-          <li>Enregistrement des livraisons par lot avec classement qualité (1er / 2ème choix)</li>
-          <li>Credential numérique (QR code) + bordereau PDF téléchargeable</li>
-          <li>Fiche producteur avec historique complet et régénération de credentials</li>
-        </ul>
-
-        <a href="/coop/login.html" class="btn btn-cta">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-          Accéder à l'espace coopérative
-        </a>
-      </div>
-
-      <div class="fade-up" style="transition-delay:.15s">
-        <div class="glass coop-visual">
-          <div class="mock-topbar">
-            <span class="mock-logo">CottonPay</span>
-            <div class="mock-user">
-              <div class="mock-avatar">K</div>
-              Kokou AGOSSOU
-            </div>
-          </div>
-
-          <div class="mock-stats">
-            <div class="mock-stat">
-              <div class="mock-stat-val">18</div>
-              <div class="mock-stat-lbl">Producteurs</div>
-            </div>
-            <div class="mock-stat">
-              <div class="mock-stat-val">47</div>
-              <div class="mock-stat-lbl">Livraisons</div>
-            </div>
-            <div class="mock-stat">
-              <div class="mock-stat-val">12,8T</div>
-              <div class="mock-stat-lbl">Poids total</div>
-            </div>
-            <div class="mock-stat">
-              <div class="mock-stat-val">42</div>
-              <div class="mock-stat-lbl">Credentials</div>
-            </div>
-          </div>
-
-          <table class="mock-table">
-            <thead>
-              <tr>
-                <th>Producteur</th>
-                <th>Poids</th>
-                <th>Qualité</th>
-                <th>Credential</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>A. MENSAH</td>
-                <td>500 kg</td>
-                <td>1er choix</td>
-                <td><span class="badge badge-paid"> Émis</span></td>
-              </tr>
-              <tr>
-                <td>K. DOSSOU</td>
-                <td>300 kg</td>
-                <td>2ème choix</td>
-                <td><span class="badge badge-paid"> Émis</span></td>
-              </tr>
-              <tr>
-                <td>B. ALABI</td>
-                <td>420 kg</td>
-                <td>1er choix</td>
-                <td><span class="badge badge-wait">En attente</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div>
+<!-- STATS -->
+<section class="band" style="padding:56px 0">
+  <div class="wrap stats">
+    <div class="s"><b>40 %</b><p>du PIB du Bénin repose sur le coton</p></div>
+    <div class="s"><b>10 %</b><p>perdus par les producteurs sur des tonnages trafiqués</p></div>
+    <div class="s"><b>1<span style="font-size:20px">er</span></b><p>producteur de coton de la zone CFA</p></div>
   </div>
 </section>
 
-<!-- ==================== PRODUCTEURS & WALLET ==================== -->
-<section id="producer">
-  <div class="container">
-    <div class="prod-inner">
-
-      <!-- Phone frame with real app screenshot -->
-      <div class="phone-wrap fade-up">
-        <div class="phone-frame">
-          <img src="app.jpeg" alt="e-IDapp Wallet" class="phone-screenshot">
-        </div>
-      </div>
-
-      <div class="fade-up" style="transition-delay:.15s">
-        <div class="section-label">e-IDapp Wallet</div>
-        <h2 class="section-title">Vos preuves de livraison dans votre poche</h2>
-        <p class="section-desc">Téléchargez e-IDapp pour recevoir et stocker vos preuves de livraison certifiées. Chaque credential est infalsifiable et accessible même hors-ligne.</p>
-
-        <ul class="coop-list" style="margin-top:24px;">
-          <li>Scannez le QR code après chaque livraison</li>
-          <li>Stockage hors-ligne et souverain sur votre téléphone</li>
-          <li>Présentez votre historique certifié à une banque en un scan</li>
-        </ul>
-
-        <a href="https://github.com/Bsh54/EVOLUTICS-did-hackathon/releases/download/v1.0/idsWallet.apk" download class="playstore-btn" style="margin-top:16px; text-decoration:none;">
-          <svg viewBox="0 0 24 24" fill="white">
-            <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
-          </svg>
-          <div class="ps-text">
-            <span class="ps-label">Télécharger</span>
-            <span class="ps-name">e-IDapp</span>
-          </div>
-        </a>
-      </div>
-
+<!-- PROBLEME -->
+<section id="probleme">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">Le problème</span>
+      <h2>Sans preuve, le producteur est vulnérable.</h2>
+      <p>À la pesée, c'est la coopérative qui note le poids. Le paysan doit faire confiance à un chiffre qu'il ne peut pas contester.</p>
     </div>
-  </div>
-</section>
-<!-- ==================== VÉRIFICATION ==================== -->
-<section id="verify">
-  <div class="container">
-    <div class="verify-inner fade-up">
-      <div class="section-label">Vérification des livraisons</div>
-      <h2 class="section-title">Accédez à l'historique certifié d'un producteur</h2>
-      <p class="section-desc">Un NPI et l'authentification du producteur via eSignet (OTP national), et vous avez la preuve vérifiable de ses livraisons passées. Idéal pour les banques et institutions financières.</p>
-
-      <div class="glass verify-card">
-        <div class="verify-label">NPI du producteur</div>
-        <input
-          type="text"
-          class="verify-input"
-          placeholder="ex : 1234567890123456"
-          maxlength="16"
-          id="npiInput"
-        >
-        <a href="/verify" class="btn btn-cta" style="width:100%;justify-content:center;margin-top:4px;" onclick="goVerify(event)">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          Vérifier ce producteur
-        </a>
-        <p style="font-size:.8125rem;color:var(--text-light);text-align:center;margin-top:14px;font-style:italic;">Le producteur devra s'authentifier via eSignet (OTP sur son téléphone).</p>
+    <div class="cards">
+      <div class="card">
+        <div class="ic"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h12"/></svg></div>
+        <h3>Tonnages sous-estimés</h3>
+        <p>On inscrit 900 kg pour 1000 kg livrés. Les 100 kg « disparus » sont autant d'argent perdu pour le producteur.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h3>Retards de paiement</h3>
+        <p>Livré en mars, parfois seulement 20 % payé en juin. Sans document fiable, difficile de réclamer son dû.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg></div>
+        <h3>Aucun historique</h3>
+        <p>Le producteur reste invisible pour les banques : pas de trace vérifiable de ce qu'il a réellement livré.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== FAQ ==================== -->
-<section id="wallet" style="padding:80px 0;">
-  <div class="container">
-    <div class="fade-up" style="text-align:center;margin-bottom:48px;">
-      <div class="section-label">Questions fréquentes</div>
-      <h2 class="section-title">Tout ce que vous devez savoir</h2>
+<!-- SOLUTION -->
+<section id="solution" class="alt">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">La solution</span>
+      <h2>Une preuve que personne ne peut trafiquer.</h2>
+      <p style="color:var(--muted);font-size:17px">À la pesée, le poids réel est enregistré et signé par l'identité numérique du producteur, puis gravé sur la blockchain. Le reçu devient une preuve définitive.</p>
+      <ul>
+        <li><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>Infalsifiable</b> — une fois émis, le reçu ne peut plus être modifié par personne.</span></li>
+        <li><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>Vérifiable par tous</b> — banque, acheteur ou union scannent le QR, sans compte.</span></li>
+        <li><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span><b>Un historique de confiance</b> — la base du futur accès au crédit.</span></li>
+      </ul>
     </div>
-
-    <div style="max-width:720px;margin:0 auto;">
-      <!-- Q1 -->
-      <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
-          <span>Comment un producteur reçoit-il son credential après une livraison ?</span>
-          <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 24px;">
-          <p style="font-size:14px;color:var(--text-light);line-height:1.7;padding-bottom:20px;">Après l'enregistrement de la livraison par le représentant de la coopérative, un QR code apparaît à l'écran. Le producteur ouvre l'application <strong>e-IDapp</strong> sur son smartphone, scanne le QR code, et le credential est automatiquement stocké dans son portefeuille numérique. Tout se fait en quelques secondes.</p>
-        </div>
-      </div>
-
-      <!-- Q2 -->
-      <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
-          <span>Le producteur a-t-il besoin d'internet pour consulter ses credentials ?</span>
-          <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 24px;">
-          <p style="font-size:14px;color:var(--text-light);line-height:1.7;padding-bottom:20px;"><strong>Non.</strong> Une fois le credential scanné et stocké dans e-IDapp, il est accessible hors-ligne à tout moment. Le producteur peut le présenter à une banque ou un partenaire même en zone rurale sans couverture réseau.</p>
-        </div>
-      </div>
-
-      <!-- Q3 -->
-      <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
-          <span>Comment une banque vérifie-t-elle l'historique d'un producteur ?</span>
-          <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 24px;">
-          <p style="font-size:14px;color:var(--text-light);line-height:1.7;padding-bottom:20px;">La banque accède à la page de <strong>vérification publique</strong> de CottonPay, saisit le NPI du producteur, puis le producteur — physiquement présent — s'authentifie via <strong>eSignet</strong> (OTP national). L'historique certifié s'affiche immédiatement. Aucun document papier n'est nécessaire.</p>
-        </div>
-      </div>
-
-      <!-- Q4 -->
-      <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
-          <span>Qu'est-ce qui empêche quelqu'un de falsifier un credential ?</span>
-          <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 24px;">
-          <p style="font-size:14px;color:var(--text-light);line-height:1.7;padding-bottom:20px;">Chaque credential est signé cryptographiquement par la coopérative et enregistré sur la <strong>blockchain BCovrin</strong>. Toute tentative de modification rend la signature invalide. C'est le même principe qu'un acte notarié, mais numérique et vérifiable instantanément par n'importe qui.</p>
-        </div>
-      </div>
-
-      <!-- Q5 -->
-      <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
-          <span>Mon téléphone est perdu ou cassé — mes credentials sont-ils perdus ?</span>
-          <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 24px;">
-          <p style="font-size:14px;color:var(--text-light);line-height:1.7;padding-bottom:20px;"><strong>Non.</strong> L'historique complet reste enregistré dans le système CottonPay et sur la blockchain. Votre représentant de coopérative peut régénérer les QR codes de vos credentials à tout moment depuis sa fiche producteur. Il vous suffit de réinstaller e-IDapp et de rescanner.</p>
-        </div>
-      </div>
+    <div class="techbox">
+      <div class="tline"><div class="tdot"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-8 0v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></div><div><b>Identité nationale (NPI)</b><small>Le producteur est authentifié de façon fiable.</small></div></div>
+      <div class="tline"><div class="tdot"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l7 4v6c0 5-3 8-7 10-4-2-7-5-7-10V6l7-4z"/></svg></div><div><b>Blockchain</b><small>Le reçu est scellé et impossible à altérer.</small></div></div>
+      <div class="tline"><div class="tdot"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v12H5.17L4 17.17V4z"/></svg></div><div><b>Wallet e-ID</b><small>Le producteur garde sa preuve dans son téléphone.</small></div></div>
     </div>
   </div>
 </section>
 
-<!-- ==================== FOOTER ==================== -->
+<!-- COMMENT -->
+<section id="comment">
+  <div class="wrap">
+    <div class="shead center">
+      <span class="eyebrow">Comment ça marche</span>
+      <h2>Trois étapes, quelques secondes.</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>On pèse la livraison</h3><p>Le chef de coopérative enregistre le producteur et le poids réel du coton livré.</p></div>
+      <div class="step"><div class="n">2</div><h3>On émet le reçu</h3><p>Un reçu numérique est signé par l'identité et gravé sur la blockchain, avec un QR.</p></div>
+      <div class="step"><div class="n">3</div><h3>La preuve circule</h3><p>Le producteur repart avec sa preuve. N'importe qui peut la vérifier en scannant le QR.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section class="alt">
+  <div class="wrap split">
+    <div class="techbox" style="background:var(--blue)">
+      <div class="tline"><div class="tdot"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div><div><b>Aujourd'hui</b><small>La preuve de chaque livraison.</small></div></div>
+      <div class="tline"><div class="tdot"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><b>Demain</b><small>L'historique devient un accès au crédit.</small></div></div>
+      <div class="tline"><div class="tdot"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg></div><div><b>La vision</b><small>L'infrastructure de confiance de la filière coton.</small></div></div>
+    </div>
+    <div>
+      <span class="eyebrow">Au-delà de la preuve</span>
+      <h2>De la preuve au financement.</h2>
+      <p style="color:var(--muted);font-size:17px">Un historique de livraisons vérifié, c'est ce qui manque aux banques et IMF pour prêter en confiance aux producteurs. CottonPay fournit ce maillon — nous sommes le rail de confiance, pas le prêteur.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="shead center">
+      <span class="eyebrow">Questions fréquentes</span>
+      <h2>Ce qu'on nous demande souvent.</h2>
+    </div>
+    <div class="faq">
+      <div class="qa"><button onclick="toggleQa(this)">Le producteur a-t-il besoin d'un smartphone ? <svg class="chev" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="ans"><p>Non. C'est le chef de coopérative qui utilise l'application. Le producteur reçoit une preuve (QR) et n'a rien à installer.</p></div></div>
+      <div class="qa"><button onclick="toggleQa(this)">En quoi le reçu est-il « infalsifiable » ? <svg class="chev" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="ans"><p>Le reçu est signé par l'identité nationale et scellé sur la blockchain. Une fois émis, il ne peut plus être modifié — le poids enregistré est définitif.</p></div></div>
+      <div class="qa"><button onclick="toggleQa(this)">Qui peut vérifier un reçu ? <svg class="chev" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="ans"><p>N'importe qui — banque, acheteur, union — en scannant le QR du reçu. Aucun compte n'est nécessaire pour vérifier l'authenticité.</p></div></div>
+      <div class="qa"><button onclick="toggleQa(this)">CottonPay prête-t-il de l'argent ? <svg class="chev" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="ans"><p>Non. CottonPay fournit la couche de confiance (la preuve et l'historique) qui permet aux banques et IMF de prêter aux producteurs. Nous sommes le rail, pas le prêteur.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section>
+  <div class="wrap">
+    <div class="finalcta">
+      <h2>Prêt à sécuriser vos livraisons ?</h2>
+      <p>Rejoignez l'espace coopérative et émettez votre premier reçu infalsifiable dès aujourd'hui.</p>
+      <a href="/coop/login.html" class="btn btn-primary">Accéder à l'espace coopérative</a>
+    </div>
+  </div>
+</section>
+
 <footer>
-  <div class="footer-logo">CottonPay</div>
-  <div class="footer-tech">Propulsé par eSignet · MOSIP · Hyperledger Aries · BCovrin</div>
-  <div class="footer-team">Team EVOLUTICS — Université d'Abomey-Calavi<br>Africa Digital ID Hackathon 2026</div>
+  <div class="wrap">
+    <div class="logo"><span class="mk">C</span> CottonPay</div>
+    <small>Traçabilité et paiement cotonnier · Campagne 2025-2026 · République du Bénin</small>
+  </div>
 </footer>
 
-</div><!-- /content -->
-
 <script>
-  // =============================================
-  // ERROR NOTIFICATION — afficher les erreurs auth
-  // =============================================
-  (function showAuthErrors() {
-    const params = new URLSearchParams(window.location.search);
-    const error = params.get('error');
-    if (!error) return;
-
-    const messages = {
-      'not_coop_member': ' Votre NPI n\'est pas enregistré comme membre d\'une coopérative. Si vous êtes producteur, connectez-vous via « Mon Espace ».',
-      'not_producer': ' Votre NPI n\'est pas enregistré comme producteur. Contactez votre coopérative pour vous affilier.',
-      'invalid_state': ' Session de connexion expirée. Veuillez réessayer.',
-      'missing_code': ' Erreur de connexion avec eSignet. Veuillez réessayer.',
-      'missing_verifier': ' Session de connexion invalide. Veuillez réessayer.',
-      'token_exchange_failed': ' Échec de la connexion avec eSignet (échange de jetons). Les clés du client OIDC sont peut-être désynchronisées. Veuillez réessayer.',
-      'token_validation_failed': ' Le jeton d\'identité retourné par eSignet est invalide. Veuillez réessayer.',
-      'auth_failed': ' Une erreur inattendue s\'est produite lors de la connexion. Veuillez réessayer.',
-    };
-
-    const msg = messages[error] || params.get('error_description') || `Erreur d'authentification : ${error}`;
-
-    // Nettoyer la session côté serveur pour permettre une nouvelle tentative
-    // (fetch asynchrone, on n'attend pas la réponse)
-    fetch('/auth/logout', { credentials: 'include' }).catch(() => {});
-
-    const banner = document.createElement('div');
-    banner.style.cssText = `
-      position:fixed; top:80px; left:50%; transform:translateX(-50%); z-index:9999;
-      max-width:640px; width:90%; padding:18px 24px; border-radius:14px;
-      background:rgba(245,158,11,.12); border:1.5px solid rgba(245,158,11,.4);
-      color:#92400e; font-size:.9375rem; font-weight:500; line-height:1.6;
-      box-shadow:0 8px 32px rgba(0,0,0,.1); backdrop-filter:blur(8px);
-      animation: slideDown .4s ease both;
-    `;
-    banner.innerHTML = `
-      <div style="display:flex;align-items:flex-start;gap:12px;">
-        <div style="flex:1;">
-          ${msg}
-          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
-            <a href="/coop/login.html"
-              style="display:inline-block;padding:6px 16px;border-radius:8px;background:var(--cta);color:white;font-size:.8125rem;font-weight:600;text-decoration:none;">
-               Réessayer la connexion
-            </a>
-          </div>
-        </div>
-        <button onclick="this.parentElement.parentElement.remove(); history.replaceState(null,'',location.pathname);"
-          style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#92400e;padding:0 4px;flex-shrink:0;"></button>
-      </div>
-    `;
-
-    const style = document.createElement('style');
-    style.textContent = '@keyframes slideDown{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}';
-    document.head.appendChild(style);
-    document.body.appendChild(banner);
-
-    // Auto-dismiss après 15s (plus long pour laisser le temps de lire)
-    setTimeout(() => { if (banner.parentElement) banner.remove(); }, 15000);
-    // Nettoyer l'URL
-    history.replaceState(null, '', location.pathname);
-  })();
-
-  // Hamburger menu
-  function toggleMenu() {
-    const nav = document.getElementById('mobileNav');
-    nav.classList.toggle('open');
-  }
-
-  // FAQ accordion
-  function toggleFaq(btn) {
-    const answer = btn.nextElementSibling;
-    const chevron = btn.querySelector('.faq-chevron');
-    const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
-    // Close all
-    document.querySelectorAll('.faq-answer').forEach(a => { a.style.maxHeight = '0px'; a.style.paddingTop = '0'; });
-    document.querySelectorAll('.faq-chevron').forEach(c => c.style.transform = 'rotate(0deg)');
-    // Open clicked (if it was closed)
-    if (!isOpen) {
-      answer.style.maxHeight = answer.scrollHeight + 'px';
-      chevron.style.transform = 'rotate(180deg)';
-    }
-  }
-
-  // Verify redirect
-  function goVerify(e) {
-    e.preventDefault();
-    const npi = document.getElementById('npiInput').value.trim();
-    if (npi.length >= 10) {
-      window.location.href = `/verify?npi=${npi}`;
-    } else if (npi.length === 0) {
-      window.location.href = `/verify`;
-    } else {
-      alert('Veuillez entrer un NPI valide (au moins 10 chiffres).');
-    }
-  }
-
-  // Intersection observer for fade-up
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-  // Navbar shrink on scroll
-  window.addEventListener('scroll', () => {
-    const nav = document.getElementById('navbar');
-    if (window.scrollY > 40) {
-      nav.style.boxShadow = '0 4px 24px rgba(21,128,61,.1)';
-    } else {
-      nav.style.boxShadow = 'none';
-    }
-  });
-
-  // Close mobile menu on outside click
-  document.addEventListener('click', (e) => {
-    const nav = document.getElementById('mobileNav');
-    const ham = document.getElementById('hamburger');
-    if (!nav.contains(e.target) && !ham.contains(e.target)) {
-      nav.classList.remove('open');
-    }
-  });
+function toggleQa(btn){ btn.parentElement.classList.toggle('open'); }
 </script>
 </body>
 </html>
