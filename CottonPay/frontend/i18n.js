@@ -83,6 +83,16 @@
     "De la preuve au financement.": "From proof to financing.",
     "Un historique de livraisons vérifié, c'est ce qui manque aux banques et IMF pour prêter en confiance aux producteurs. CottonPay fournit ce maillon — nous sommes le rail de confiance, pas le prêteur.":
       "A verified delivery history is what banks and MFIs lack to lend to producers with confidence. CottonPay provides that link — we are the trust rail, not the lender.",
+    "Producteurs": "Producers",
+    "Pour les producteurs": "For producers",
+    "Vos preuves de livraison, dans votre poche.": "Your delivery proofs, in your pocket.",
+    "Avec l'application": "With the",
+    "le producteur reçoit et garde ses reçus certifiés sur son téléphone. Chaque preuve est infalsifiable et reste accessible, même hors ligne.":
+      "app, the producer receives and keeps their certified receipts on their phone. Every proof is tamper-proof and stays available, even offline.",
+    "Scannez le QR après chaque livraison pour recevoir votre reçu.": "Scan the QR after each delivery to receive your receipt.",
+    "Vos preuves restent dans votre téléphone, même sans réseau.": "Your proofs stay on your phone, even without network.",
+    "Présentez votre historique à une banque en un seul scan.": "Show your history to a bank in a single scan.",
+    "Télécharger e-IDapp": "Download e-IDapp",
     "Ce qu'on nous demande souvent.": "What we're often asked.",
     "Le producteur a-t-il besoin d'un smartphone ?": "Does the producer need a smartphone?",
     "Non. C'est le chef de coopérative qui utilise l'application. Le producteur reçoit une preuve (QR) et n'a rien à installer.":
