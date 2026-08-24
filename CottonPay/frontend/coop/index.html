@@ -1,410 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CottonPay — Espace Coopérative</title>
-    <meta name="description" content="Tableau de bord coopérative CottonPay — Gestion des livraisons et paiements de coton">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CottonPay — Espace Coopérative</title><meta name="description" content="Tableau de bord coopérative CottonPay — Gestion des livraisons et paiements de coton"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"><script src="/i18n.js"></script>
 </head>
-<body>
-
-<!-- ============================================
+<body><!-- ============================================
      SIDEBAR (Desktop)
      ============================================ -->
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-icon">
-            <img src="../logo.jpeg" alt="CottonPay" style="width:28px;height:28px;object-fit:contain;">
-        </div>
-        <div class="sidebar-brand-text">
-            <div class="sidebar-title">CottonPay</div>
-            <div class="sidebar-subtitle" id="sidebarCoopName">Coopérative</div>
-        </div>
-    </div>
-
-    <nav class="sidebar-nav">
-        <button class="sidebar-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            Tableau de bord
-        </button>
-        <button class="sidebar-item" data-page="delivery" onclick="navigateTo('delivery')">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-            Enregistrer livraison
-        </button>
-
-        <button class="sidebar-item" data-page="register-producer" onclick="navigateTo('register-producer')">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-            Enregistrer producteur
-        </button>
-    </nav>
-
-    <button class="sidebar-logout" onclick="handleLogout()">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-        Déconnexion
-    </button>
-</aside>
-
-<!-- ============================================
+<aside class="sidebar" id="sidebar"><div class="sidebar-brand"><div class="sidebar-brand-icon"><img src="../logo.jpeg" alt="CottonPay" style="width:28px;height:28px;object-fit:contain;"></div><div class="sidebar-brand-text"><div class="sidebar-title">CottonPay</div><div class="sidebar-subtitle" id="sidebarCoopName">Coopérative</div></div></div><nav class="sidebar-nav"><button class="sidebar-item active" data-page="dashboard" onclick="navigateTo('dashboard')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Tableau de bord </button><button class="sidebar-item" data-page="delivery" onclick="navigateTo('delivery')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>Enregistrer livraison </button><button class="sidebar-item" data-page="register-producer" onclick="navigateTo('register-producer')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>Enregistrer producteur </button></nav><button class="sidebar-logout" onclick="handleLogout()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Déconnexion </button>
+</aside><!-- ============================================
      MOBILE HEADER
      ============================================ -->
-<div class="mobile-header" id="mobileHeader">
-    <div class="flex items-center" style="gap:8px;">
-        <img src="../logo.jpeg" alt="CottonPay" style="width:28px;height:28px;object-fit:contain;">
-        <span class="font-lora" style="font-weight:700;color:var(--primary);">CottonPay</span>
-    </div>
-    <span class="font-jakarta" style="font-size:13px;color:rgba(107,114,128,1);" id="mobileGreeting"></span>
-</div>
-
-<!-- Mobile bottom nav (always visible) -->
-<nav class="mobile-bottom-nav" id="mobileBottomNav">
-    <button class="bottom-nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        <span>Tableau</span>
-    </button>
-    <button class="bottom-nav-item" data-page="delivery" onclick="navigateTo('delivery')">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-        <span>Livraison</span>
-    </button>
-
-    <button class="bottom-nav-item" data-page="register-producer" onclick="navigateTo('register-producer')">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-        <span>Producteur</span>
-    </button>
-</nav>
-
-<!-- ============================================
+<div class="mobile-header" id="mobileHeader"><div class="flex items-center" style="gap:8px;"><img src="../logo.jpeg" alt="CottonPay" style="width:28px;height:28px;object-fit:contain;"><span class="font-lora" style="font-weight:700;color:var(--primary);">CottonPay</span></div><span class="font-jakarta" style="font-size:13px;color:rgba(107,114,128,1);" id="mobileGreeting"></span>
+</div><!-- Mobile bottom nav (always visible) -->
+<nav class="mobile-bottom-nav" id="mobileBottomNav"><button class="bottom-nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Tableau</span></button><button class="bottom-nav-item" data-page="delivery" onclick="navigateTo('delivery')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><span>Livraison</span></button><button class="bottom-nav-item" data-page="register-producer" onclick="navigateTo('register-producer')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg><span>Producteur</span></button></nav><!-- ============================================
      MAIN AREA
      ============================================ -->
-<main class="main">
-    <div class="topbar">
-        <div>
-            <p class="topbar-greeting-label">Bonjour,</p>
-            <p class="topbar-greeting-name" id="greeting">Chargement...</p>
-        </div>
-        <div class="flex items-center" style="gap:12px;">
-            <span class="badge badge-success topbar-npi" id="memberNpi">NPI: —</span>
-        </div>
-    </div>
-
-    <div class="content">
-
-        <!-- ========== PAGE 1: DASHBOARD ========== -->
-        <section class="page active" id="page-dashboard">
-            <!-- Stats Grid -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;" id="statsGrid">
-                <div class="glass-card" style="padding:20px 24px;">
-                    <div style="font-size:28px;margin-bottom:12px;">👥</div>
-                    <p class="font-jakarta" style="font-weight:800;font-size:22px;" id="statProducers">—</p>
-                    <p style="font-size:13px;color:rgba(107,114,128,1);margin-top:4px;">Producteurs affiliés</p>
-                </div>
-                <div class="glass-card" style="padding:20px 24px;">
-                    <div style="font-size:28px;margin-bottom:12px;">📦</div>
-                    <p class="font-jakarta" style="font-weight:800;font-size:22px;" id="statDeliveries">—</p>
-                    <p style="font-size:13px;color:rgba(107,114,128,1);margin-top:4px;">Livraisons enregistrées</p>
-                </div>
-                <div class="glass-card" style="padding:20px 24px;">
-                    <div style="font-size:28px;margin-bottom:12px;">📊</div>
-                    <p class="font-jakarta" style="font-weight:800;font-size:22px;" id="statLots">—</p>
-                    <p style="font-size:13px;color:rgba(107,114,128,1);margin-top:4px;">Lots fermés / en cours</p>
-                </div>
-                <div class="glass-card" style="padding:20px 24px;">
-                    <div style="font-size:28px;margin-bottom:12px;">💰</div>
-                    <p class="font-jakarta" style="font-weight:800;font-size:22px;" id="statAmount">—</p>
-                    <p style="font-size:13px;color:rgba(107,114,128,1);margin-top:4px;">Montant total campagne</p>
-                </div>
-            </div>
-
-            <!-- Campaign Card -->
-            <div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:24px;">
-                <h3 class="font-jakarta" style="font-weight:700;font-size:18px;margin-bottom:16px;">Campagne 2025-2026</h3>
-                <div id="campaignInfo"></div>
-            </div>
-
-            <!-- Producers Table -->
-            <div class="glass-card no-hover" style="padding:24px 32px;">
-                <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;">
-                    <h3 class="font-jakarta" style="font-weight:700;font-size:18px;">Producteurs affiliés</h3>
-                    <button class="btn btn-cta btn-sm" onclick="navigateTo('register-producer')" style="gap:6px;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                        Enregistrer un producteur
-                    </button>
-                </div>
-                <div class="search-wrap mb-6">
-                    <div class="search-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
-                    <input type="text" class="input-field" id="producerSearch" placeholder="Rechercher par NPI ou nom..." oninput="handleProducerSearch()">
-                </div>
-                <div style="overflow-x:auto;">
-                    <table id="producersTable">
-                        <thead>
-                            <tr>
-                                <th>NPI</th>
-                                <th>Nom</th>
-                                <th class="td-hide-mobile">Commune</th>
-                                <th>Livraisons</th>
-                                <th class="td-hide-mobile">Dernière</th>
-                            </tr>
-                        </thead>
-                        <tbody id="producersBody"></tbody>
-                    </table>
-                </div>
-                <div class="empty-state hidden" id="producersEmpty">
-                    <div class="empty-state-icon">👥</div>
-                    <div class="empty-state-text">Aucun producteur trouvé.</div>
-                    <button class="btn btn-cta" onclick="navigateTo('register-producer')">Enregistrer un producteur</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ========== PAGE 2: ENREGISTRER LIVRAISON ========== -->
-        <section class="page" id="page-delivery">
-            <div style="max-width:640px;margin:0 auto;" class="animate-fadeInUp">
-                <div class="glass-card no-hover" style="padding:24px 32px;">
-                    <h2 class="font-lora" style="font-size:24px;font-weight:700;margin-bottom:24px;">Enregistrer une livraison</h2>
-
-                    <!-- Step 1: NPI Search -->
-                    <div id="delivery-step-1">
-                        <label class="font-jakarta" style="font-weight:600;font-size:14px;display:block;margin-bottom:8px;">NPI du producteur</label>
-                        <div class="flex" style="gap:12px;margin-bottom:8px;">
-                            <input type="text" class="input-field input-mono flex-1" id="deliveryNpi" placeholder="16 chiffres" maxlength="16">
-                            <button class="btn btn-primary" id="btnVerifyDeliveryNpi" onclick="verifyDeliveryNpi()" style="padding:12px 24px;">Rechercher</button>
-                        </div>
-                        <div id="deliveryNpiResult"></div>
-                    </div>
-
-                    <!-- Step 2: Weight + Quality -->
-                    <div id="delivery-step-2" class="hidden">
-                        <!-- Producer banner -->
-                        <div id="deliveryProducerBanner" style="background:rgba(240,253,244,1);border:2px solid rgba(187,247,208,1);border-radius:12px;padding:16px;margin-bottom:24px;"></div>
-
-                        <div style="margin-bottom:24px;">
-                            <label class="font-jakarta" style="font-weight:600;font-size:14px;display:block;margin-bottom:12px;">Poids (kg)</label>
-                            <div class="weight-stepper">
-                                <button type="button" class="weight-btn" onclick="adjustWeight(-10)">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
-                                </button>
-                                <div>
-                                    <input type="number" id="deliveryWeight" value="0" min="0" max="10000" class="weight-input" oninput="updateDeliveryPreview()">
-                                    <p class="weight-unit">kg</p>
-                                </div>
-                                <button type="button" class="weight-btn" onclick="adjustWeight(10)">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom:24px;">
-                            <label class="font-jakarta" style="font-weight:600;font-size:14px;display:block;margin-bottom:12px;">Classement qualité</label>
-                            <div class="quality-grid">
-                                <button type="button" id="qualBtn1er" class="quality-btn active" onclick="selectQuality('1er_choix')">
-                                    <div class="quality-btn-title">1er choix</div>
-                                    <div class="quality-btn-price">300 FCFA/kg</div>
-                                </button>
-                                <button type="button" id="qualBtn2eme" class="quality-btn" onclick="selectQuality('2eme_choix')">
-                                    <div class="quality-btn-title">2ème choix</div>
-                                    <div class="quality-btn-price">250 FCFA/kg</div>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="price-preview mb-6">
-                            <div class="price-row">
-                                <span class="price-label">Prix unitaire</span>
-                                <span class="price-value" id="previewUnitPrice">300 FCFA/kg</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Montant brut</span>
-                                <span class="price-value price-value-lg" id="previewGross">0 FCFA</span>
-                            </div>
-                        </div>
-
-                        <div id="deliveryLotBadge" style="margin-bottom:20px;"></div>
-
-                        <button class="btn btn-primary btn-block" id="btnSubmitDelivery" onclick="submitDelivery()" style="padding:16px;font-size:16px;" disabled>
-                            Enregistrer la livraison
-                        </button>
-                    </div>
-
-                    <!-- Step 3: Success -->
-                    <div id="delivery-step-3" class="hidden" style="text-align:center;">
-                        <div style="width:64px;height:64px;background:rgba(209,250,229,1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;" class="animate-scaleIn">
-                            <svg width="28" height="28" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        </div>
-                        <h3 class="font-jakarta" style="font-weight:700;font-size:20px;color:#065F46;margin-bottom:4px;">Livraison enregistrée avec succès</h3>
-                        <p id="deliveryRefLabel" style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:24px;"></p>
-                        <div id="deliveryRecap"></div>
-                        <div id="deliveryQr" style="margin:24px 0;display:flex;justify-content:center;"></div>
-                        <p style="font-size:14px;color:rgba(107,114,128,1);margin-bottom:24px;max-width:320px;margin-left:auto;margin-right:auto;">Le producteur peut scanner ce QR code avec <strong>IDS Wallet</strong> pour recevoir son credential numérique.</p>
-                        <div style="display:flex;flex-direction:column;gap:12px;">
-                            <button class="btn btn-cta btn-block" onclick="downloadDeliveryPdf()" style="gap:8px;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                                Télécharger le bordereau PDF
-                            </button>
-                            <button class="btn btn-outline btn-block" onclick="shareDelivery()" style="gap:8px;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
-                                Partager
-                            </button>
-                            <button style="padding:16px;color:rgba(107,114,128,1);background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='rgba(107,114,128,1)'" onclick="resetDelivery()">Enregistrer une autre livraison</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-
-        <!-- ========== PAGE 4: ENREGISTRER PRODUCTEUR ========== -->
-        <section class="page" id="page-register-producer">
-            <div style="max-width:640px;margin:0 auto;" class="animate-fadeInUp">
-                <div class="glass-card no-hover" style="padding:24px 32px;">
-                    <h2 class="font-lora" style="font-size:24px;font-weight:700;margin-bottom:24px;">Enregistrer un nouveau producteur</h2>
-
-                    <!-- Step 1: NPI Input -->
-                    <div id="register-step-1">
-                        <div id="registerNpiGroup">
-                            <label class="font-jakarta" style="font-weight:600;font-size:14px;display:block;margin-bottom:8px;">NPI du producteur</label>
-                            <input type="text" class="input-field input-mono input-xl" id="registerNpi" placeholder="Entrez les 16 chiffres du NPI" maxlength="16">
-                            <p id="registerError" style="color:#EF4444;font-size:13px;margin-top:8px;" class="hidden"></p>
-                            <p style="color:rgba(156,163,175,1);font-size:12px;margin-top:8px;">Le producteur doit être physiquement présent.</p>
-                        </div>
-                        <div id="registerNpiResult" style="margin-top:16px;"></div>
-                        <button class="btn btn-primary btn-block" id="btnVerifyRegisterNpi" onclick="verifyRegisterNpi()" style="margin-top:20px;padding:16px;font-size:16px;">Vérifier</button>
-                    </div>
-
-                    <!-- Step 2: Success -->
-                    <div id="register-step-2" class="hidden" style="text-align:center;">
-                        <div style="width:80px;height:80px;background:rgba(209,250,229,1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;" class="animate-scaleIn">
-                            <svg width="32" height="32" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        </div>
-                        <h3 class="font-jakarta" style="font-weight:700;font-size:20px;color:#065F46;margin-bottom:8px;">Affiliation réussie !</h3>
-                        <p id="registerSuccess" style="color:rgba(107,114,128,1);font-size:15px;margin-bottom:24px;"></p>
-                        <div style="display:flex;flex-direction:column;gap:12px;">
-                            <button class="btn btn-primary btn-block" onclick="resetRegister()">Enregistrer un autre producteur</button>
-                            <button class="btn btn-cta btn-block" onclick="navigateTo('delivery')">📦 Enregistrer une livraison →</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ========== PAGE 5: FICHE PRODUCTEUR ========== -->
-        <section class="page" id="page-producer-detail">
-            <div class="animate-fadeInUp">
-                <!-- Back button -->
-                <button onclick="backFromProducerDetail()" style="display:flex;align-items:center;gap:8px;color:rgba(107,114,128,1);background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;padding:0;margin-bottom:20px;transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='rgba(107,114,128,1)'">
-                    ← Retour au tableau de bord
-                </button>
-
-                <!-- Profile Card -->
-                <div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:20px;">
-                    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
-                        <div id="pdAvatar" style="width:80px;height:80px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;flex-shrink:0;box-shadow:0 4px 15px rgba(21,128,61,0.3);">--</div>
-                        <div style="flex:1;min-width:200px;">
-                            <h2 class="font-jakarta" style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:14px;" id="pdName">Chargement...</h2>
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;">
-                                <div>
-                                    <p style="color:rgba(107,114,128,1);margin-bottom:2px;">NPI</p>
-                                    <p class="font-mono" style="font-weight:600;" id="pdNpi">---</p>
-                                </div>
-                                <div>
-                                    <p style="color:rgba(107,114,128,1);margin-bottom:2px;">Téléphone</p>
-                                    <p style="font-weight:600;" id="pdPhone">---</p>
-                                </div>
-                                <div>
-                                    <p style="color:rgba(107,114,128,1);margin-bottom:2px;">Coopérative</p>
-                                    <p style="font-weight:600;" id="pdCoop">---</p>
-                                </div>
-                                <div>
-                                    <p style="color:rgba(107,114,128,1);margin-bottom:2px;">Commune</p>
-                                    <p style="font-weight:600;" id="pdCommune">---</p>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn btn-cta" onclick="startDeliveryForProducer()" id="pdDeliveryBtn" style="gap:6px;align-self:flex-start;">
-                            📦 Enregistrer une livraison
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Deliveries List -->
-                <div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:20px;">
-                    <h3 class="font-jakarta" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Historique des livraisons</h3>
-                    <div id="pdDeliveries" style="display:flex;flex-direction:column;gap:14px;"></div>
-                    <div class="empty-state hidden" id="pdDeliveriesEmpty">
-                        <div class="empty-state-icon">📦</div>
-                        <div class="empty-state-text">Aucune livraison enregistrée pour ce producteur.</div>
-                    </div>
-                </div>
-
-                <!-- Financial Summary -->
-                <div class="glass-card no-hover" style="padding:24px 32px;background:linear-gradient(to bottom right,rgba(240,253,244,0.9),rgba(209,250,229,0.9));">
-                    <h3 class="font-jakarta" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Résumé financier</h3>
-                    <div style="display:flex;flex-direction:column;gap:12px;">
-                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:14px;">
-                            <span style="color:rgba(75,85,99,1);">Total livré</span>
-                            <span class="font-jakarta" id="pdStatWeight" style="font-weight:600;">0 kg</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:14px;">
-                            <span style="color:rgba(75,85,99,1);">Nombre de livraisons</span>
-                            <span class="font-jakarta" id="pdStatCount" style="font-weight:600;">0</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:14px;">
-                            <span style="color:rgba(75,85,99,1);">Total brut</span>
-                            <span class="font-jakarta" id="pdStatGross" style="font-weight:600;">0 F</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:14px;">
-                            <span style="color:rgba(75,85,99,1);">Total déductions</span>
-                            <span class="font-jakarta" id="pdStatDeductions" style="color:rgba(220,38,38,1);font-weight:600;">- 0 F</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid rgba(220,252,231,1);font-size:15px;">
-                            <span style="color:rgba(75,85,99,1);font-weight:600;">Net à payer</span>
-                            <span class="font-jakarta" id="pdStatNet" style="font-weight:700;color:var(--primary);">0 F</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;padding-bottom:6px;font-size:14px;">
-                            <span style="color:rgba(75,85,99,1);">Total payé</span>
-                            <span class="font-jakarta" id="pdStatPaid" style="color:rgba(22,163,74,1);font-weight:600;">0 F ✅</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;font-size:14px;">
-                            <span style="color:rgba(75,85,99,1);">En attente</span>
-                            <span class="font-jakarta" id="pdStatPending" style="color:rgba(217,119,6,1);font-weight:600;">0 F ⏳</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </div>
-</main>
-
-<!-- ============================================
+<main class="main"><div class="topbar"><div><p class="topbar-greeting-label">Bonjour,</p><p class="topbar-greeting-name" id="greeting">Chargement...</p></div><div class="flex items-center" style="gap:12px;"><button class="btn btn-outline btn-sm" onclick="enrollWallet()" title="Activer la connexion par wallet"> Activer login wallet</button><span class="badge badge-success topbar-npi" id="memberNpi">NPI: —</span></div></div><div class="content"><!-- ========== PAGE 1: DASHBOARD ========== --><section class="page active" id="page-dashboard"><!-- Hero CTA --><div style="background:var(--primary);border-radius:16px;padding:28px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;"><div><h2 style="color:#fff;font-size:22px;font-weight:700;margin-bottom:8px;">Une livraison arrive ?</h2><p style="color:rgba(255,255,255,0.82);font-size:15px;max-width:440px;line-height:1.5;">Pesez le coton, enregistrez le poids réel, et générez un reçu infalsifiable en quelques secondes.</p></div><button class="btn btn-cta" onclick="navigateTo('delivery')" style="gap:8px;min-height:52px;"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 5v14M5 12h14"/></svg>Peser une livraison</button></div><!-- Stats Grid --><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;" id="statsGrid"><div class="glass-card" style="padding:20px 24px;"><div style="font-size:28px;margin-bottom:12px;"></div><p class="font-jakarta" style="font-weight:800;font-size:22px;" id="statProducers">—</p><p style="font-size:13px;color:rgba(107,114,128,1);margin-top:4px;">Producteurs affiliés</p></div><div class="glass-card" style="padding:20px 24px;"><div style="font-size:28px;margin-bottom:12px;"></div><p class="font-jakarta" style="font-weight:800;font-size:22px;" id="statDeliveries">—</p><p style="font-size:13px;color:rgba(107,114,128,1);margin-top:4px;">Livraisons enregistrées</p></div><div class="glass-card" style="padding:20px 24px;"><div style="font-size:28px;margin-bottom:12px;"></div><p class="font-jakarta" style="font-weight:800;font-size:22px;" id="statLots">—</p><p style="font-size:13px;color:rgba(107,114,128,1);margin-top:4px;">Lots fermés / en cours</p></div><div class="glass-card" style="padding:20px 24px;"><div style="font-size:28px;margin-bottom:12px;"></div><p class="font-jakarta" style="font-weight:800;font-size:22px;" id="statAmount">—</p><p style="font-size:13px;color:rgba(107,114,128,1);margin-top:4px;">Montant total campagne</p></div></div><!-- Campaign Card --><div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:24px;"><h3 class="font-jakarta" style="font-weight:700;font-size:18px;margin-bottom:16px;">Campagne 2025-2026</h3><div id="campaignInfo"></div></div><!-- Weather Card --><div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:24px;" id="weatherCard"><div class="flex items-center" style="justify-content:space-between;margin-bottom:16px;"><h3 class="font-jakarta" style="font-weight:700;font-size:18px;"> Météo & pluviométrie</h3><span style="font-size:12px;color:rgba(107,114,128,1);" id="weatherPlace"></span></div><div id="weatherContent"><div class="spinner" style="width:28px;height:28px;margin:12px auto;"></div></div></div><!-- Producers Table --><div class="glass-card no-hover" style="padding:24px 32px;"><div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;"><h3 class="font-jakarta" style="font-weight:700;font-size:18px;">Producteurs affiliés</h3><button class="btn btn-cta btn-sm" onclick="navigateTo('register-producer')" style="gap:6px;"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Enregistrer un producteur </button></div><div class="search-wrap mb-6"><div class="search-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div><input type="text" class="input-field" id="producerSearch" placeholder="Rechercher par NPI ou nom..." oninput="handleProducerSearch()"></div><div style="overflow-x:auto;"><table id="producersTable"><thead><tr><th>NPI</th><th>Nom</th><th class="td-hide-mobile">Commune</th><th>Livraisons</th><th class="td-hide-mobile">Dernière</th></tr></thead><tbody id="producersBody"></tbody></table></div><div class="empty-state hidden" id="producersEmpty"><div class="empty-state-icon"></div><div class="empty-state-text">Aucun producteur trouvé.</div><button class="btn btn-cta" onclick="navigateTo('register-producer')">Enregistrer un producteur</button></div></div></section><!-- ========== PAGE 2: ENREGISTRER LIVRAISON ========== --><section class="page" id="page-delivery"><div style="max-width:640px;margin:0 auto;" class="animate-fadeInUp"><div class="glass-card no-hover" style="padding:24px 32px;"><h2 class="font-lora" style="font-size:24px;font-weight:700;margin-bottom:24px;">Enregistrer une livraison</h2><!-- Step 1: NPI Search --><div id="delivery-step-1"><label class="font-jakarta" style="font-weight:600;font-size:14px;display:block;margin-bottom:8px;">NPI du producteur</label><div class="flex" style="gap:12px;margin-bottom:8px;"><input type="text" class="input-field input-mono flex-1" id="deliveryNpi" placeholder="16 chiffres" maxlength="16"><button class="btn btn-primary" id="btnVerifyDeliveryNpi" onclick="verifyDeliveryNpi()" style="padding:12px 24px;">Rechercher</button></div><div id="deliveryNpiResult"></div></div><!-- Step 2: Weight + Quality --><div id="delivery-step-2" class="hidden"><!-- Producer banner --><div id="deliveryProducerBanner" style="background:#F1F4F9;border:2px solid #C7D3EA;border-radius:12px;padding:16px;margin-bottom:24px;"></div><div style="margin-bottom:24px;"><label class="font-jakarta" style="font-weight:600;font-size:14px;display:block;margin-bottom:12px;">Poids (kg)</label><div class="weight-stepper"><button type="button" class="weight-btn" onclick="adjustWeight(-10)"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg></button><div><input type="number" id="deliveryWeight" value="0" min="0" max="10000" class="weight-input" oninput="updateDeliveryPreview()"><p class="weight-unit">kg</p></div><button type="button" class="weight-btn" onclick="adjustWeight(10)"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button></div></div><div style="margin-bottom:24px;"><label class="font-jakarta" style="font-weight:600;font-size:14px;display:block;margin-bottom:12px;">Classement qualité</label><div class="quality-grid"><button type="button" id="qualBtn1er" class="quality-btn active" onclick="selectQuality('1er_choix')"><div class="quality-btn-title">1er choix</div><div class="quality-btn-price">300 FCFA/kg</div></button><button type="button" id="qualBtn2eme" class="quality-btn" onclick="selectQuality('2eme_choix')"><div class="quality-btn-title">2ème choix</div><div class="quality-btn-price">250 FCFA/kg</div></button></div></div><div class="price-preview mb-6"><div class="price-row"><span class="price-label">Prix unitaire</span><span class="price-value" id="previewUnitPrice">300 FCFA/kg</span></div><div class="price-row"><span class="price-label">Montant brut</span><span class="price-value price-value-lg" id="previewGross">0 FCFA</span></div></div><div id="deliveryLotBadge" style="margin-bottom:20px;"></div><button class="btn btn-primary btn-block" id="btnSubmitDelivery" onclick="submitDelivery()" style="padding:16px;font-size:16px;" disabled>Enregistrer la livraison </button></div><!-- Step 3: Success --><div id="delivery-step-3" class="hidden" style="text-align:center;"><div style="width:64px;height:64px;background:rgba(46,125,82,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;" class="animate-scaleIn"><svg width="28" height="28" fill="none" stroke="#2E7D52" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><h3 class="font-jakarta" style="font-weight:700;font-size:20px;color:#2E7D52;margin-bottom:4px;">Livraison enregistrée avec succès</h3><p id="deliveryRefLabel" style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:24px;"></p><div id="deliveryRecap"></div><div id="deliveryQr" style="margin:24px 0;display:flex;justify-content:center;"></div><p style="font-size:14px;color:rgba(107,114,128,1);margin-bottom:24px;max-width:320px;margin-left:auto;margin-right:auto;">Le producteur peut scanner ce QR code avec <strong>IDS Wallet</strong> pour recevoir son credential numérique.</p><div style="display:flex;flex-direction:column;gap:12px;"><button class="btn btn-cta btn-block" onclick="downloadDeliveryPdf()" style="gap:8px;"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>Télécharger le bordereau PDF </button><button class="btn btn-outline btn-block" onclick="shareDelivery()" style="gap:8px;"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>Partager </button><button style="padding:16px;color:rgba(107,114,128,1);background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='rgba(107,114,128,1)'" onclick="resetDelivery()">Enregistrer une autre livraison</button></div></div></div></div></section><!-- ========== PAGE 4: ENREGISTRER PRODUCTEUR ========== --><section class="page" id="page-register-producer"><div style="max-width:640px;margin:0 auto;" class="animate-fadeInUp"><div class="glass-card no-hover" style="padding:24px 32px;"><h2 class="font-lora" style="font-size:24px;font-weight:700;margin-bottom:24px;">Enregistrer un nouveau producteur</h2><!-- Step 1: NPI Input --><div id="register-step-1"><div id="registerNpiGroup"><label class="font-jakarta" style="font-weight:600;font-size:14px;display:block;margin-bottom:8px;">NPI du producteur</label><input type="text" class="input-field input-mono input-xl" id="registerNpi" placeholder="Entrez les 16 chiffres du NPI" maxlength="16"><p id="registerError" style="color:#C0392B;font-size:13px;margin-top:8px;" class="hidden"></p><p style="color:rgba(156,163,175,1);font-size:12px;margin-top:8px;">Le producteur doit être physiquement présent.</p></div><div id="registerNpiResult" style="margin-top:16px;"></div><button class="btn btn-primary btn-block" id="btnVerifyRegisterNpi" onclick="verifyRegisterNpi()" style="margin-top:20px;padding:16px;font-size:16px;">Vérifier</button></div><!-- Step 2: Success --><div id="register-step-2" class="hidden" style="text-align:center;"><div style="width:80px;height:80px;background:rgba(46,125,82,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;" class="animate-scaleIn"><svg width="32" height="32" fill="none" stroke="#2E7D52" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div><h3 class="font-jakarta" style="font-weight:700;font-size:20px;color:#2E7D52;margin-bottom:8px;">Affiliation réussie !</h3><p id="registerSuccess" style="color:rgba(107,114,128,1);font-size:15px;margin-bottom:24px;"></p><div style="display:flex;flex-direction:column;gap:12px;"><button class="btn btn-primary btn-block" onclick="resetRegister()">Enregistrer un autre producteur</button><button class="btn btn-cta btn-block" onclick="navigateTo('delivery')"> Enregistrer une livraison →</button></div></div></div></div></section><!-- ========== PAGE 5: FICHE PRODUCTEUR ========== --><section class="page" id="page-producer-detail"><div class="animate-fadeInUp"><!-- Back button --><button onclick="backFromProducerDetail()" style="display:flex;align-items:center;gap:8px;color:rgba(107,114,128,1);background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;padding:0;margin-bottom:20px;transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='rgba(107,114,128,1)'">← Retour au tableau de bord </button><!-- Profile Card --><div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:20px;"><div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;"><div id="pdAvatar" style="width:80px;height:80px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;font-weight:700;font-family:Arial,Helvetica,sans-serif;flex-shrink:0;box-shadow:0 4px 15px rgba(37,84,176,0.25);">--</div><div style="flex:1;min-width:200px;"><h2 class="font-jakarta" style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:14px;" id="pdName">Chargement...</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;"><div><p style="color:rgba(107,114,128,1);margin-bottom:2px;">NPI</p><p class="font-mono" style="font-weight:600;" id="pdNpi">---</p></div><div><p style="color:rgba(107,114,128,1);margin-bottom:2px;">Téléphone</p><p style="font-weight:600;" id="pdPhone">---</p></div><div><p style="color:rgba(107,114,128,1);margin-bottom:2px;">Coopérative</p><p style="font-weight:600;" id="pdCoop">---</p></div><div><p style="color:rgba(107,114,128,1);margin-bottom:2px;">Commune</p><p style="font-weight:600;" id="pdCommune">---</p></div></div></div><button class="btn btn-cta" onclick="startDeliveryForProducer()" id="pdDeliveryBtn" style="gap:6px;align-self:flex-start;">Enregistrer une livraison </button></div></div><!-- Deliveries List --><div class="glass-card no-hover" style="padding:24px 32px;margin-bottom:20px;"><h3 class="font-jakarta" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Historique des livraisons</h3><div id="pdDeliveries" style="display:flex;flex-direction:column;gap:14px;"></div><div class="empty-state hidden" id="pdDeliveriesEmpty"><div class="empty-state-icon"></div><div class="empty-state-text">Aucune livraison enregistrée pour ce producteur.</div></div></div><!-- Financial Summary --><div class="glass-card no-hover" style="padding:24px 32px;background:linear-gradient(to bottom right,rgba(247,248,250,0.9),rgba(231,236,245,0.9));"><h3 class="font-jakarta" style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;">Résumé financier</h3><div style="display:flex;flex-direction:column;gap:12px;"><div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid #D8DEE7;font-size:14px;"><span style="color:rgba(75,85,99,1);">Total livré</span><span class="font-jakarta" id="pdStatWeight" style="font-weight:600;">0 kg</span></div><div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid #D8DEE7;font-size:14px;"><span style="color:rgba(75,85,99,1);">Nombre de livraisons</span><span class="font-jakarta" id="pdStatCount" style="font-weight:600;">0</span></div><div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid #D8DEE7;font-size:14px;"><span style="color:rgba(75,85,99,1);">Total brut</span><span class="font-jakarta" id="pdStatGross" style="font-weight:600;">0 F</span></div><div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid #D8DEE7;font-size:14px;"><span style="color:rgba(75,85,99,1);">Total déductions</span><span class="font-jakarta" id="pdStatDeductions" style="color:rgba(220,38,38,1);font-weight:600;">- 0 F</span></div><div style="display:flex;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid #D8DEE7;font-size:15px;"><span style="color:rgba(75,85,99,1);font-weight:600;">Net à payer</span><span class="font-jakarta" id="pdStatNet" style="font-weight:700;color:var(--primary);">0 F</span></div><div style="display:flex;justify-content:space-between;padding-bottom:6px;font-size:14px;"><span style="color:rgba(75,85,99,1);">Total payé</span><span class="font-jakarta" id="pdStatPaid" style="color:#2E7D52;font-weight:600;">0 F </span></div><div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:rgba(75,85,99,1);">En attente</span><span class="font-jakarta" id="pdStatPending" style="color:#B07A1E;font-weight:600;">0 F</span></div></div></div></div></section><!-- ========== PAGE: CRÉANCES & PAIEMENTS ========== --><section class="page" id="page-creances"><div style="margin-bottom:20px;"><h2 class="font-lora" style="font-weight:700;font-size:24px;margin-bottom:4px;">Créances & paiements</h2><p style="font-size:14px;color:rgba(107,114,128,1);">Chaque livraison crée une créance. Avancez au producteur via une IMF, puis réglez au décaissement de campagne.</p></div><!-- Résumé --><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;" id="creanceSummary"></div><!-- Filtres --><div class="flex" style="gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="creanceFilters"><button class="btn btn-sm btn-cta"      data-cf="all"      onclick="filterCreances('all')">Toutes</button><button class="btn btn-sm btn-outline"  data-cf="due"      onclick="filterCreances('due')">À payer</button><button class="btn btn-sm btn-outline"  data-cf="advanced" onclick="filterCreances('advanced')">Avancées</button><button class="btn btn-sm btn-outline"  data-cf="settled"  onclick="filterCreances('settled')">Soldées</button></div><div id="creancesList"><div class="glass-card" style="padding:40px;text-align:center;color:rgba(107,114,128,1);"><div class="spinner" style="width:32px;height:32px;margin:0 auto;"></div></div></div></section><!-- ========== PAGE: INTRANTS À CRÉDIT ========== --><section class="page" id="page-intrants"><div class="flex items-center" style="justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px;"><div><h2 class="font-lora" style="font-weight:700;font-size:24px;margin-bottom:4px;">Intrants à crédit</h2><p style="font-size:14px;color:rgba(107,114,128,1);">Distribuez les intrants à crédit (engrais, insecticides, semences). La dette est récupérée automatiquement à chaque livraison (90 FCFA/kg).</p></div><button class="btn btn-cta" onclick="openIntrantsModal()"> Distribuer des intrants</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;" id="intrantsSummary"></div><div id="intrantsList"><div class="glass-card" style="padding:40px;text-align:center;color:rgba(107,114,128,1);"><div class="spinner" style="width:32px;height:32px;margin:0 auto;"></div></div></div></section><!-- ========== PAGE: CAUTION SOLIDAIRE ========== --><section class="page" id="page-caution"><div class="flex items-center" style="justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px;"><div><h2 class="font-lora" style="font-weight:700;font-size:24px;margin-bottom:4px;">Caution solidaire</h2><p style="font-size:14px;color:rgba(107,114,128,1);">Cercles de garantie mutuelle : les membres se portent garants du remboursement du crédit intrants. Le risque est calculé sur les soldes réels.</p></div><button class="btn btn-cta" onclick="openCautionModal()"> Créer un cercle</button></div><div id="cautionList"><div class="glass-card" style="padding:40px;text-align:center;color:rgba(107,114,128,1);"><div class="spinner" style="width:32px;height:32px;margin:0 auto;"></div></div></div></section><!-- ========== PAGE: SEMENCES ========== --><section class="page" id="page-semences"><div class="flex items-center" style="justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px;"><div><h2 class="font-lora" style="font-weight:700;font-size:24px;margin-bottom:4px;">Qualité des semences</h2><p style="font-size:14px;color:rgba(107,114,128,1);">Suivi des variétés distribuées et de leur taux de germination — un facteur clé du rendement.</p></div><button class="btn btn-cta" onclick="openSemenceModal()"> Enregistrer une distribution</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;" id="semencesSummary"></div><div id="semencesList"><div class="glass-card" style="padding:40px;text-align:center;color:rgba(107,114,128,1);"><div class="spinner" style="width:32px;height:32px;margin:0 auto;"></div></div></div></section><!-- ========== PAGE: MÉCANISATION ========== --><section class="page" id="page-mecanisation"><div class="flex items-center" style="justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px;"><div><h2 class="font-lora" style="font-weight:700;font-size:24px;margin-bottom:4px;">Mécanisation</h2><p style="font-size:14px;color:rgba(107,114,128,1);">Parc de matériel partagé et planning des réservations des producteurs.</p></div><div class="flex" style="gap:8px;"><button class="btn btn-outline btn-sm" onclick="openEquipmentModal()"> Matériel</button><button class="btn btn-cta btn-sm" onclick="openReserveModal()"> Réserver</button></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;" id="mecaSummary"></div><h3 class="font-jakarta" style="font-weight:700;font-size:16px;margin-bottom:10px;">Parc de matériel</h3><div id="mecaEquipments" style="margin-bottom:24px;"></div><h3 class="font-jakarta" style="font-weight:700;font-size:16px;margin-bottom:10px;">Réservations à venir</h3><div id="mecaReservations"></div></section><!-- ========== PAGE: VUE UNION (AIC) ========== --><section class="page" id="page-aic"><div style="margin-bottom:20px;"><h2 class="font-lora" style="font-weight:700;font-size:24px;margin-bottom:4px;">Vue Union — Interprofession (AIC)</h2><p style="font-size:14px;color:rgba(107,114,128,1);">Consolidation de toutes les coopératives : production, paiements et intrants par coopérative et par commune.</p></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px;" id="aicSummary"></div><h3 class="font-jakarta" style="font-weight:700;font-size:16px;margin-bottom:10px;">Par coopérative</h3><div class="glass-card no-hover" style="padding:0;overflow-x:auto;margin-bottom:24px;"><table id="aicCoopTable" style="width:100%;"></table></div><h3 class="font-jakarta" style="font-weight:700;font-size:16px;margin-bottom:10px;">Par commune</h3><div class="glass-card no-hover" style="padding:0;overflow-x:auto;"><table id="aicCommuneTable" style="width:100%;"></table></div></section></div>
+</main><!-- ============================================
      MODALS
      ============================================ -->
 <!-- QR Code Modal (for producer detail credential viewing) -->
-<div class="modal-overlay" id="producerQrModal">
-    <div class="modal-content glass-card" style="padding:32px;text-align:center;max-width:420px;">
-        <h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:8px;">Credential Numérique</h3>
-        <p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:24px;">Scannez ce QR code avec <strong>IDS Wallet</strong> pour récupérer le reçu certifié.</p>
-        <div id="pdQrContainer" style="background:#fff;padding:16px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid rgba(229,231,235,1);min-height:232px;min-width:232px;">
-            <div class="spinner" style="width:32px;height:32px;"></div>
-        </div>
-        <p id="pdQrError" style="color:#EF4444;font-size:13px;margin-bottom:16px;display:none;"></p>
-        <button class="btn btn-outline btn-block" onclick="closeModal('producerQrModal')">Fermer</button>
-    </div>
-</div>
-
-<!-- Lot Detail Modal -->
-<div class="modal-overlay" id="lotModal">
-    <div class="modal-content glass-card" style="padding:24px 32px;max-width:600px;">
-        <div id="lotModalContent"></div>
-    </div>
-</div>
-
-
-
-
-<script src="app.js"></script>
+<div class="modal-overlay" id="producerQrModal"><div class="modal-content glass-card" style="padding:32px;text-align:center;max-width:420px;"><h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:8px;">Credential Numérique</h3><p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:24px;">Scannez ce QR code avec <strong>IDS Wallet</strong> pour récupérer le reçu certifié.</p><div id="pdQrContainer" style="background:#fff;padding:16px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid rgba(229,231,235,1);min-height:232px;min-width:232px;"><div class="spinner" style="width:32px;height:32px;"></div></div><p id="pdQrError" style="color:#C0392B;font-size:13px;margin-bottom:16px;display:none;"></p><button class="btn btn-outline btn-block" onclick="closeModal('producerQrModal')">Fermer</button></div>
+</div><!-- Activation login wallet (enrôlement credential membre) -->
+<div class="modal-overlay" id="enrollModal"><div class="modal-content glass-card" style="padding:32px;text-align:center;max-width:420px;"><h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:8px;"> Activer le login wallet</h3><p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:20px;">Scannez ce QR avec votre wallet e-ID pour recevoir votre credential membre. Ensuite, vous pourrez vous connecter sans mot de passe.</p><div id="enrollQr" style="background:#fff;padding:14px;border-radius:12px;display:inline-flex;min-height:216px;min-width:216px;align-items:center;justify-content:center;border:1px solid rgba(229,231,235,1);"><div class="spinner" style="width:28px;height:28px;"></div></div><p id="enrollErr" style="color:#C0392B;font-size:13px;margin-top:12px;display:none;"></p><button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="closeModal('enrollModal')">Fermer</button></div>
+</div><!-- Lot Detail Modal -->
+<div class="modal-overlay" id="lotModal"><div class="modal-content glass-card" style="padding:24px 32px;max-width:600px;"><div id="lotModalContent"></div></div>
+</div><!-- Mécanisation : ajouter matériel -->
+<div class="modal-overlay" id="equipmentModal"><div class="modal-content glass-card" style="padding:28px 32px;max-width:440px;"><h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:16px;"> Ajouter du matériel</h3><label style="font-size:13px;font-weight:600;">Nom / identifiant</label><input id="eqName" class="input" placeholder="Ex: Tracteur Massey #1" style="margin:6px 0 12px;width:100%;"><label style="font-size:13px;font-weight:600;">Type</label><select id="eqType" class="input" style="margin:6px 0 12px;width:100%;"></select><p id="eqError" style="color:#C0392B;font-size:13px;margin:8px 0;display:none;"></p><div class="flex" style="gap:10px;margin-top:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closeModal('equipmentModal')">Annuler</button><button class="btn btn-cta" style="flex:1;" id="eqConfirm" onclick="submitEquipment()">Ajouter</button></div></div>
+</div><!-- Mécanisation : réserver -->
+<div class="modal-overlay" id="reserveModal"><div class="modal-content glass-card" style="padding:28px 32px;max-width:440px;"><h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:16px;"> Réserver du matériel</h3><label style="font-size:13px;font-weight:600;">Matériel</label><select id="rsvEquipment" class="input" style="margin:6px 0 12px;width:100%;"></select><label style="font-size:13px;font-weight:600;">NPI producteur (optionnel)</label><input id="rsvNpi" class="input" placeholder="Ex: 1000000000000001" style="margin:6px 0 12px;width:100%;"><label style="font-size:13px;font-weight:600;">Date</label><input id="rsvDate" type="date" class="input" style="margin:6px 0 12px;width:100%;"><label style="font-size:13px;font-weight:600;">Note (optionnel)</label><input id="rsvNote" class="input" placeholder="Ex: labour parcelle nord" style="margin:6px 0 12px;width:100%;"><p id="rsvError" style="color:#C0392B;font-size:13px;margin:8px 0;display:none;"></p><div class="flex" style="gap:10px;margin-top:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closeModal('reserveModal')">Annuler</button><button class="btn btn-cta" style="flex:1;" id="rsvConfirm" onclick="submitReserve()">Réserver</button></div></div>
+</div><!-- Semences : distribution -->
+<div class="modal-overlay" id="semenceModal"><div class="modal-content glass-card" style="padding:28px 32px;max-width:460px;"><h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:6px;"> Distribuer des semences</h3><p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:18px;">Variété, quantité et taux de germination.</p><label style="font-size:13px;font-weight:600;">NPI du producteur</label><input id="semNpi" class="input" placeholder="Ex: 1000000000000001" style="margin:6px 0 12px;width:100%;"><label style="font-size:13px;font-weight:600;">Variété</label><select id="semVariety" class="input" style="margin:6px 0 12px;width:100%;" onchange="semVarietyChanged()"></select><div class="flex" style="gap:12px;"><div style="flex:1;"><label style="font-size:13px;font-weight:600;">Quantité (kg)</label><input id="semQty" type="number" min="0" value="0" class="input" style="margin:6px 0 12px;width:100%;"></div><div style="flex:1;"><label style="font-size:13px;font-weight:600;">Germination (%)</label><input id="semGerm" type="number" min="0" max="100" class="input" style="margin:6px 0 12px;width:100%;"></div></div><p id="semError" style="color:#C0392B;font-size:13px;margin:8px 0;display:none;"></p><div class="flex" style="gap:10px;margin-top:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closeModal('semenceModal')">Annuler</button><button class="btn btn-cta" style="flex:1;" id="semConfirm" onclick="submitSemence()">Enregistrer</button></div></div>
+</div><!-- Caution : créer un cercle -->
+<div class="modal-overlay" id="cautionModal"><div class="modal-content glass-card" style="padding:28px 32px;max-width:480px;"><h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:6px;"> Créer un cercle de caution</h3><p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:18px;">Au moins 2 producteurs qui se garantissent mutuellement.</p><label style="font-size:13px;font-weight:600;">Nom du cercle</label><input id="cautionName" class="input" placeholder="Ex: Cercle Parakou A" style="margin:6px 0 14px;width:100%;"><label style="font-size:13px;font-weight:600;">NPI des membres (un par ligne)</label><textarea id="cautionMembers" class="input" rows="4" placeholder="1000000000000001&#10;1000000000000002" style="margin:6px 0 4px;width:100%;font-family:inherit;"></textarea><p id="cautionError" style="color:#C0392B;font-size:13px;margin:8px 0;display:none;"></p><div class="flex" style="gap:10px;margin-top:14px;"><button class="btn btn-outline" style="flex:1;" onclick="closeModal('cautionModal')">Annuler</button><button class="btn btn-cta" style="flex:1;" id="cautionConfirm" onclick="submitCaution()">Créer le cercle</button></div></div>
+</div><!-- Caution : détail cercle -->
+<div class="modal-overlay" id="cautionDetailModal"><div class="modal-content glass-card" style="padding:28px 32px;max-width:560px;max-height:88vh;overflow:auto;"><div id="cautionDetailContent"></div><button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="closeModal('cautionDetailModal')">Fermer</button></div>
+</div><!-- Intrants : distribution -->
+<div class="modal-overlay" id="intrantsModal"><div class="modal-content glass-card" style="padding:28px 32px;max-width:520px;max-height:88vh;overflow:auto;"><h3 class="font-jakarta" style="font-weight:700;font-size:20px;margin-bottom:6px;"> Distribuer des intrants à crédit</h3><p style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:18px;">Sélectionnez le producteur et les quantités.</p><label style="font-size:13px;font-weight:600;">NPI du producteur</label><input id="intrantNpi" class="input" placeholder="Ex: 1000000000000001" style="margin:6px 0 14px;width:100%;"><div id="intrantsCatalog"></div><div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid rgba(229,231,235,1);font-weight:700;"><span>Total à crédit</span><span id="intrantsTotal" class="font-jakarta" style="color:var(--primary);">0 FCFA</span></div><p id="intrantsError" style="color:#C0392B;font-size:13px;margin:12px 0;display:none;"></p><div class="flex" style="gap:10px;margin-top:18px;"><button class="btn btn-outline" style="flex:1;" onclick="closeModal('intrantsModal')">Annuler</button><button class="btn btn-cta" style="flex:1;" id="intrantsConfirm" onclick="submitIntrants()">Enregistrer</button></div></div>
+</div><!-- Intrants : détail compte -->
+<div class="modal-overlay" id="intrantAccountModal"><div class="modal-content glass-card" style="padding:28px 32px;max-width:560px;max-height:88vh;overflow:auto;"><div id="intrantAccountContent"></div><button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="closeModal('intrantAccountModal')">Fermer</button></div>
+</div><!-- Créance action Modal (avance / règlement) -->
+<div class="modal-overlay" id="creanceModal"><div class="modal-content glass-card" style="padding:28px 32px;max-width:460px;"><h3 class="font-jakarta" id="creanceModalTitle" style="font-weight:700;font-size:20px;margin-bottom:6px;">Action</h3><p id="creanceModalSub" style="color:rgba(107,114,128,1);font-size:14px;margin-bottom:20px;"></p><div id="creanceModalBody"></div><p id="creanceModalError" style="color:#C0392B;font-size:13px;margin:12px 0;display:none;"></p><div class="flex" style="gap:10px;margin-top:20px;"><button class="btn btn-outline" style="flex:1;" onclick="closeModal('creanceModal')">Annuler</button><button class="btn btn-cta" style="flex:1;" id="creanceModalConfirm">Confirmer</button></div></div>
+</div><script src="app.js"></script>
 </body>
 </html>

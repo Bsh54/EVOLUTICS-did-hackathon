@@ -88,7 +88,8 @@ function getProducers(coopId) {
 }
 
 /**
- * Récupère un producteur par son NPI
+ * Récupère un producteur par son NPI (première occurrence, tous coops confondus)
+ * Utilisé pour l'identité / le rôle "est producteur quelque part".
  * @param {string} npi - NPI du producteur
  * @returns {object|null}
  */
@@ -98,14 +99,36 @@ function getProducerByNpi(npi) {
 }
 
 /**
- * Vérifie si un producteur est affilié à une coopérative
+ * Récupère l'enregistrement d'un producteur DANS une coopérative précise.
+ * Un même NPI peut être affilié à plusieurs coopératives (multi-affiliation) :
+ * il existe alors un enregistrement distinct par coopérative.
+ * @param {string} npi
+ * @param {string} coopId
+ * @returns {object|null}
+ */
+function getProducerInCoop(npi, coopId) {
+  const { producers } = readJSON('producers.json');
+  return producers.find(p => p.npi === npi && p.cooperative_id === coopId) || null;
+}
+
+/**
+ * Liste toutes les coopératives auxquelles un NPI est affilié.
+ * @param {string} npi
+ * @returns {string[]} - ids de coopératives
+ */
+function getProducerCoops(npi) {
+  const { producers } = readJSON('producers.json');
+  return producers.filter(p => p.npi === npi).map(p => p.cooperative_id);
+}
+
+/**
+ * Vérifie si un producteur est affilié à une coopérative précise
  * @param {string} npi - NPI du producteur
  * @param {string} coopId - ID de la coopérative
  * @returns {boolean}
  */
 function isProducerAffiliated(npi, coopId) {
-  const producer = getProducerByNpi(npi);
-  return producer !== null && producer.cooperative_id === coopId;
+  return getProducerInCoop(npi, coopId) !== null;
 }
 
 /**
@@ -120,13 +143,13 @@ function isProducerAffiliated(npi, coopId) {
 function addProducer(coopId, identityData, registeredByNpi) {
   const data = readJSON('producers.json');
 
-  // Vérifier doublon
-  const existing = data.producers.find(p => p.npi === identityData.npi);
-  if (existing) {
-    if (existing.cooperative_id === coopId) {
-      throw new Error('Ce producteur est déjà affilié à votre coopérative');
-    }
-    throw new Error('Ce producteur est déjà affilié à une autre coopérative');
+  // Multi-affiliation : on bloque uniquement si le producteur est DÉJÀ dans CETTE coopérative.
+  // Il peut être affilié à d'autres coopératives en parallèle.
+  const existingHere = data.producers.find(
+    p => p.npi === identityData.npi && p.cooperative_id === coopId
+  );
+  if (existingHere) {
+    throw new Error('Ce producteur est déjà affilié à votre coopérative');
   }
 
   const newProducer = {
@@ -212,6 +235,8 @@ module.exports = {
   getCoopById,
   getProducers,
   getProducerByNpi,
+  getProducerInCoop,
+  getProducerCoops,
   isProducerAffiliated,
   addProducer,
   searchProducers,

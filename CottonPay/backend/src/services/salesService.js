@@ -35,14 +35,12 @@ class SalesService {
       // 2. Générer un ID de transaction unique
       const transaction_id = `TXN-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-      // 3. Simuler le paiement Mobile Money
-      const payment_reference = `MOMO-${Date.now()}`;
-      const payment_status = 'completed';
-      const payment_method = 'Mobile Money';
+      // 3. Référence de créance (paiement filière différé, suivi manuel)
+      const payment_reference = `REF-${Date.now()}`;
+      const payment_status = 'due';
+      const payment_method = 'Filière (différé)';
 
-      console.log('💰 Simulating Mobile Money payment...');
-      console.log(`   Amount: ${total_amount_fcfa} FCFA`);
-      console.log(`   Reference: ${payment_reference}`);
+      console.log(`Sale recorded: ${total_amount_fcfa} FCFA | ref ${payment_reference}`);
 
       // 4. Créer l'objet vente complet
       const sale = {

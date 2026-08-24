@@ -17,15 +17,24 @@ const path = require('path');
 
 const DATA_DIR = path.join(__dirname, '../../data');
 
-// Constantes de la campagne 2025-2026
+// Constantes de la campagne 2025-2026 (prix homologués officiels — filière coton Bénin)
 const CAMPAIGN = {
   name: '2025-2026',
   INPUT_CREDIT_PER_KG: 90,
   AIC_LEVY_PER_KG: 18,
+  // Coton conventionnel
   PRICES: {
     '1er_choix': 300,
     '2eme_choix': 250
-  }
+  },
+  // Coton biologique (prix supérieurs homologués)
+  PRICES_BIO: {
+    '1er_choix': 360,
+    '2eme_choix': 310
+  },
+  // Prime "reconquête" : +10 FCFA/kg dès que le seuil national de production est atteint
+  RECONQUEST_BONUS_PER_KG: 10,
+  RECONQUEST_THRESHOLD_TONNES: 700000
 };
 
 function readJSON(filename) {
@@ -177,6 +186,9 @@ function getCampaignInfo() {
   return {
     name: CAMPAIGN.name,
     prices: CAMPAIGN.PRICES,
+    prices_bio: CAMPAIGN.PRICES_BIO,
+    reconquest_bonus_per_kg: CAMPAIGN.RECONQUEST_BONUS_PER_KG,
+    reconquest_threshold_tonnes: CAMPAIGN.RECONQUEST_THRESHOLD_TONNES,
     deductions: {
       input_credit_per_kg: CAMPAIGN.INPUT_CREDIT_PER_KG,
       aic_levy_per_kg: CAMPAIGN.AIC_LEVY_PER_KG

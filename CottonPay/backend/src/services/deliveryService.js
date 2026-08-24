@@ -227,7 +227,10 @@ function createDelivery({ farmer_npi, cooperative_id, registered_by_npi, weight_
     lot_number: currentLot.id,
     payment_status: 'pending',
     credential_status: 'pending',
-    credential_exchange_id: null
+    credential_exchange_id: null,
+    // Cycle de vie de la créance (suivi manuel, voir creanceService)
+    claim_status: 'due',       // due → settled
+    settlement: null           // règlement filière (marqué manuellement)
   };
 
   // Ajouter aux données en mémoire
@@ -334,6 +337,11 @@ async function issueDeliveryCredential(delivery, producer, coop, registeredByNam
     //    IMPORTANT : Les noms DOIVENT correspondre EXACTEMENT aux attributs du schema
     //    enregistré sur BCovrin (CottonSaleReceiptCredential)
     const now = new Date(delivery.date);
+
+    // Refléter l'état RÉEL de la créance dans le credential (preuve blockchain).
+    // payment_status = cycle de vie : due | settled (suivi manuel, sans Mobile Money)
+    const paymentStatus = delivery.claim_status || delivery.payment_status || 'due';
+
     const attributes = [
       { name: 'farmer_npi', value: delivery.farmer_npi },
       { name: 'sale_date', value: delivery.date.split('T')[0] },
@@ -342,8 +350,8 @@ async function issueDeliveryCredential(delivery, producer, coop, registeredByNam
       { name: 'unit_price_fcfa', value: String(delivery.unit_price) },
       { name: 'total_amount_fcfa', value: String(delivery.total_gross) },
       { name: 'payment_reference', value: delivery.id },
-      { name: 'payment_status', value: delivery.payment_status || 'pending' },
-      { name: 'payment_method', value: 'Mobile Money' },
+      { name: 'payment_status', value: paymentStatus },
+      { name: 'payment_method', value: 'Filière (différé)' },
       { name: 'transaction_id', value: delivery.id },
       { name: 'collection_point', value: `${coop.name} - Lot ${delivery.lot_number}` }
     ];
@@ -413,6 +421,21 @@ function getDeliveriesByNpi(npi) {
   const { deliveries } = readJSON('deliveries.json');
   return deliveries
     .filter(d => d.farmer_npi === npi)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+/**
+ * Liste les livraisons d'un producteur DANS une coopérative précise.
+ * Nécessaire pour la multi-affiliation : la fiche producteur d'une coop
+ * ne doit montrer que les livraisons enregistrées par cette coop.
+ * @param {string} npi
+ * @param {string} coopId
+ * @returns {Array}
+ */
+function getDeliveriesByNpiAndCoop(npi, coopId) {
+  const { deliveries } = readJSON('deliveries.json');
+  return deliveries
+    .filter(d => d.farmer_npi === npi && d.cooperative_id === coopId)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
@@ -508,6 +531,7 @@ module.exports = {
   checkCredentialStatus,
   getDeliveriesByCoopId,
   getDeliveriesByNpi,
+  getDeliveriesByNpiAndCoop,
   getDeliveryById,
   getPublicDeliveriesByNpi,
   getCurrentLot,

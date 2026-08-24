@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="i18n.js"></script>
 
 </head>
 <body>
@@ -28,7 +29,7 @@
     <li><a href="#producer">Producteurs</a></li>
     <li><a href="#verify">Vérification </a></li>
     <li><a href="#wallet">FAQ</a></li>
-    <li><a href="/auth/login?flow=coop" class="nav-cta">Espace Coopérative</a></li>
+    <li><a href="/coop/login.html" class="nav-cta">Espace Coopérative</a></li>
   </ul>
 
   <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
@@ -43,7 +44,7 @@
   <a href="#producer" onclick="toggleMenu()">Producteurs</a>
   <a href="#verify" onclick="toggleMenu()">Vérification</a>
   <a href="#wallet" onclick="toggleMenu()">FAQ</a>
-  <a href="/auth/login?flow=coop" class="btn-cta">Espace Coopérative</a>
+  <a href="/coop/login.html" class="btn-cta">Espace Coopérative</a>
 </div>
 
 <!-- ==================== HERO ==================== -->
@@ -69,7 +70,7 @@
         </p>
 
         <div class="hero-btns">
-          <a href="/auth/login?flow=coop" class="btn btn-cta">
+          <a href="/coop/login.html" class="btn btn-cta">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             Espace Coopérative
           </a>
@@ -173,7 +174,7 @@
           <li>Fiche producteur avec historique complet et régénération de credentials</li>
         </ul>
 
-        <a href="/auth/login?flow=coop" class="btn btn-cta">
+        <a href="/coop/login.html" class="btn btn-cta">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
           Accéder à l'espace coopérative
         </a>
@@ -222,13 +223,13 @@
                 <td>A. MENSAH</td>
                 <td>500 kg</td>
                 <td>1er choix</td>
-                <td><span class="badge badge-paid">✓ Émis</span></td>
+                <td><span class="badge badge-paid"> Émis</span></td>
               </tr>
               <tr>
                 <td>K. DOSSOU</td>
                 <td>300 kg</td>
                 <td>2ème choix</td>
-                <td><span class="badge badge-paid">✓ Émis</span></td>
+                <td><span class="badge badge-paid"> Émis</span></td>
               </tr>
               <tr>
                 <td>B. ALABI</td>
@@ -320,7 +321,7 @@
     <div style="max-width:720px;margin:0 auto;">
       <!-- Q1 -->
       <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Raleway',sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
           <span>Comment un producteur reçoit-il son credential après une livraison ?</span>
           <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
@@ -331,7 +332,7 @@
 
       <!-- Q2 -->
       <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Raleway',sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
           <span>Le producteur a-t-il besoin d'internet pour consulter ses credentials ?</span>
           <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
@@ -342,7 +343,7 @@
 
       <!-- Q3 -->
       <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Raleway',sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
           <span>Comment une banque vérifie-t-elle l'historique d'un producteur ?</span>
           <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
@@ -353,7 +354,7 @@
 
       <!-- Q4 -->
       <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Raleway',sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
           <span>Qu'est-ce qui empêche quelqu'un de falsifier un credential ?</span>
           <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
@@ -364,7 +365,7 @@
 
       <!-- Q5 -->
       <div class="glass fade-up" style="border-radius:16px;margin-bottom:12px;overflow:hidden;">
-        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Raleway',sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:none;border:none;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:left;">
           <span>Mon téléphone est perdu ou cassé — mes credentials sont-ils perdus ?</span>
           <svg class="faq-chevron" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition:transform .3s;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
@@ -395,14 +396,14 @@
     if (!error) return;
 
     const messages = {
-      'not_coop_member': '⚠️ Votre NPI n\'est pas enregistré comme membre d\'une coopérative. Si vous êtes producteur, connectez-vous via « Mon Espace ».',
-      'not_producer': '⚠️ Votre NPI n\'est pas enregistré comme producteur. Contactez votre coopérative pour vous affilier.',
-      'invalid_state': '⚠️ Session de connexion expirée. Veuillez réessayer.',
-      'missing_code': '⚠️ Erreur de connexion avec eSignet. Veuillez réessayer.',
-      'missing_verifier': '⚠️ Session de connexion invalide. Veuillez réessayer.',
-      'token_exchange_failed': '⚠️ Échec de la connexion avec eSignet (échange de jetons). Les clés du client OIDC sont peut-être désynchronisées. Veuillez réessayer.',
-      'token_validation_failed': '⚠️ Le jeton d\'identité retourné par eSignet est invalide. Veuillez réessayer.',
-      'auth_failed': '⚠️ Une erreur inattendue s\'est produite lors de la connexion. Veuillez réessayer.',
+      'not_coop_member': ' Votre NPI n\'est pas enregistré comme membre d\'une coopérative. Si vous êtes producteur, connectez-vous via « Mon Espace ».',
+      'not_producer': ' Votre NPI n\'est pas enregistré comme producteur. Contactez votre coopérative pour vous affilier.',
+      'invalid_state': ' Session de connexion expirée. Veuillez réessayer.',
+      'missing_code': ' Erreur de connexion avec eSignet. Veuillez réessayer.',
+      'missing_verifier': ' Session de connexion invalide. Veuillez réessayer.',
+      'token_exchange_failed': ' Échec de la connexion avec eSignet (échange de jetons). Les clés du client OIDC sont peut-être désynchronisées. Veuillez réessayer.',
+      'token_validation_failed': ' Le jeton d\'identité retourné par eSignet est invalide. Veuillez réessayer.',
+      'auth_failed': ' Une erreur inattendue s\'est produite lors de la connexion. Veuillez réessayer.',
     };
 
     const msg = messages[error] || params.get('error_description') || `Erreur d'authentification : ${error}`;
@@ -425,14 +426,14 @@
         <div style="flex:1;">
           ${msg}
           <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
-            <a href="/auth/login?flow=coop"
+            <a href="/coop/login.html"
               style="display:inline-block;padding:6px 16px;border-radius:8px;background:var(--cta);color:white;font-size:.8125rem;font-weight:600;text-decoration:none;">
-              🔄 Réessayer la connexion
+               Réessayer la connexion
             </a>
           </div>
         </div>
         <button onclick="this.parentElement.parentElement.remove(); history.replaceState(null,'',location.pathname);"
-          style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#92400e;padding:0 4px;flex-shrink:0;">✕</button>
+          style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#92400e;padding:0 4px;flex-shrink:0;"></button>
       </div>
     `;
 

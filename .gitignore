@@ -71,3 +71,13 @@ phone_log.txt
 
 # Generated seed
 .generated-seed
+
+# secrets / deploiement (mots de passe serveur)
+scripts-deploy/
+serveur.txt
+serveurs-ssh.md
+cloudflare-login-link.txt
+*.pid
+CottonPay/.cottonpay.pid
+node_modules/
+CottonPay/backend/keys/

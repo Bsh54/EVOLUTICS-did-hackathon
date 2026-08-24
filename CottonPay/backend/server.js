@@ -74,6 +74,9 @@ app.get('/logo.jpeg', (req, res) => {
 // Authentification eSignet (login, callback, logout, status)
 app.use('/auth', authRoutes);
 
+// Espace Admin — enrôlement des membres (protégé par ADMIN_KEY)
+app.use('/api/admin', require('./src/routes/admin'));
+
 // Espace Coopérative (dashboard, producteurs, livraisons, lots, paiements)
 app.use('/api/coop', coopRoutes);
 

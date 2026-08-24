@@ -9,6 +9,9 @@
 const express = require('express');
 const router = express.Router();
 const authService = require('../services/authService');
+const vpAuthService = require('../services/vpAuthService');
+const coopService = require('../services/coopService');
+const { requireCoopAuth } = require('../middleware/auth');
 const { generatePKCE } = require('../utils/pkce');
 
 /**
@@ -249,6 +252,81 @@ router.get('/status', (req, res) => {
     });
   } else {
     res.json({ authenticated: false });
+  }
+});
+
+// ============================================
+// LOGIN PAR WALLET (eid / Verifiable Presentation)
+// ============================================
+
+/**
+ * POST /auth/vp-login/start
+ * Crée une demande de preuve → renvoie le QR à scanner par le wallet.
+ */
+router.post('/vp-login/start', async (req, res) => {
+  try {
+    const pr = await vpAuthService.startLogin();
+    res.json({
+      success: true,
+      proofRecordId: pr.proofRecordId,
+      invitationUrl: pr.invitationUrl,
+      verificationQr: pr.verificationQr,
+      shortUrl: pr.shortUrl
+    });
+  } catch (error) {
+    console.error('❌ VP login start error:', error.response?.data || error.message);
+    res.status(503).json({ error: 'Service de connexion wallet indisponible' });
+  }
+});
+
+/**
+ * GET /auth/vp-login/status?proofRecordId=...
+ * Sonde la preuve. Quand vérifiée + membre reconnu → ouvre la session.
+ */
+router.get('/vp-login/status', async (req, res) => {
+  try {
+    const { proofRecordId } = req.query;
+    if (!proofRecordId) return res.status(400).json({ error: 'proofRecordId requis' });
+
+    const r = await vpAuthService.checkLogin(proofRecordId);
+    if (!r.verified) return res.json({ authenticated: false, state: r.state });
+
+    if (!r.npi) return res.json({ authenticated: false, state: r.state, error: 'no_npi' });
+
+    // Vérifier que le NPI présenté est bien un membre de coopérative
+    const coop = coopService.getCoopByMemberNpi(r.npi);
+    if (!coop) return res.json({ authenticated: false, state: r.state, error: 'not_coop_member' });
+
+    // Ouvrir la session (même forme que le login eSignet)
+    req.session.user = { sub: r.npi, name: r.name || 'Chef de coopérative', login_method: 'wallet' };
+    req.session.loginFlow = 'coop';
+    req.session.save(() => {
+      console.log(`🔓 Login wallet OK — NPI ${r.npi} (${coop.name})`);
+      res.json({ authenticated: true, redirect: '/coop/' });
+    });
+  } catch (error) {
+    console.error('❌ VP login status error:', error.response?.data || error.message);
+    res.status(500).json({ error: 'Erreur de vérification' });
+  }
+});
+
+/**
+ * POST /auth/enroll-member
+ * Émet le credential "membre" au chef connecté (via eSignet) pour activer le login wallet.
+ * Retourne le QR d'acceptation à scanner avec le wallet.
+ */
+router.post('/enroll-member', requireCoopAuth, async (req, res) => {
+  try {
+    const cred = await vpAuthService.issueMemberCredential({
+      npi: req.memberNpi,
+      name: req.session.user?.name || 'Chef',
+      cooperative_id: req.coop.id,
+      role: 'chef'
+    });
+    res.json({ success: true, invitationUrl: cred.invitationUrl, credentialExchangeId: cred.credentialExchangeId });
+  } catch (error) {
+    console.error('❌ enroll-member error:', error.response?.data || error.message);
+    res.status(500).json({ error: 'Émission du credential membre échouée' });
   }
 });
 

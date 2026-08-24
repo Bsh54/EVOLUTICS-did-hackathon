@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CottonPay — Connexion coopérative</title>
+  <style>
+    :root{--cp-blue:#2554B0;--cp-blue-dark:#1C4090;--cp-ink:#14202E;--cp-muted:#8A94A6;--cp-border:#D8DEE7;--cp-canvas:#F7F8FA;}
+    body{font-family:Arial,Helvetica,'Segoe UI',sans-serif;background:var(--cp-canvas);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;margin:0;color:var(--cp-ink);}
+    .card{background:#fff;border:1px solid var(--cp-border);border-radius:14px;box-shadow:0 6px 20px rgba(37,84,176,.08);max-width:440px;width:100%;padding:36px 32px;text-align:center;}
+    .logo{width:54px;height:54px;border-radius:10px;object-fit:contain;margin-bottom:12px;}
+    h1{font-size:22px;font-weight:700;margin:0 0 4px;}
+    .sub{color:var(--cp-muted);font-size:14px;margin-bottom:24px;}
+    .btn{border:none;border-radius:10px;padding:15px 22px;font-size:15px;font-weight:700;cursor:pointer;width:100%;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;}
+    .btn-primary{background:var(--cp-blue);color:#fff;}
+    .btn-primary:hover{background:var(--cp-blue-dark);}
+    .btn-link{background:transparent;color:var(--cp-blue);text-decoration:underline;margin-top:14px;font-weight:600;font-size:13px;}
+    .qrbox{margin:18px auto 8px;background:#fff;border:1px solid var(--cp-border);border-radius:10px;padding:10px;display:inline-flex;min-width:236px;min-height:236px;align-items:center;justify-content:center;}
+    .qrbox img{width:216px;height:216px;}
+    .status{font-size:13px;color:var(--cp-muted);margin-top:10px;min-height:18px;}
+    .spinner{width:28px;height:28px;border:3px solid #E4E8EF;border-top-color:var(--cp-blue);border-radius:50%;animation:spin 1s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .hidden{display:none;}
+    .err{color:#C0392B;font-size:13px;margin-top:8px;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="../logo.jpeg" alt="CottonPay" class="logo">
+    <h1>Espace Coopérative</h1>
+    <p class="sub">Connectez-vous en scannant avec votre wallet e-ID.</p>
+
+    <div id="startView">
+      <button class="btn btn-primary" onclick="startWalletLogin()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        Se connecter avec mon wallet
+      </button>
+      <p style="font-size:12px;color:#9ca3af;margin-top:14px;">Pas encore de credential ? Demandez à votre coopérative d'activer votre accès.</p>
+    </div>
+
+    <div id="qrView" class="hidden">
+      <div class="qrbox" id="qrBox"><div class="spinner"></div></div>
+      <p class="status" id="status">Scannez le QR avec votre wallet…</p>
+      <p class="err hidden" id="err"></p>
+      <button class="btn btn-link" onclick="resetLogin()">Annuler</button>
+    </div>
+  </div>
+
+  <script>
+    let pollTimer = null;
+
+    async function startWalletLogin() {
+      document.getElementById('startView').classList.add('hidden');
+      document.getElementById('qrView').classList.remove('hidden');
+      document.getElementById('err').classList.add('hidden');
+      document.getElementById('qrBox').innerHTML = '<div class="spinner"></div>';
+      document.getElementById('status').textContent = 'Préparation…';
+      try {
+        const res = await fetch('/auth/vp-login/start', { method: 'POST', credentials: 'include' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erreur');
+        const qr = data.verificationQr || (data.invitationUrl
+          ? 'https://api.qrserver.com/v1/create-qr-code/?size=216x216&data=' + encodeURIComponent(data.invitationUrl) : '');
+        document.getElementById('qrBox').innerHTML = qr ? '<img src="' + qr + '" alt="QR">' : '';
+        document.getElementById('status').textContent = 'Scannez le QR avec votre wallet…';
+        pollStatus(data.proofRecordId);
+      } catch (e) {
+        showError(e.message);
+      }
+    }
+
+    function pollStatus(proofRecordId) {
+      clearInterval(pollTimer);
+      pollTimer = setInterval(async () => {
+        try {
+          const res = await fetch('/auth/vp-login/status?proofRecordId=' + encodeURIComponent(proofRecordId), { credentials: 'include' });
+          const data = await res.json();
+          if (data.authenticated) {
+            clearInterval(pollTimer);
+            document.getElementById('status').textContent = ' Connexion réussie, redirection…';
+            window.location.href = data.redirect || '/coop/';
+          } else if (data.error === 'not_coop_member') {
+            clearInterval(pollTimer);
+            showError("Ce credential n'est pas rattaché à une coopérative.");
+          } else if (data.state) {
+            document.getElementById('status').textContent = 'En attente de la présentation… (' + data.state + ')';
+          }
+        } catch (e) { /* on continue de sonder */ }
+      }, 2500);
+    }
+
+    function showError(msg) {
+      const err = document.getElementById('err');
+      err.textContent = msg; err.classList.remove('hidden');
+      document.getElementById('status').textContent = '';
+    }
+    function resetLogin() {
+      clearInterval(pollTimer);
+      document.getElementById('qrView').classList.add('hidden');
+      document.getElementById('startView').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

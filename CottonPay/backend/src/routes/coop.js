@@ -16,6 +16,13 @@ const { requireCoopAuth } = require('../middleware/auth');
 const coopService = require('../services/coopService');
 const deliveryService = require('../services/deliveryService');
 const paymentService = require('../services/paymentService');
+const creanceService = require('../services/creanceService');
+const intrantsService = require('../services/intrantsService');
+const cautionService = require('../services/cautionService');
+const weatherService = require('../services/weatherService');
+const semencesService = require('../services/semencesService');
+const mecanisationService = require('../services/mecanisationService');
+const aicService = require('../services/aicService');
 const identityService = require('../services/identityService');
 
 // Toutes les routes de ce fichier nécessitent l'auth coopérative
@@ -88,17 +95,15 @@ router.get('/producers', (req, res) => {
  */
 router.get('/producers/:npi', (req, res) => {
   try {
-    const producer = coopService.getProducerByNpi(req.params.npi);
+    // Multi-affiliation : on récupère l'enregistrement du producteur DANS cette coopérative
+    const producer = coopService.getProducerInCoop(req.params.npi, req.coop.id);
 
     if (!producer) {
-      return res.status(404).json({ error: 'Producteur non trouvé' });
+      return res.status(404).json({ error: 'Ce producteur n\'est pas affilié à votre coopérative' });
     }
 
-    if (producer.cooperative_id !== req.coop.id) {
-      return res.status(403).json({ error: 'Ce producteur n\'est pas affilié à votre coopérative' });
-    }
-
-    const deliveries = deliveryService.getDeliveriesByNpi(req.params.npi);
+    // Ne montrer que les livraisons enregistrées par cette coopérative
+    const deliveries = deliveryService.getDeliveriesByNpiAndCoop(req.params.npi, req.coop.id);
 
     res.json({
       success: true,
@@ -143,8 +148,9 @@ router.post('/producers/verify', async (req, res) => {
       });
     }
 
-    // Vérifier si déjà affilié
-    const existing = coopService.getProducerByNpi(npi.trim());
+    // Multi-affiliation : distinguer "affilié quelque part" et "affilié à CETTE coop"
+    const inThisCoop = coopService.getProducerInCoop(npi.trim(), req.coop.id);
+    const otherCoops = coopService.getProducerCoops(npi.trim()).filter(id => id !== req.coop.id);
 
     res.json({
       found: true,
@@ -157,8 +163,9 @@ router.post('/producers/verify', async (req, res) => {
         region: identity.region,
         commune: identity.commune
       },
-      already_affiliated: !!existing,
-      affiliated_to_this_coop: existing ? existing.cooperative_id === req.coop.id : false
+      already_affiliated: !!inThisCoop,
+      affiliated_to_this_coop: !!inThisCoop,
+      other_coops_count: otherCoops.length
     });
   } catch (error) {
     console.error('❌ NPI verify error:', error);
@@ -194,19 +201,14 @@ router.post('/producers', async (req, res) => {
       });
     }
 
-    // Étape 2 : Vérifier s'il est déjà affilié
-    const existing = coopService.getProducerByNpi(npi.trim());
-    if (existing) {
-      if (existing.cooperative_id === req.coop.id) {
-        return res.status(409).json({
-          error: 'Déjà affilié',
-          message: 'Ce producteur est déjà affilié à votre coopérative',
-          producer: existing
-        });
-      }
+    // Étape 2 : Multi-affiliation — on bloque uniquement s'il est déjà dans CETTE coopérative.
+    // L'affiliation à d'autres coopératives en parallèle est autorisée.
+    const inThisCoop = coopService.getProducerInCoop(npi.trim(), req.coop.id);
+    if (inThisCoop) {
       return res.status(409).json({
-        error: 'Déjà affilié ailleurs',
-        message: 'Ce producteur est déjà affilié à une autre coopérative'
+        error: 'Déjà affilié',
+        message: 'Ce producteur est déjà affilié à votre coopérative',
+        producer: inThisCoop
       });
     }
 
@@ -286,18 +288,12 @@ router.post('/deliveries', async (req, res) => {
       return res.status(400).json({ error: 'La qualité doit être "1er_choix" ou "2eme_choix"' });
     }
 
-    // Vérifier l'affiliation
-    const producer = coopService.getProducerByNpi(farmer_npi);
+    // Vérifier l'affiliation À CETTE coopérative (multi-affiliation)
+    const producer = coopService.getProducerInCoop(farmer_npi, req.coop.id);
     if (!producer) {
       return res.status(404).json({
-        error: 'Producteur non trouvé',
-        message: 'Ce producteur n\'est pas enregistré. Veuillez l\'enregistrer d\'abord.'
-      });
-    }
-    if (producer.cooperative_id !== req.coop.id) {
-      return res.status(403).json({
         error: 'Producteur non affilié',
-        message: 'Ce producteur n\'est pas affilié à votre coopérative'
+        message: 'Ce producteur n\'est pas enregistré dans votre coopérative. Veuillez l\'enregistrer d\'abord.'
       });
     }
 
@@ -328,7 +324,7 @@ router.post('/deliveries', async (req, res) => {
         { name: 'total_amount_fcfa', value: String(delivery.total_gross) },
         { name: 'payment_reference', value: delivery.id },
         { name: 'payment_status', value: delivery.payment_status || 'pending' },
-        { name: 'payment_method', value: 'Mobile Money' },
+        { name: 'payment_method', value: 'Filière (différé)' },
         { name: 'transaction_id', value: delivery.id },
         { name: 'collection_point', value: `${req.coop.name} - Lot ${delivery.lot_number}` }
       ];
@@ -448,6 +444,316 @@ router.post('/payments/:deliveryId', (req, res) => {
 });
 
 // ============================================
+// CRÉANCES — cycle de vie (DUE → AVANCÉE → SOLDÉE)
+// ============================================
+
+/**
+ * GET /api/coop/creances
+ * Liste les créances de la coopérative (option ?status=due|settled)
+ */
+router.get('/creances', (req, res) => {
+  try {
+    const creances = creanceService.listCreances(req.coop.id, req.query.status);
+    res.json({ success: true, creances });
+  } catch (error) {
+    console.error('Créances list error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement des créances' });
+  }
+});
+
+/**
+ * GET /api/coop/creances/:deliveryId
+ * Détail d'une créance (montants, statut de règlement)
+ */
+router.get('/creances/:deliveryId', (req, res) => {
+  try {
+    const creance = creanceService.getCreance(req.params.deliveryId, req.coop.id);
+    if (!creance) return res.status(404).json({ error: 'Créance introuvable' });
+    res.json({ success: true, creance });
+  } catch (error) {
+    console.error('Créance detail error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement de la créance' });
+  }
+});
+
+/**
+ * POST /api/coop/creances/:deliveryId/settle
+ * Suivi manuel : le chef marque la créance comme réglée (paiement filière effectué).
+ */
+router.post('/creances/:deliveryId/settle', async (req, res) => {
+  try {
+    const creance = await creanceService.markSettled(req.params.deliveryId, req.coop.id);
+    console.log(`Créance réglée ${creance.delivery_id} | ${creance.farmer_name}`);
+    res.json({ success: true, message: 'Créance marquée comme réglée', creance });
+  } catch (error) {
+    console.error('Settle error:', error);
+    res.status(400).json({ error: error.message || 'Erreur lors du règlement' });
+  }
+});
+
+// ============================================
+// VUE UNION / AIC (agrégée, toutes coopératives)
+// ============================================
+
+/** GET /api/coop/aic/overview — consolidation interprofessionnelle */
+router.get('/aic/overview', (req, res) => {
+  try {
+    res.json({ success: true, overview: aicService.getOverview() });
+  } catch (error) {
+    console.error('❌ AIC overview error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement de la vue union' });
+  }
+});
+
+// ============================================
+// MÉCANISATION (matériel partagé)
+// ============================================
+
+/** GET /api/coop/mecanisation — parc + réservations + stats + types */
+router.get('/mecanisation', (req, res) => {
+  try {
+    res.json({
+      success: true,
+      types: mecanisationService.getTypes(),
+      stats: mecanisationService.getStats(req.coop.id),
+      equipments: mecanisationService.listEquipments(req.coop.id),
+      reservations: mecanisationService.listReservations(req.coop.id)
+    });
+  } catch (error) {
+    console.error('❌ Mécanisation error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement' });
+  }
+});
+
+/** POST /api/coop/mecanisation/equipment — ajouter du matériel. body: { name, type } */
+router.post('/mecanisation/equipment', (req, res) => {
+  try {
+    const { name, type } = req.body || {};
+    const eq = mecanisationService.addEquipment(req.coop.id, name, type);
+    res.json({ success: true, message: 'Matériel ajouté', equipment: eq });
+  } catch (error) {
+    res.status(400).json({ error: error.message || 'Erreur' });
+  }
+});
+
+/** POST /api/coop/mecanisation/reserve — réserver. body: { equipment_id, producer_npi, date, note } */
+router.post('/mecanisation/reserve', (req, res) => {
+  try {
+    const { equipment_id, producer_npi, date, note } = req.body || {};
+    if (producer_npi && !coopService.isProducerAffiliated(producer_npi, req.coop.id)) {
+      return res.status(400).json({ error: 'Ce producteur n\'est pas affilié à votre coopérative' });
+    }
+    const resv = mecanisationService.reserve(req.coop.id, equipment_id, producer_npi, date, note, req.memberNpi);
+    console.log(`🚜 Réservation: ${resv.id} | ${resv.equipment_name} le ${resv.date}`);
+    res.json({ success: true, message: 'Réservation enregistrée', reservation: resv });
+  } catch (error) {
+    res.status(400).json({ error: error.message || 'Erreur' });
+  }
+});
+
+/** POST /api/coop/mecanisation/reserve/:id/cancel — annuler une réservation */
+router.post('/mecanisation/reserve/:id/cancel', (req, res) => {
+  try {
+    const r = mecanisationService.cancelReservation(req.coop.id, req.params.id);
+    res.json({ success: true, message: 'Réservation annulée', reservation: r });
+  } catch (error) {
+    res.status(400).json({ error: error.message || 'Erreur' });
+  }
+});
+
+// ============================================
+// SEMENCES (qualité / variétés)
+// ============================================
+
+/** GET /api/coop/semences/varieties — catalogue des variétés */
+router.get('/semences/varieties', (req, res) => {
+  res.json({ success: true, varieties: semencesService.getVarieties() });
+});
+
+/** GET /api/coop/semences — historique + statistiques */
+router.get('/semences', (req, res) => {
+  try {
+    res.json({ success: true, stats: semencesService.getStats(req.coop.id), records: semencesService.listByCoop(req.coop.id) });
+  } catch (error) {
+    console.error('❌ Semences list error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement des semences' });
+  }
+});
+
+/** POST /api/coop/semences — enregistrer une distribution de semences */
+router.post('/semences', (req, res) => {
+  try {
+    const { producer_npi, variety, quantity_kg, germination_rate } = req.body || {};
+    if (!producer_npi) return res.status(400).json({ error: 'NPI du producteur requis' });
+    if (!coopService.isProducerAffiliated(producer_npi, req.coop.id)) {
+      return res.status(400).json({ error: 'Ce producteur n\'est pas affilié à votre coopérative' });
+    }
+    const record = semencesService.distribute(req.coop.id, producer_npi, variety, quantity_kg, germination_rate, req.memberNpi);
+    console.log(`🌱 Semences: ${record.id} | ${record.variety_label} ${record.quantity_kg}kg (germ ${record.germination_rate}%) → ${producer_npi}`);
+    res.json({ success: true, message: 'Semences enregistrées', record });
+  } catch (error) {
+    console.error('❌ Semences error:', error);
+    res.status(400).json({ error: error.message || 'Erreur' });
+  }
+});
+
+/** GET /api/coop/semences/:npi — historique semences d'un producteur */
+router.get('/semences/:npi', (req, res) => {
+  try {
+    res.json({ success: true, records: semencesService.getByProducer(req.params.npi, req.coop.id) });
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur' });
+  }
+});
+
+// ============================================
+// MÉTÉO / PLUVIOMÉTRIE
+// ============================================
+
+/** GET /api/coop/weather — prévision 7 jours + alertes pour la commune de la coop */
+router.get('/weather', async (req, res) => {
+  try {
+    const commune = req.coop.commune || req.coop.region || 'Parakou';
+    const forecast = await weatherService.getForecast(commune);
+    res.json({ success: true, forecast });
+  } catch (error) {
+    console.error('❌ Weather error:', error.message);
+    res.status(503).json({ error: 'Service météo momentanément indisponible' });
+  }
+});
+
+// ============================================
+// INTRANTS À CRÉDIT
+// ============================================
+
+/**
+ * GET /api/coop/intrants/catalog
+ * Catalogue des intrants (types + prix indicatifs)
+ */
+router.get('/intrants/catalog', (req, res) => {
+  res.json({ success: true, catalog: intrantsService.getCatalog() });
+});
+
+/**
+ * GET /api/coop/intrants
+ * Liste des comptes d'intrants des producteurs + totaux coopérative
+ */
+router.get('/intrants', (req, res) => {
+  try {
+    res.json({
+      success: true,
+      totals: intrantsService.getCoopTotals(req.coop.id),
+      accounts: intrantsService.listAccounts(req.coop.id)
+    });
+  } catch (error) {
+    console.error('❌ Intrants list error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement des intrants' });
+  }
+});
+
+/**
+ * POST /api/coop/intrants
+ * Distribuer des intrants à crédit à un producteur
+ * body: { producer_npi, items: [{ type, quantity, unit_price? }] }
+ */
+router.post('/intrants', (req, res) => {
+  try {
+    const { producer_npi, items } = req.body || {};
+    if (!producer_npi) return res.status(400).json({ error: 'NPI du producteur requis' });
+    if (!coopService.isProducerAffiliated(producer_npi, req.coop.id)) {
+      return res.status(400).json({ error: 'Ce producteur n\'est pas affilié à votre coopérative' });
+    }
+    const record = intrantsService.distribute(req.coop.id, producer_npi, items, req.memberNpi);
+    console.log(`🌾 Intrants distribués: ${record.id} | ${record.total} FCFA → ${producer_npi}`);
+    res.json({ success: true, message: 'Intrants distribués à crédit', distribution: record });
+  } catch (error) {
+    console.error('❌ Intrants distribute error:', error);
+    res.status(400).json({ error: error.message || 'Erreur lors de la distribution' });
+  }
+});
+
+/**
+ * GET /api/coop/intrants/:npi
+ * Compte d'intrants détaillé d'un producteur
+ */
+router.get('/intrants/:npi', (req, res) => {
+  try {
+    res.json({ success: true, account: intrantsService.getAccount(req.params.npi, req.coop.id) });
+  } catch (error) {
+    console.error('❌ Intrants account error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement du compte' });
+  }
+});
+
+// ============================================
+// CAUTION SOLIDAIRE (cercles de garantie)
+// ============================================
+
+/** GET /api/coop/caution — liste des cercles + risque */
+router.get('/caution', (req, res) => {
+  try {
+    res.json({ success: true, groups: cautionService.listGroups(req.coop.id) });
+  } catch (error) {
+    console.error('❌ Caution list error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement des cercles' });
+  }
+});
+
+/** POST /api/coop/caution — créer un cercle. body: { name, members: [npi] } */
+router.post('/caution', (req, res) => {
+  try {
+    const { name, members } = req.body || {};
+    (members || []).forEach(npi => {
+      if (!coopService.isProducerAffiliated(npi, req.coop.id)) {
+        throw new Error(`Le producteur ${npi} n'est pas affilié à votre coopérative`);
+      }
+    });
+    const group = cautionService.createGroup(req.coop.id, name, members, req.memberNpi);
+    console.log(`🤝 Cercle de caution créé: ${group.id} (${group.member_count} membres)`);
+    res.json({ success: true, message: 'Cercle de caution créé', group });
+  } catch (error) {
+    console.error('❌ Caution create error:', error);
+    res.status(400).json({ error: error.message || 'Erreur lors de la création' });
+  }
+});
+
+/** GET /api/coop/caution/:id — détail d'un cercle */
+router.get('/caution/:id', (req, res) => {
+  try {
+    const group = cautionService.getGroup(req.params.id, req.coop.id);
+    if (!group) return res.status(404).json({ error: 'Cercle introuvable' });
+    res.json({ success: true, group });
+  } catch (error) {
+    console.error('❌ Caution detail error:', error);
+    res.status(500).json({ error: 'Erreur lors du chargement du cercle' });
+  }
+});
+
+/** POST /api/coop/caution/:id/members — ajouter un membre. body: { npi } */
+router.post('/caution/:id/members', (req, res) => {
+  try {
+    const { npi } = req.body || {};
+    if (!coopService.isProducerAffiliated(npi, req.coop.id)) {
+      return res.status(400).json({ error: 'Ce producteur n\'est pas affilié à votre coopérative' });
+    }
+    const group = cautionService.addMember(req.params.id, req.coop.id, npi);
+    res.json({ success: true, message: 'Membre ajouté', group });
+  } catch (error) {
+    res.status(400).json({ error: error.message || 'Erreur' });
+  }
+});
+
+/** POST /api/coop/caution/:id/members/remove — retirer un membre. body: { npi } */
+router.post('/caution/:id/members/remove', (req, res) => {
+  try {
+    const group = cautionService.removeMember(req.params.id, req.coop.id, (req.body || {}).npi);
+    res.json({ success: true, message: 'Membre retiré', group });
+  } catch (error) {
+    res.status(400).json({ error: error.message || 'Erreur' });
+  }
+});
+
+// ============================================
 // CREDENTIAL (QR) — pour la fiche producteur
 // ============================================
 
@@ -527,17 +833,63 @@ router.get('/receipt/:deliveryId', (req, res) => {
 
     const producer = coopService.getProducerByNpi(delivery.farmer_npi);
     const coop = req.coop;
-    const qualityLabel = delivery.quality === '1er_choix' ? '1er Choix' : '2ème Choix';
-    const fmtN = n => new Intl.NumberFormat('fr-FR').format(n);
-    const dateStr = new Date(delivery.date).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
-    const printDate = new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
+
+    // ---- Langue (suivie depuis le frontend via ?lang=en) ----
+    const lang = req.query.lang === 'en' ? 'en' : 'fr';
+    const locale = lang === 'en' ? 'en-GB' : 'fr-FR';
+    const T = lang === 'en' ? {
+      docTitle: 'Delivery Receipt', platform: 'Cotton traceability platform',
+      docType: 'Delivery Receipt', producer: '🧑‍🌾 Producer', name: 'Name', npi: 'NPI',
+      commune: 'Municipality', coop: '🏢 Cooperative', date: 'Date', batch: 'Batch',
+      finTitle: '💰 Financial details', colDesc: 'Description', colAmount: 'Amount',
+      cotton: 'Cotton', inputCredit: 'Input credit', aicLevy: 'AIC levy',
+      netPay: 'Net payable to producer', verifyTitle: "🔍 Authenticity verification",
+      verifyText: 'This receipt is linked to a <strong>Verifiable Credential</strong> signed on the BCovrin blockchain. Scan the QR code opposite to verify the authenticity of this transaction on the CottonPay platform.',
+      issuedOn: 'Issued on', scanVerify: 'Scan to verify',
+      footer1: '<strong>CottonPay</strong> — Cotton traceability &amp; payment platform · 2025-2026 Season · Republic of Benin',
+      footer2: 'This document is authoritative. The delivery is attested by a digitally signed Verifiable Credential.',
+      btnPrint: '🖨️ Print / Save PDF', btnShare: '📤 Share PDF',
+      q1: '1st grade', q2: '2nd grade',
+      payTitle: 'Payment status', stDue: 'Awaiting settlement', stSettled: 'Settled'
+    } : {
+      docTitle: 'Bordereau', platform: 'Plateforme de traçabilité cotonnière',
+      docType: 'Bordereau de Livraison', producer: '🧑‍🌾 Producteur', name: 'Nom', npi: 'NPI',
+      commune: 'Commune', coop: '🏢 Coopérative', date: 'Date', batch: 'Lot',
+      finTitle: '💰 Détails financiers', colDesc: 'Désignation', colAmount: 'Montant',
+      cotton: 'Coton', inputCredit: 'Crédit intrants', aicLevy: 'Prélèvement AIC',
+      netPay: 'Net à payer au producteur', verifyTitle: "🔍 Vérification d'authenticité",
+      verifyText: "Ce bordereau est lié à un <strong>Verifiable Credential</strong> signé sur la blockchain BCovrin. Scannez le QR code ci-contre pour vérifier l'authenticité de cette transaction sur la plateforme CottonPay.",
+      issuedOn: 'Émis le', scanVerify: 'Scanner pour vérifier',
+      footer1: '<strong>CottonPay</strong> — Plateforme de traçabilité et paiement cotonnier · Campagne 2025-2026 · République du Bénin',
+      footer2: 'Ce document fait foi. La livraison est attestée par un Verifiable Credential signé numériquement.',
+      btnPrint: '🖨️ Imprimer / Enregistrer PDF', btnShare: '📤 Partager le PDF',
+      q1: '1er Choix', q2: '2ème Choix',
+      payTitle: 'Statut de paiement', stDue: 'En attente de règlement', stSettled: 'Réglé'
+    };
+
+    const qualityLabel = delivery.quality === '1er_choix' ? T.q1 : T.q2;
+    const fmtN = n => new Intl.NumberFormat(locale).format(n);
+    const dateStr = new Date(delivery.date).toLocaleDateString(locale, { day:'2-digit', month:'long', year:'numeric' });
+    const printDate = new Date().toLocaleDateString(locale, { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
 
     const appUrl = process.env.FRONTEND_URL || 'http://localhost:3002';
-    const verifyUrl = `${appUrl}/verify?npi=${delivery.farmer_npi}&delivery=${delivery.id}`;
+    const verifyUrl = `${appUrl}/verify?npi=${delivery.farmer_npi}&delivery=${delivery.id}&lang=${lang}`;
     const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}&color=14532D`;
 
+    // ---- Section paiement (suivi manuel : due / settled) ----
+    const claim = delivery.claim_status === 'settled' ? 'settled' : 'due';
+    const stLabel = claim === 'settled' ? T.stSettled : T.stDue;
+    const stStyle = claim === 'settled'
+      ? 'color:#15803D;background:#dcfce7'
+      : 'color:#92400e;background:#fef9c3';
+    const paymentSection = `
+<div class="finance-section">
+  <h3>${T.payTitle}</h3>
+  <div><span style="display:inline-block;${stStyle};padding:8px 16px;border-radius:24px;font-size:13px;font-weight:700;">${stLabel}</span></div>
+</div>`;
+
     const html = `<!DOCTYPE html>
-<html lang="fr"><head><meta charset="UTF-8"><title>Bordereau ${delivery.id}</title>
+<html lang="${lang}"><head><meta charset="UTF-8"><title>${T.docTitle} ${delivery.id}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -616,11 +968,11 @@ router.get('/receipt/:deliveryId', (req, res) => {
     <img src="${appUrl}/logo.jpeg" alt="CottonPay" style="width:48px;height:48px;object-fit:contain;border-radius:12px;">
     <div class="brand">
       <h1>CottonPay</h1>
-      <p>Plateforme de traçabilité cotonnière</p>
+      <p>${T.platform}</p>
     </div>
   </div>
   <div class="doc-type">
-    <h2>Bordereau de Livraison</h2>
+    <h2>${T.docType}</h2>
     <p>${delivery.id}</p>
   </div>
 </div>
@@ -628,58 +980,60 @@ router.get('/receipt/:deliveryId', (req, res) => {
 <!-- Info boxes -->
 <div class="info-grid">
   <div class="info-box">
-    <h4>🧑‍🌾 Producteur</h4>
-    <div class="info-row"><span class="label">Nom</span><span class="value">${producer ? `${producer.firstname || ''} ${producer.name}` : delivery.farmer_npi}</span></div>
-    <div class="info-row"><span class="label">NPI</span><span class="value">${delivery.farmer_npi}</span></div>
-    <div class="info-row"><span class="label">Commune</span><span class="value">${producer ? producer.commune || '—' : '—'}</span></div>
+    <h4>${T.producer}</h4>
+    <div class="info-row"><span class="label">${T.name}</span><span class="value">${producer ? `${producer.firstname || ''} ${producer.name}` : delivery.farmer_npi}</span></div>
+    <div class="info-row"><span class="label">${T.npi}</span><span class="value">${delivery.farmer_npi}</span></div>
+    <div class="info-row"><span class="label">${T.commune}</span><span class="value">${producer ? producer.commune || '—' : '—'}</span></div>
   </div>
   <div class="info-box">
-    <h4>🏢 Coopérative</h4>
-    <div class="info-row"><span class="label">Nom</span><span class="value">${coop.name}</span></div>
-    <div class="info-row"><span class="label">Date</span><span class="value">${dateStr}</span></div>
-    <div class="info-row"><span class="label">Lot</span><span class="value">${delivery.lot_number}</span></div>
+    <h4>${T.coop}</h4>
+    <div class="info-row"><span class="label">${T.name}</span><span class="value">${coop.name}</span></div>
+    <div class="info-row"><span class="label">${T.date}</span><span class="value">${dateStr}</span></div>
+    <div class="info-row"><span class="label">${T.batch}</span><span class="value">${delivery.lot_number}</span></div>
   </div>
 </div>
 
 <!-- Financial breakdown -->
 <div class="finance-section">
-  <h3>💰 Détails financiers</h3>
+  <h3>${T.finTitle}</h3>
   <table>
     <thead>
-      <tr><th>Désignation</th><th style="text-align:right">Montant</th></tr>
+      <tr><th>${T.colDesc}</th><th style="text-align:right">${T.colAmount}</th></tr>
     </thead>
     <tbody>
-      <tr><td>Coton ${qualityLabel} — ${fmtN(delivery.weight_kg)} kg × ${fmtN(delivery.unit_price)} FCFA/kg</td><td>${fmtN(delivery.total_gross)} FCFA</td></tr>
-      <tr class="deduction"><td>Crédit intrants (90 FCFA/kg × ${fmtN(delivery.weight_kg)} kg)</td><td>${fmtN(delivery.input_credit_deduction)} FCFA</td></tr>
-      <tr class="deduction"><td>Prélèvement AIC (18 FCFA/kg × ${fmtN(delivery.weight_kg)} kg)</td><td>${fmtN(delivery.aic_deduction)} FCFA</td></tr>
-      <tr class="total-row"><td>Net à payer au producteur</td><td>${fmtN(delivery.total_net)} FCFA</td></tr>
+      <tr><td>${T.cotton} ${qualityLabel} — ${fmtN(delivery.weight_kg)} kg × ${fmtN(delivery.unit_price)} FCFA/kg</td><td>${fmtN(delivery.total_gross)} FCFA</td></tr>
+      <tr class="deduction"><td>${T.inputCredit} (90 FCFA/kg × ${fmtN(delivery.weight_kg)} kg)</td><td>${fmtN(delivery.input_credit_deduction)} FCFA</td></tr>
+      <tr class="deduction"><td>${T.aicLevy} (18 FCFA/kg × ${fmtN(delivery.weight_kg)} kg)</td><td>${fmtN(delivery.aic_deduction)} FCFA</td></tr>
+      <tr class="total-row"><td>${T.netPay}</td><td>${fmtN(delivery.total_net)} FCFA</td></tr>
     </tbody>
   </table>
 </div>
 
+${paymentSection}
+
 <!-- QR + verification -->
 <div class="footer-section">
   <div class="footer-left">
-    <h4>🔍 Vérification d'authenticité</h4>
-    <p>Ce bordereau est lié à un <strong>Verifiable Credential</strong> signé sur la blockchain BCovrin. Scannez le QR code ci-contre pour vérifier l'authenticité de cette transaction sur la plateforme CottonPay.</p>
-    <p style="margin-top:8px;font-size:11px;color:#9ca3af;">Émis le ${printDate}</p>
+    <h4>${T.verifyTitle}</h4>
+    <p>${T.verifyText}</p>
+    <p style="margin-top:8px;font-size:11px;color:#9ca3af;">${T.issuedOn} ${printDate}</p>
   </div>
   <div class="qr-box">
-    <img src="${qrImgUrl}" alt="QR Vérification" width="150" height="150" />
-    <p class="qr-label">Scanner pour vérifier</p>
+    <img src="${qrImgUrl}" alt="QR" width="150" height="150" />
+    <p class="qr-label">${T.scanVerify}</p>
   </div>
 </div>
 
 <!-- Print footer -->
 <div class="print-footer">
-  <p><strong>CottonPay</strong> — Plateforme de traçabilité et paiement cotonnier · Campagne 2025-2026 · République du Bénin</p>
-  <p>Ce document fait foi. La livraison est attestée par un Verifiable Credential signé numériquement.</p>
+  <p>${T.footer1}</p>
+  <p>${T.footer2}</p>
 </div>
 
 <!-- Actions (hidden in print) -->
 <div class="actions no-print">
-  <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimer / Enregistrer PDF</button>
-  <button class="btn btn-outline" onclick="shareBordereau()">📤 Partager le PDF</button>
+  <button class="btn btn-primary" onclick="window.print()">${T.btnPrint}</button>
+  <button class="btn btn-outline" onclick="shareBordereau()">${T.btnShare}</button>
 </div>
 
 <script>

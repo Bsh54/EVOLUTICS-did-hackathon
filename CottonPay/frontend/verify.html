@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Raleway:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/i18n.js"></script>
     <style>
         :root {
             --primary:#15803D; --primary-dark:#0f6330; --secondary:#22C55E;
@@ -81,7 +82,7 @@
     <div class="card">
         <!-- STEP 1: NPI Lookup -->
         <div class="step active" id="step-npi">
-            <h2 class="card-title">🏦 Vérification des livraisons</h2>
+            <h2 class="card-title"> Vérification des livraisons</h2>
             <p class="card-sub">Entrez le NPI d'un producteur pour consulter son historique de livraisons certifié sur la blockchain.</p>
             <div id="npiError" class="msg msg-error" style="display:none;"></div>
             <label for="npiInput">NPI du producteur</label>
@@ -100,10 +101,10 @@
             <div id="sendError" class="msg msg-error" style="display:none;"></div>
             <button class="btn btn-esignet" id="btnEsignet" onclick="redirectToEsignet()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                🔐 Authentification eSignet (OTP)
+                 Authentification eSignet (OTP)
             </button>
             <div class="esignet-note">
-                💡 Le producteur doit être <strong>physiquement présent</strong>. Il saisira son NPI dans eSignet et recevra un <strong>OTP sur son téléphone</strong> pour autoriser l'accès à ses données.
+                 Le producteur doit être <strong>physiquement présent</strong>. Il saisira son NPI dans eSignet et recevra un <strong>OTP sur son téléphone</strong> pour autoriser l'accès à ses données.
             </div>
             <button class="btn-ghost" onclick="goToStep('npi')">← Modifier le NPI</button>
         </div>
@@ -113,11 +114,11 @@
             <div class="shield-icon">
                 <svg width="28" height="28" fill="none" stroke="#15803D" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             </div>
-            <h2 class="card-title">✅ Identité vérifiée via eSignet</h2>
+            <h2 class="card-title"> Identité vérifiée via eSignet</h2>
             <p class="card-sub">Le producteur a autorisé l'accès à son historique. Données certifiées sur la blockchain.</p>
             <div id="historyContent"></div>
             <button class="btn btn-primary" onclick="resetVerification()" style="margin-top:16px;">
-                🔄 Nouvelle vérification
+                 Nouvelle vérification
             </button>
         </div>
     </div>
@@ -191,7 +192,7 @@
             const d = data.deliveries || [];
             let html = `
                 <div class="result-card">
-                    <h4>👤 Producteur</h4>
+                    <h4> Producteur</h4>
                     <div class="stat-row"><span>Nom</span><span>${p.name}</span></div>
                     <div class="stat-row"><span>NPI</span><span style="font-family:monospace;">${p.npi}</span></div>
                     <div class="stat-row"><span>Coopérative</span><span>${p.cooperative}</span></div>
@@ -199,12 +200,12 @@
                     <div class="stat-row"><span>Région</span><span>${p.region || '—'}</span></div>
                 </div>
                 <div class="result-card">
-                    <h4>📊 Résumé campagne</h4>
+                    <h4> Résumé campagne</h4>
                     <div class="stat-row"><span>Nombre de livraisons</span><span>${s.total_deliveries}</span></div>
                     <div class="stat-row"><span>Poids total livré</span><span>${fmtN(s.total_weight_kg)} kg</span></div>
                     <div class="stat-row"><span>Montant brut total</span><span>${fmtN(s.total_gross)} FCFA</span></div>
                 </div>
-                <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;margin-bottom:10px;">📦 Détail des livraisons</h4>`;
+                <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;margin-bottom:10px;"> Détail des livraisons</h4>`;
             if (d.length === 0) {
                 html += '<p style="text-align:center;color:var(--text-light);font-size:13px;">Aucune livraison enregistrée.</p>';
             } else {
@@ -267,7 +268,7 @@
     // Enter key support
     document.getElementById('npiInput').addEventListener('keypress', e => { if (e.key === 'Enter') lookupNpi(); });
 
-    console.log('🏦 CottonPay — Vérification Publique v3 (eSignet)');
+    console.log(' CottonPay — Vérification Publique v3 (eSignet)');
 </script>
 </body>
 </html>
