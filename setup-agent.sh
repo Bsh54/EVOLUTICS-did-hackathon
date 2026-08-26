@@ -10,7 +10,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 API_URL="http://localhost:4000"
-SEED="CottonPaySecretSeedPourUriel2024"
+SEED="db7cf33aff55ce8e31266b5b23ed54e2"
 
 # Charger les variables d'environnement depuis .env.development
 # IMPORTANT: tr -d '\r' pour supprimer les retours chariot Windows
@@ -137,7 +137,7 @@ echo ""
 # ============================================================
 # Creation du schema FarmerIdentityCredential
 # ============================================================
-echo "[4/6] Creation du schema FarmerIdentityCredential..."
+echo "[4/7] Creation du schema FarmerIdentityCredential..."
 echo ""
 
 # Verifier si le schema existe deja
@@ -180,7 +180,7 @@ echo ""
 # ============================================================
 # Creation du schema CottonSaleReceiptCredential
 # ============================================================
-echo "[5/6] Creation du schema CottonSaleReceiptCredential..."
+echo "[5/7] Creation du schema CottonSaleReceiptCredential..."
 echo ""
 
 # Verifier si le schema existe deja
@@ -223,9 +223,46 @@ fi
 echo ""
 
 # ============================================================
+# Creation du schema CooperativeMemberCredential (login wallet)
+# ============================================================
+echo "[6/7] Creation du schema CooperativeMemberCredential..."
+echo ""
+
+if echo "$EXISTING_SCHEMAS" | grep -q '"name":"CooperativeMemberCredential"'; then
+    MEMBER_SCHEMA_ID=$(echo "$EXISTING_SCHEMAS" | grep -o '"schema_id":"did:indy:bcovrin:test:[^"]*CooperativeMemberCredential[^"]*"' | head -1 | cut -d'"' -f4)
+    echo "[OK] Schema CooperativeMemberCredential existe deja"
+    echo "     Schema ID: $MEMBER_SCHEMA_ID"
+else
+    MEMBER_SCHEMA=$(curl -s -X POST "$API_URL/issuance/schemas" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "CooperativeMemberCredential",
+        "version": "1.0",
+        "attributes": [
+          {"attributeName": "npi", "schemaDataType": "string", "displayName": "NPI"},
+          {"attributeName": "name", "schemaDataType": "string", "displayName": "Nom"},
+          {"attributeName": "cooperative_id", "schemaDataType": "string", "displayName": "Cooperative"},
+          {"attributeName": "role", "schemaDataType": "string", "displayName": "Role"}
+        ]
+      }')
+
+    if echo "$MEMBER_SCHEMA" | grep -q "schemaId"; then
+        MEMBER_SCHEMA_ID=$(echo "$MEMBER_SCHEMA" | grep -o '"schemaId":"[^"]*"' | cut -d'"' -f4)
+        echo "[OK] Schema CooperativeMemberCredential cree"
+        echo "     Schema ID: $MEMBER_SCHEMA_ID"
+    else
+        echo "[ERREUR] Echec de creation du schema CooperativeMemberCredential"
+        echo "$MEMBER_SCHEMA"
+        exit 1
+    fi
+fi
+
+echo ""
+
+# ============================================================
 # Creation des Credential Definitions
 # ============================================================
-echo "[6/6] Creation des Credential Definitions..."
+echo "[7/7] Creation des Credential Definitions..."
 echo ""
 
 # Fonction de retry pour les operations sur le ledge
@@ -296,6 +333,18 @@ fi
 
 echo ""
 
+# Attendre 5 secondes avant la prochaine CredDef
+echo "Attente de 5 secondes avant la prochaine CredDef..."
+sleep 5
+
+# Credential Definition pour CooperativeMemberCredential (requise par le login wallet)
+echo "Creation de la CredDef pour CooperativeMemberCredential..."
+if ! retry_creddef "$MEMBER_SCHEMA_ID" "member-v1" "CooperativeMemberCredential"; then
+    exit 1
+fi
+
+echo ""
+
 # ============================================================
 # Resume final
 # ============================================================
@@ -312,6 +361,9 @@ echo "     Schema ID: $FARMER_SCHEMA_ID"
 echo ""
 echo "  2. CottonSaleReceiptCredential"
 echo "     Schema ID: $SALE_SCHEMA_ID"
+echo ""
+echo "  3. CooperativeMemberCredential"
+echo "     Schema ID: $MEMBER_SCHEMA_ID"
 echo ""
 echo "Credential Definitions creees avec succes !"
 echo ""

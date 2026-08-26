@@ -704,6 +704,24 @@
       "payment_status": "pending",
       "credential_status": "issued",
       "credential_exchange_id": "2be443ac-7210-458a-b524-04d34e97997d"
+    },
+    {
+      "id": "LIV-20260508-001",
+      "farmer_npi": "1000000000000001",
+      "cooperative_id": "coop-001",
+      "registered_by_npi": "9876543210987654",
+      "date": "2026-05-08T00:03:51.047Z",
+      "weight_kg": 60,
+      "quality": "1er_choix",
+      "unit_price": 300,
+      "total_gross": 18000,
+      "input_credit_deduction": 5400,
+      "aic_deduction": 1080,
+      "total_net": 11520,
+      "lot_number": "LOT-004",
+      "payment_status": "pending",
+      "credential_status": "pending",
+      "credential_exchange_id": null
     }
   ]
 }

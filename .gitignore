@@ -50,6 +50,7 @@ eidStack-CMU/node_modules/
 eidStack-CMU/.env
 eidStack-CMU/dist/
 eidStack-CMU/prisma/.env
+eidStack-CMU/.npm-cache-host/
 
 esignet-master/docker-compose/.env
 

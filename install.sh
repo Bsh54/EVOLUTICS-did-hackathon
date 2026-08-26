@@ -1,4 +1,4 @@
-#!/bin/bash
+.#!/bin/bash
 # ============================================================
 # CottonPay - Installation Initiale
 # A executer UNE SEULE FOIS apres le clonage du projet
