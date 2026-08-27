@@ -45,9 +45,15 @@ async function issueMemberCredential({ npi, name, cooperative_id, role = 'chef' 
 /** Démarre un login : crée une demande de preuve (npi + name) restreinte au credential membre. */
 async function startLogin() {
   const credDefId = await resolveMemberCredDefId();
+  // On RESTREINT chaque attribut à la cred def "membre" : sinon le wallet ne sait pas
+  // quel credential présenter (attributs "self-attested") et lève une erreur trompeuse.
+  const restrictions = [{ cred_def_id: credDefId }];
   const res = await axios.post(`${EIDSTACK_URL}/verification/createProofRequest`, {
     credDefId,
-    attributes: [{ name: 'npi' }, { name: 'name' }],
+    attributes: [
+      { name: 'npi', restrictions },
+      { name: 'name', restrictions }
+    ],
     comment: 'CottonPay — connexion coopérative'
   }, { timeout: 30000 });
   return res.data?.data || res.data;
