@@ -77,6 +77,12 @@ app.use('/auth', authRoutes);
 // Espace Admin — enrôlement des membres (protégé par ADMIN_KEY)
 app.use('/api/admin', require('./src/routes/admin'));
 
+// Redirection d'invitations DIDComm (le wallet suit /inv/:id -> URL oob complète)
+app.use('/inv', require('./src/routes/inv'));
+
+// Porteur d'invitation : le wallet lit le paramètre ?oob= depuis cette URL (réponse 200).
+app.get('/oob', (req, res) => res.status(200).type('text/plain').send('ok'));
+
 // Espace Coopérative (dashboard, producteurs, livraisons, lots, paiements)
 app.use('/api/coop', coopRoutes);
 

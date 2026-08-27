@@ -86,3 +86,15 @@ CottonPay/backend/keys/
 # APK volumineux (disponible en release + servi sur le serveur)
 CottonPay/frontend/idsWallet.apk
 *.apk
+
+# secrets / fichiers locaux
+cle.txt
+test-credential.json
+CottonPay/test-credential.json
+eidStack-CMU/test-credential-new.json
+cottonpay.txt
+dash-desktop.png
+dash-mobile.png
+qr-*.png
+*.old
+GUIDE.md
